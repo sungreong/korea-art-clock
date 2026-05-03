@@ -1,0 +1,818 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <title>대한민국 아트 시계</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: #050506;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+    }
+
+    body.hide-cursor { cursor: none; }
+
+    .bg {
+      position: fixed;
+      top: -1.5%;
+      right: -1.5%;
+      bottom: -1.5%;
+      left: -1.5%;
+      background-position: center center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      opacity: 0;
+      transform: scale(1.035);
+      transition: opacity 2200ms ease, transform 14000ms ease;
+      z-index: 0;
+    }
+
+    #bg-a { opacity: 1; }
+
+    .fallback-bg-1 {
+      background:
+        radial-gradient(circle at 15% 20%, rgba(183, 137, 92, 0.85), transparent 26%),
+        radial-gradient(circle at 80% 12%, rgba(83, 87, 128, 0.7), transparent 30%),
+        radial-gradient(circle at 65% 85%, rgba(56, 80, 74, 0.9), transparent 34%),
+        linear-gradient(135deg, #17120f, #0a0d12 52%, #231918);
+    }
+
+    .fallback-bg-2 {
+      background:
+        radial-gradient(circle at 50% 12%, rgba(245, 225, 180, 0.38), transparent 22%),
+        radial-gradient(circle at 18% 85%, rgba(80, 70, 118, 0.65), transparent 34%),
+        linear-gradient(120deg, #0d1117, #21140d 48%, #050506);
+    }
+
+    .fallback-bg-3 {
+      background:
+        radial-gradient(circle at 80% 74%, rgba(210, 177, 113, 0.45), transparent 30%),
+        radial-gradient(circle at 20% 18%, rgba(99, 118, 160, 0.62), transparent 28%),
+        linear-gradient(160deg, #07080a, #18121a 46%, #2b1f16);
+    }
+
+    .vignette {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at center, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.25) 48%, rgba(0,0,0,0.78) 100%),
+        linear-gradient(to bottom, rgba(0,0,0,0.18), rgba(0,0,0,0.05) 28%, rgba(0,0,0,0.55));
+    }
+
+    .stage {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      min-height: 100%;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+      flex-direction: column;
+      -webkit-box-pack: center;
+      -ms-flex-pack: center;
+      justify-content: center;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
+      text-align: center;
+      padding: 5vh 4vw 9vh;
+      transition: transform 2500ms ease;
+    }
+
+    .clock-card {
+      max-width: 94vw;
+      padding: 2.4vh 4vw 2.6vh;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 34px;
+      background: rgba(0,0,0,0.22);
+      box-shadow: 0 36px 90px rgba(0,0,0,0.45);
+      text-shadow: 0 8px 28px rgba(0,0,0,0.9), 0 1px 4px rgba(0,0,0,0.9);
+    }
+
+    @supports ((-webkit-backdrop-filter: blur(8px)) or (backdrop-filter: blur(8px))) {
+      .clock-card {
+        -webkit-backdrop-filter: blur(8px) saturate(118%);
+        backdrop-filter: blur(8px) saturate(118%);
+      }
+    }
+
+    .timezone-label {
+      margin-bottom: 0.7vh;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.24em;
+      color: rgba(255,255,255,0.76);
+      text-transform: uppercase;
+    }
+
+    .time {
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.07em;
+      line-height: 0.88;
+      font-weight: 800;
+    }
+
+    .time .hm {
+      font-size: 180px;
+    }
+
+    .time .sec {
+      display: inline-block;
+      min-width: 1.8em;
+      margin-left: 0.16em;
+      letter-spacing: -0.04em;
+      font-size: 0.33em;
+      font-weight: 700;
+      vertical-align: super;
+      color: rgba(255,255,255,0.84);
+    }
+
+    @supports (font-size: clamp(1px, 2vw, 3px)) {
+      .time .hm { font-size: clamp(92px, 17vw, 330px); }
+      .timezone-label { font-size: clamp(13px, 1.2vw, 23px); }
+    }
+
+    .date {
+      margin-top: 1.8vh;
+      font-size: 31px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.9);
+      letter-spacing: -0.02em;
+    }
+
+    @supports (font-size: clamp(1px, 2vw, 3px)) {
+      .date { font-size: clamp(20px, 2.5vw, 44px); }
+    }
+
+    .weather {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+      -webkit-box-pack: center;
+      -ms-flex-pack: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 2.1vh;
+      color: rgba(255,255,255,0.88);
+    }
+
+    .weather-item {
+      min-width: 116px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.26);
+      border: 1px solid rgba(255,255,255,0.14);
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    @supports (font-size: clamp(1px, 2vw, 3px)) {
+      .weather-item { font-size: clamp(14px, 1.5vw, 25px); }
+    }
+
+    .weather-source {
+      margin-top: 1.1vh;
+      font-size: 14px;
+      color: rgba(255,255,255,0.58);
+    }
+
+    .art-credit {
+      position: fixed;
+      left: 3vw;
+      right: 3vw;
+      bottom: 3vh;
+      z-index: 2;
+      text-align: center;
+      font-size: 16px;
+      color: rgba(255,255,255,0.72);
+      text-shadow: 0 4px 16px rgba(0,0,0,0.95);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .controls {
+      position: fixed;
+      z-index: 4;
+      top: 16px;
+      right: 16px;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      gap: 8px;
+      opacity: 0.18;
+      transition: opacity 180ms ease;
+    }
+
+    .controls:hover, .controls:focus-within { opacity: 1; }
+
+    button {
+      appearance: none;
+      -webkit-appearance: none;
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 999px;
+      padding: 10px 14px;
+      background: rgba(0,0,0,0.48);
+      color: rgba(255,255,255,0.92);
+      font-weight: 800;
+      font-size: 14px;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    button:focus {
+      outline: 2px solid rgba(255,255,255,0.75);
+      outline-offset: 2px;
+    }
+
+    .notice {
+      position: fixed;
+      left: 50%;
+      bottom: 8vh;
+      z-index: 5;
+      transform: translateX(-50%) translateY(10px);
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.66);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: rgba(255,255,255,0.92);
+      font-size: 15px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 250ms ease, transform 250ms ease;
+      white-space: nowrap;
+    }
+
+    .notice.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 860px) {
+      .clock-card { border-radius: 24px; padding-left: 5vw; padding-right: 5vw; }
+      .time .hm { font-size: 86px; }
+      .time .sec { display: block; margin-left: 0; margin-top: 1vh; font-size: 34px; vertical-align: baseline; }
+      .controls { top: 10px; right: 10px; }
+      button { padding: 8px 10px; font-size: 12px; }
+      .art-credit { font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="bg-a" class="bg fallback-bg-1"></div>
+  <div id="bg-b" class="bg fallback-bg-2"></div>
+  <div class="vignette"></div>
+
+  <div class="controls" aria-label="시계 조작 버튼">
+    <button id="fullscreen-button" type="button">전체화면</button>
+    <button id="next-art-button" type="button">배경변경</button>
+    <button id="weather-button" type="button">날씨갱신</button>
+  </div>
+
+  <main id="stage" class="stage">
+    <section class="clock-card" aria-label="대한민국 기준 현재 시각">
+      <div class="timezone-label">Korea Standard Time</div>
+      <div class="time" aria-live="polite">
+        <span id="hm" class="hm">--:--</span><span id="sec" class="sec">--</span>
+      </div>
+      <div id="date" class="date">대한민국 기준 날짜를 불러오는 중</div>
+      <div id="weather" class="weather" aria-label="현재 날씨">
+        <div class="weather-item" id="weather-city">서울</div>
+        <div class="weather-item" id="weather-temp">온도 --°</div>
+        <div class="weather-item" id="weather-humidity">습도 --%</div>
+        <div class="weather-item" id="weather-feels">체감 --°</div>
+        <div class="weather-item" id="weather-condition">날씨 확인 중</div>
+      </div>
+      <div id="weather-source" class="weather-source">실내 습도가 아니라 선택한 좌표의 실외 예보/관측 기반 습도입니다.</div>
+    </section>
+  </main>
+
+  <div id="art-credit" class="art-credit">명화 배경을 불러오는 중</div>
+  <div id="notice" class="notice" role="status" aria-live="polite"></div>
+
+  <noscript>
+    이 페이지는 시계와 날씨 표시를 위해 JavaScript가 필요합니다.
+  </noscript>
+
+  <script src="assets/artworks.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      var CONFIG = {
+        timezoneLabel: '대한민국 표준시',
+        city: '서울',
+        latitude: 37.5665,
+        longitude: 126.9780,
+        weatherRefreshMs: 20 * 60 * 1000,
+        artRefreshMs: 100 * 1000,
+        driftRefreshMs: 5 * 60 * 1000,
+        preloadAhead: 3,
+        showSeconds: true,
+        enableWeather: true,
+        enableArt: true
+      };
+
+      var el = {
+        hm: document.getElementById('hm'),
+        sec: document.getElementById('sec'),
+        date: document.getElementById('date'),
+        weather: document.getElementById('weather'),
+        city: document.getElementById('weather-city'),
+        temp: document.getElementById('weather-temp'),
+        humidity: document.getElementById('weather-humidity'),
+        feels: document.getElementById('weather-feels'),
+        condition: document.getElementById('weather-condition'),
+        source: document.getElementById('weather-source'),
+        credit: document.getElementById('art-credit'),
+        bgA: document.getElementById('bg-a'),
+        bgB: document.getElementById('bg-b'),
+        stage: document.getElementById('stage'),
+        notice: document.getElementById('notice'),
+        fullscreenButton: document.getElementById('fullscreen-button'),
+        nextArtButton: document.getElementById('next-art-button'),
+        weatherButton: document.getElementById('weather-button')
+      };
+
+      var state = {
+        usingA: true,
+        artPool: [],
+        artIndex: -1,
+        fallbackIndex: 0,
+        preloadCache: {},
+        failedArt: {},
+        noticeTimer: null,
+        cursorTimer: null
+      };
+
+      var weekdays = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+      var fallbackClasses = ['fallback-bg-1', 'fallback-bg-2', 'fallback-bg-3'];
+
+      applyQuerySettings();
+      init();
+
+      function init() {
+        if (!CONFIG.showSeconds) {
+          el.sec.style.display = 'none';
+        }
+        el.city.textContent = CONFIG.city;
+
+        updateClock();
+        setInterval(updateClock, 500);
+
+        if (CONFIG.enableWeather) {
+          updateWeather();
+          setInterval(updateWeather, CONFIG.weatherRefreshMs);
+        } else {
+          el.weather.style.display = 'none';
+          el.source.textContent = '날씨 표시가 꺼져 있습니다.';
+        }
+
+        setFallbackBackground();
+        if (CONFIG.enableArt) {
+          loadLocalArtPool(true);
+          setInterval(function () { nextArtwork(false); }, CONFIG.artRefreshMs);
+        } else {
+          el.credit.textContent = '명화 배경을 끄고 기본 배경을 사용 중입니다.';
+          setInterval(setFallbackBackground, CONFIG.artRefreshMs);
+        }
+
+        driftClock();
+        setInterval(driftClock, CONFIG.driftRefreshMs);
+        bindControls();
+        setupCursorAutoHide();
+      }
+
+      function applyQuerySettings() {
+        var params = parseQuery();
+        if (params.city) CONFIG.city = params.city;
+        if (isFiniteNumber(params.lat)) CONFIG.latitude = Number(params.lat);
+        if (isFiniteNumber(params.lon)) CONFIG.longitude = Number(params.lon);
+        if (params.seconds === 'off') CONFIG.showSeconds = false;
+        if (params.weather === 'off') CONFIG.enableWeather = false;
+        if (params.art === 'off') CONFIG.enableArt = false;
+        if (isFiniteNumber(params.artSeconds)) CONFIG.artRefreshMs = Math.max(20, Number(params.artSeconds)) * 1000;
+      }
+
+      function parseQuery() {
+        var out = {};
+        var q = window.location.search ? window.location.search.substring(1) : '';
+        if (!q) return out;
+        var parts = q.split('&');
+        for (var i = 0; i < parts.length; i++) {
+          var pair = parts[i].split('=');
+          var key = decodeURIComponent((pair[0] || '').replace(/\+/g, ' '));
+          var val = decodeURIComponent((pair.slice(1).join('=') || '').replace(/\+/g, ' '));
+          if (key) out[key] = val;
+        }
+        return out;
+      }
+
+      function isFiniteNumber(value) {
+        if (value === undefined || value === null || value === '') return false;
+        return isFinite(Number(value));
+      }
+
+      function updateClock() {
+        var kst = getKoreaDate();
+        var hour = kst.getUTCHours();
+        var minute = kst.getUTCMinutes();
+        var second = kst.getUTCSeconds();
+
+        el.hm.textContent = pad(hour) + ':' + pad(minute);
+        if (CONFIG.showSeconds) {
+          el.sec.textContent = pad(second);
+        }
+
+        el.date.textContent = kst.getUTCFullYear() + '년 ' +
+          (kst.getUTCMonth() + 1) + '월 ' +
+          kst.getUTCDate() + '일 ' +
+          weekdays[kst.getUTCDay()] + ' · 대한민국 기준';
+      }
+
+      function getKoreaDate() {
+        var now = new Date();
+        return new Date(now.getTime() + 9 * 60 * 60 * 1000);
+      }
+
+      function pad(value) {
+        return value < 10 ? '0' + value : String(value);
+      }
+
+      function updateWeather() {
+        el.condition.textContent = '날씨 확인 중';
+
+        var url = 'https://api.open-meteo.com/v1/forecast' +
+          '?latitude=' + encodeURIComponent(CONFIG.latitude) +
+          '&longitude=' + encodeURIComponent(CONFIG.longitude) +
+          '&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m' +
+          '&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m' +
+          '&forecast_days=1' +
+          '&timezone=Asia%2FSeoul';
+
+        requestJSON(url, function (data) {
+          var current = normalizeWeather(data);
+          if (!current) {
+            weatherFailed('날씨 데이터 형식이 예상과 다릅니다.');
+            return;
+          }
+
+          el.city.textContent = CONFIG.city;
+          el.temp.textContent = '온도 ' + formatNumber(current.temperature_2m) + '°';
+          el.humidity.textContent = '습도 ' + formatNumber(current.relative_humidity_2m) + '%';
+          el.feels.textContent = '체감 ' + formatNumber(current.apparent_temperature) + '°';
+          el.condition.textContent = codeToKorean(current.weather_code);
+          el.source.textContent = 'Open-Meteo 기준 · ' + CONFIG.city + ' · ' + compactWeatherTime(current.time);
+        }, function () {
+          weatherFailed('날씨 API에 연결하지 못했습니다. 시계는 계속 정상 동작합니다.');
+        });
+      }
+
+      function normalizeWeather(data) {
+        if (data && data.current && data.current.relative_humidity_2m !== undefined) {
+          return data.current;
+        }
+        if (!data || !data.hourly || !data.hourly.time) return null;
+
+        var index = nearestHourlyIndex(data.hourly.time);
+        if (index < 0) return null;
+        return {
+          time: data.hourly.time[index],
+          temperature_2m: valueAt(data.hourly.temperature_2m, index),
+          relative_humidity_2m: valueAt(data.hourly.relative_humidity_2m, index),
+          apparent_temperature: valueAt(data.hourly.apparent_temperature, index),
+          weather_code: valueAt(data.hourly.weather_code, index),
+          wind_speed_10m: valueAt(data.hourly.wind_speed_10m, index)
+        };
+      }
+
+      function nearestHourlyIndex(times) {
+        var now = getKoreaDate();
+        var nowKey = now.getUTCFullYear() + '-' + pad(now.getUTCMonth() + 1) + '-' + pad(now.getUTCDate()) + 'T' + pad(now.getUTCHours()) + ':00';
+        for (var i = 0; i < times.length; i++) {
+          if (String(times[i]).indexOf(nowKey) === 0) return i;
+        }
+        return times.length ? 0 : -1;
+      }
+
+      function valueAt(arr, index) {
+        return arr && arr.length > index ? arr[index] : null;
+      }
+
+      function weatherFailed(message) {
+        el.temp.textContent = '온도 --°';
+        el.humidity.textContent = '습도 --%';
+        el.feels.textContent = '체감 --°';
+        el.condition.textContent = '날씨 연결 실패';
+        el.source.textContent = message;
+      }
+
+      function formatNumber(value) {
+        if (value === null || value === undefined || value === '') return '--';
+        var n = Number(value);
+        if (!isFinite(n)) return '--';
+        return String(Math.round(n));
+      }
+
+      function compactWeatherTime(timeText) {
+        if (!timeText) return '갱신됨';
+        return String(timeText).replace('T', ' ');
+      }
+
+      function codeToKorean(code) {
+        var c = Number(code);
+        if (c === 0) return '맑음';
+        if (c === 1) return '대체로 맑음';
+        if (c === 2) return '구름 조금';
+        if (c === 3) return '흐림';
+        if (c === 45 || c === 48) return '안개';
+        if (c === 51 || c === 53 || c === 55) return '이슬비';
+        if (c === 56 || c === 57) return '어는 이슬비';
+        if (c === 61 || c === 63 || c === 65) return '비';
+        if (c === 66 || c === 67) return '어는 비';
+        if (c === 71 || c === 73 || c === 75) return '눈';
+        if (c === 77) return '싸락눈';
+        if (c === 80 || c === 81 || c === 82) return '소나기';
+        if (c === 85 || c === 86) return '눈 소나기';
+        if (c === 95) return '천둥번개';
+        if (c === 96 || c === 99) return '우박 동반 폭풍';
+        return '날씨 코드 ' + code;
+      }
+
+      function loadLocalArtPool(showNotice) {
+        var manifest = window.KOREA_ART_CLOCK_ARTWORKS || [];
+        var artworks = manifest.items || manifest;
+        if (!artworks.length) {
+          if (showNotice) showMessage('로컬 명화 asset을 찾지 못해 기본 배경을 사용합니다.');
+          setFallbackBackground();
+          return;
+        }
+        state.artPool = shuffle(artworks);
+        state.artIndex = -1;
+        nextArtwork(true);
+      }
+
+      function nextArtwork(forcePoolReload) {
+        if (!CONFIG.enableArt) {
+          setFallbackBackground();
+          return;
+        }
+        if (!state.artPool.length) {
+          loadLocalArtPool(false);
+          return;
+        }
+        if (forcePoolReload === false && state.artIndex >= state.artPool.length - 2) {
+          state.artPool = shuffle(state.artPool);
+          state.artIndex = -1;
+        }
+        showNextAvailableArtwork(0);
+      }
+
+      function showNextAvailableArtwork(attempt) {
+        if (!state.artPool.length || attempt >= state.artPool.length) {
+          setFallbackBackground();
+          return;
+        }
+        state.artIndex = (state.artIndex + 1) % state.artPool.length;
+        var art = state.artPool[state.artIndex];
+        var url = art && art.src ? art.src : '';
+        if (!url || state.failedArt[url]) {
+          showNextAvailableArtwork(attempt + 1);
+          return;
+        }
+        loadArtworkImage(url, function () {
+          swapBackgroundImage(url);
+          el.credit.textContent = formatArtworkCredit(art);
+          preloadUpcomingArtworks();
+        }, function () {
+          state.failedArt[url] = true;
+          showNextAvailableArtwork(attempt + 1);
+        });
+      }
+
+      function preloadUpcomingArtworks() {
+        if (!state.artPool.length) return;
+        for (var i = 1; i <= CONFIG.preloadAhead; i++) {
+          var art = state.artPool[(state.artIndex + i) % state.artPool.length];
+          if (art && art.src && !state.failedArt[art.src]) {
+            loadArtworkImage(art.src, null, markArtworkFailed(art.src));
+          }
+        }
+      }
+
+      function markArtworkFailed(url) {
+        return function () {
+          state.failedArt[url] = true;
+        };
+      }
+
+      function loadArtworkImage(url, onSuccess, onError) {
+        var entry = state.preloadCache[url];
+        if (entry) {
+          if (entry.status === 'loaded') {
+            if (onSuccess) onSuccess(entry.img);
+            return;
+          }
+          if (entry.status === 'error') {
+            if (onError) onError();
+            return;
+          }
+          if (onSuccess) entry.success.push(onSuccess);
+          if (onError) entry.error.push(onError);
+          return;
+        }
+
+        entry = {
+          img: new Image(),
+          status: 'loading',
+          success: onSuccess ? [onSuccess] : [],
+          error: onError ? [onError] : []
+        };
+        state.preloadCache[url] = entry;
+
+        entry.img.onload = function () {
+          entry.status = 'loaded';
+          for (var i = 0; i < entry.success.length; i++) entry.success[i](entry.img);
+          entry.success = [];
+          entry.error = [];
+        };
+        entry.img.onerror = function () {
+          entry.status = 'error';
+          for (var i = 0; i < entry.error.length; i++) entry.error[i]();
+          entry.success = [];
+          entry.error = [];
+        };
+        entry.img.src = url;
+      }
+
+      function formatArtworkCredit(art) {
+        var title = art.title || '제목 없음';
+        var artist = cleanText(art.artist || '작가 미상');
+        var date = art.date ? ' · ' + art.date : '';
+        var source = art.source || 'Art Institute of Chicago';
+        return title + ' · ' + artist + date + ' · ' + source + ' 공개 도메인 asset';
+      }
+
+      function cleanText(text) {
+        return String(text).replace(/\s+/g, ' ').trim();
+      }
+
+      function swapBackgroundImage(url) {
+        var show = state.usingA ? el.bgB : el.bgA;
+        var hide = state.usingA ? el.bgA : el.bgB;
+
+        removeFallbackClasses(show);
+        show.style.backgroundImage = 'url("' + url + '")';
+        show.style.opacity = '1';
+        show.style.transform = 'scale(1.01)';
+        hide.style.opacity = '0';
+        hide.style.transform = 'scale(1.04)';
+        state.usingA = !state.usingA;
+      }
+
+      function setFallbackBackground() {
+        var show = state.usingA ? el.bgB : el.bgA;
+        var hide = state.usingA ? el.bgA : el.bgB;
+        removeFallbackClasses(show);
+        show.style.backgroundImage = '';
+        show.className = 'bg ' + fallbackClasses[state.fallbackIndex % fallbackClasses.length];
+        state.fallbackIndex++;
+        show.style.opacity = '1';
+        hide.style.opacity = '0';
+        state.usingA = !state.usingA;
+        el.credit.textContent = '기본 배경 표시 중 · 로컬 명화 asset을 사용할 수 있으면 자동으로 전환됩니다.';
+      }
+
+      function removeFallbackClasses(node) {
+        for (var i = 0; i < fallbackClasses.length; i++) {
+          node.classList.remove(fallbackClasses[i]);
+        }
+      }
+
+      function shuffle(arr) {
+        var out = arr.slice(0);
+        for (var i = out.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var tmp = out[i];
+          out[i] = out[j];
+          out[j] = tmp;
+        }
+        return out;
+      }
+
+      function requestJSON(url, onSuccess, onError) {
+        if (window.fetch) {
+          fetch(url, { cache: 'no-store' })
+            .then(function (response) {
+              if (!response.ok) throw new Error('HTTP ' + response.status);
+              return response.json();
+            })
+            .then(onSuccess)
+            .catch(onError);
+          return;
+        }
+
+        try {
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', url, true);
+          xhr.onreadystatechange = function () {
+            if (xhr.readyState !== 4) return;
+            if (xhr.status >= 200 && xhr.status < 300) {
+              try {
+                onSuccess(JSON.parse(xhr.responseText));
+              } catch (err) {
+                onError(err);
+              }
+            } else {
+              onError(new Error('HTTP ' + xhr.status));
+            }
+          };
+          xhr.send();
+        } catch (err) {
+          onError(err);
+        }
+      }
+
+      function bindControls() {
+        el.fullscreenButton.addEventListener('click', requestFullscreen);
+        el.nextArtButton.addEventListener('click', function () {
+          nextArtwork(false);
+          showMessage('배경을 변경합니다.');
+        });
+        el.weatherButton.addEventListener('click', function () {
+          updateWeather();
+          showMessage('날씨를 갱신합니다.');
+        });
+
+        document.addEventListener('keydown', function (event) {
+          var key = event.key || event.code;
+          if (key === 'f' || key === 'F') requestFullscreen();
+          if (key === 'n' || key === 'N') nextArtwork(false);
+          if (key === 'w' || key === 'W') updateWeather();
+        });
+      }
+
+      function requestFullscreen() {
+        var root = document.documentElement;
+        var fn = root.requestFullscreen || root.webkitRequestFullscreen || root.mozRequestFullScreen || root.msRequestFullscreen;
+        if (fn) {
+          try {
+            fn.call(root);
+            showMessage('전체화면을 요청했습니다.');
+          } catch (err) {
+            showMessage('TV 브라우저가 전체화면 요청을 막았습니다.');
+          }
+        } else {
+          showMessage('이 브라우저는 전체화면 API를 지원하지 않습니다.');
+        }
+      }
+
+      function driftClock() {
+        var x = (Math.random() * 2.4 - 1.2).toFixed(2);
+        var y = (Math.random() * 2.0 - 1.0).toFixed(2);
+        el.stage.style.transform = 'translate(' + x + 'vw, ' + y + 'vh)';
+      }
+
+      function setupCursorAutoHide() {
+        document.body.classList.add('hide-cursor');
+        document.addEventListener('mousemove', function () {
+          document.body.classList.remove('hide-cursor');
+          clearTimeout(state.cursorTimer);
+          state.cursorTimer = setTimeout(function () {
+            document.body.classList.add('hide-cursor');
+          }, 2500);
+        });
+      }
+
+      function showMessage(text) {
+        el.notice.textContent = text;
+        el.notice.classList.add('show');
+        clearTimeout(state.noticeTimer);
+        state.noticeTimer = setTimeout(function () {
+          el.notice.classList.remove('show');
+        }, 1800);
+      }
+    })();
+  </script>
+</body>
+</html>
