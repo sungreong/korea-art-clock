@@ -365,7 +365,7 @@
       outline-offset: 2px;
     }
 
-    .music-panel, .city-panel {
+    .music-panel, .city-panel, .timer-panel {
       position: fixed;
       z-index: 4;
       top: 66px;
@@ -381,17 +381,18 @@
     }
 
     .city-panel { top: 120px; }
+    .timer-panel { top: 174px; width: min(430px, calc(100vw - 32px)); }
 
-    .music-panel[hidden], .city-panel[hidden] { display: none; }
+    .music-panel[hidden], .city-panel[hidden], .timer-panel[hidden] { display: none; }
 
     @supports ((-webkit-backdrop-filter: blur(8px)) or (backdrop-filter: blur(8px))) {
-      .music-panel, .city-panel {
+      .music-panel, .city-panel, .timer-panel {
         -webkit-backdrop-filter: blur(12px) saturate(120%);
         backdrop-filter: blur(12px) saturate(120%);
       }
     }
 
-    .music-label, .city-label {
+    .music-label, .city-label, .timer-label {
       display: block;
       margin-bottom: 8px;
       font-size: 13px;
@@ -399,7 +400,7 @@
       color: rgba(255,255,255,0.72);
     }
 
-    .music-select, .city-select {
+    .music-select, .city-select, .timer-input {
       width: 100%;
       margin-top: 6px;
       padding: 10px 12px;
@@ -412,7 +413,7 @@
       font-weight: 700;
     }
 
-    .music-row, .city-row {
+    .music-row, .city-row, .timer-row, .timer-presets {
       display: -webkit-box;
       display: -ms-flexbox;
       display: flex;
@@ -423,9 +424,9 @@
       margin-top: 10px;
     }
 
-    .city-row { -ms-flex-wrap: wrap; flex-wrap: wrap; }
+    .city-row, .timer-row, .timer-presets { -ms-flex-wrap: wrap; flex-wrap: wrap; }
 
-    .music-row button, .city-row button {
+    .music-row button, .city-row button, .timer-row button, .timer-presets button {
       min-width: 44px;
       min-height: 42px;
       padding: 8px 12px;
@@ -433,6 +434,36 @@
 
     .music-row .music-mode-button {
       min-width: 96px;
+    }
+
+    .timer-presets button.active {
+      background: rgba(255,255,255,0.2);
+      border-color: rgba(255,255,255,0.42);
+    }
+
+    .timer-countdown {
+      margin-top: 12px;
+      font-size: 42px;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      color: rgba(255,255,255,0.96);
+      text-shadow: 0 8px 24px rgba(0,0,0,0.9);
+    }
+
+    .timer-status, .alarm-status {
+      margin-top: 8px;
+      font-size: 13px;
+      line-height: 1.45;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .alarm-label {
+      display: block;
+      margin-top: 14px;
+      font-size: 13px;
+      font-weight: 800;
+      color: rgba(255,255,255,0.72);
     }
 
     .music-volume {
@@ -474,10 +505,91 @@
 
     body.night-mode button,
     body.night-mode .music-select,
-    body.night-mode .city-select {
+    body.night-mode .city-select,
+    body.night-mode .timer-input {
       background: rgba(0,0,0,0.62);
       border-color: rgba(255,255,255,0.12);
       color: rgba(255,255,255,0.78);
+    }
+
+    .timer-alert {
+      position: fixed;
+      inset: 0;
+      z-index: 7;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
+      -webkit-box-pack: center;
+      -ms-flex-pack: center;
+      justify-content: center;
+      padding: 5vw;
+      background:
+        radial-gradient(circle at center, rgba(255,255,255,0.14), rgba(0,0,0,0.7) 62%),
+        rgba(0,0,0,0.72);
+      animation: timerPulse 1800ms ease-in-out infinite;
+    }
+
+    .timer-alert[hidden] { display: none; }
+
+    .timer-alert-card {
+      width: min(760px, 92vw);
+      padding: clamp(28px, 5vw, 58px);
+      border: 1px solid rgba(255,255,255,0.26);
+      border-radius: 36px;
+      background: rgba(0,0,0,0.6);
+      box-shadow: 0 40px 120px rgba(0,0,0,0.58);
+      color: #fff;
+      text-align: center;
+      text-shadow: 0 8px 24px rgba(0,0,0,0.92);
+    }
+
+    .timer-alert-title {
+      font-size: clamp(38px, 8vw, 88px);
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: -0.06em;
+    }
+
+    .timer-alert-time {
+      margin-top: 16px;
+      font-size: clamp(18px, 3vw, 32px);
+      font-weight: 900;
+      color: rgba(255,255,255,0.86);
+    }
+
+    .timer-alert-detail {
+      margin-top: 12px;
+      font-size: clamp(15px, 2vw, 21px);
+      line-height: 1.45;
+      color: rgba(255,255,255,0.72);
+    }
+
+    .timer-alert-card button {
+      margin-top: 26px;
+      min-width: 160px;
+      min-height: 54px;
+      font-size: 18px;
+    }
+
+    body.night-mode .timer-alert {
+      background:
+        radial-gradient(circle at center, rgba(255,255,255,0.08), rgba(0,0,0,0.82) 64%),
+        rgba(0,0,0,0.84);
+      animation-duration: 2600ms;
+    }
+
+    body.night-mode .timer-alert-card {
+      background: rgba(0,0,0,0.72);
+      border-color: rgba(255,255,255,0.14);
+      box-shadow: 0 28px 80px rgba(0,0,0,0.62);
+    }
+
+    @keyframes timerPulse {
+      0%, 100% { opacity: 0.9; }
+      50% { opacity: 1; }
     }
 
     .notice {
@@ -513,6 +625,8 @@
       .controls { top: 10px; right: 10px; }
       .music-panel { top: 94px; right: 10px; width: calc(100vw - 20px); }
       .city-panel { top: 148px; right: 10px; width: calc(100vw - 20px); }
+      .timer-panel { top: 202px; right: 10px; width: calc(100vw - 20px); }
+      .timer-countdown { font-size: 34px; }
       button { padding: 8px 10px; font-size: 12px; }
       .art-credit { font-size: 13px; }
     }
@@ -528,6 +642,7 @@
     <button id="next-art-button" type="button">배경변경</button>
     <button id="weather-button" type="button">날씨갱신</button>
     <button id="city-panel-button" type="button" aria-expanded="false" aria-controls="city-panel">도시선택</button>
+    <button id="timer-panel-button" type="button" aria-expanded="false" aria-controls="timer-panel">타이머</button>
     <button id="music-toggle-button" type="button">음악재생</button>
     <button id="music-panel-button" type="button" aria-expanded="false" aria-controls="music-panel">음악선택</button>
   </div>
@@ -564,6 +679,35 @@
       <button id="night-mode-button" type="button">야간자동</button>
     </div>
     <div id="city-note" class="city-note">기본 도시는 서울입니다. 선택한 도시는 이 브라우저에 저장됩니다.</div>
+  </div>
+
+  <div id="timer-panel" class="timer-panel" hidden>
+    <div class="timer-label">생활 타이머</div>
+    <div class="timer-presets" aria-label="타이머 프리셋">
+      <button type="button" data-timer-minutes="3">3분</button>
+      <button type="button" data-timer-minutes="5">5분</button>
+      <button type="button" data-timer-minutes="10">10분</button>
+      <button type="button" data-timer-minutes="15">15분</button>
+      <button type="button" data-timer-minutes="25">25분</button>
+      <button type="button" data-timer-minutes="50">50분</button>
+    </div>
+    <div class="timer-row" aria-label="타이머 조작">
+      <button id="timer-start-button" type="button">시작</button>
+      <button id="timer-pause-button" type="button">일시정지</button>
+      <button id="timer-reset-button" type="button">초기화</button>
+      <button id="timer-add-five-button" type="button">5분 더</button>
+    </div>
+    <div id="timer-countdown" class="timer-countdown">10:00</div>
+    <div id="timer-status" class="timer-status">프리셋을 고른 뒤 시작을 누르세요.</div>
+    <label class="alarm-label" for="alarm-time-input">
+      KST 알람 시간
+      <input id="alarm-time-input" class="timer-input" type="time" step="60" value="07:30">
+    </label>
+    <div class="timer-row" aria-label="알람 조작">
+      <button id="alarm-set-button" type="button">알람설정</button>
+      <button id="alarm-clear-button" type="button">알람해제</button>
+    </div>
+    <div id="alarm-status" class="alarm-status">알람 없음</div>
   </div>
 
   <main id="stage" class="stage">
@@ -603,6 +747,14 @@
 
   <div id="art-credit" class="art-credit">명화 배경을 불러오는 중</div>
   <div id="notice" class="notice" role="status" aria-live="polite"></div>
+  <div id="timer-alert" class="timer-alert" role="alertdialog" aria-modal="true" aria-labelledby="timer-alert-title" hidden>
+    <div class="timer-alert-card">
+      <div id="timer-alert-title" class="timer-alert-title">타이머 종료</div>
+      <div id="timer-alert-time" class="timer-alert-time">00:00</div>
+      <div id="timer-alert-detail" class="timer-alert-detail">60초 뒤 자동으로 조용해집니다.</div>
+      <button id="timer-alert-ok-button" type="button">확인</button>
+    </div>
+  </div>
   <audio id="music-audio" preload="metadata"></audio>
 
   <noscript>
@@ -629,6 +781,11 @@
         enableWeatherSummary: true,
         enableArt: true,
         enableMusic: true,
+        enableTimer: true,
+        timerMinutes: 10,
+        timerMinutesFromQuery: false,
+        alarmTime: '',
+        alarmTimeFromQuery: false,
         musicAutoStart: false,
         musicTrack: '',
         musicMode: 'playlist',
@@ -675,6 +832,24 @@
         summaryHumidity: document.getElementById('summary-humidity'),
         summaryTips: document.getElementById('summary-tips'),
         summaryNight: document.getElementById('summary-night'),
+        timerPanelButton: document.getElementById('timer-panel-button'),
+        timerPanel: document.getElementById('timer-panel'),
+        timerPresetButtons: document.querySelectorAll('[data-timer-minutes]'),
+        timerStartButton: document.getElementById('timer-start-button'),
+        timerPauseButton: document.getElementById('timer-pause-button'),
+        timerResetButton: document.getElementById('timer-reset-button'),
+        timerAddFiveButton: document.getElementById('timer-add-five-button'),
+        timerCountdown: document.getElementById('timer-countdown'),
+        timerStatus: document.getElementById('timer-status'),
+        alarmTimeInput: document.getElementById('alarm-time-input'),
+        alarmSetButton: document.getElementById('alarm-set-button'),
+        alarmClearButton: document.getElementById('alarm-clear-button'),
+        alarmStatus: document.getElementById('alarm-status'),
+        timerAlert: document.getElementById('timer-alert'),
+        timerAlertTitle: document.getElementById('timer-alert-title'),
+        timerAlertTime: document.getElementById('timer-alert-time'),
+        timerAlertDetail: document.getElementById('timer-alert-detail'),
+        timerAlertOkButton: document.getElementById('timer-alert-ok-button'),
         musicToggleButton: document.getElementById('music-toggle-button'),
         musicPanelButton: document.getElementById('music-panel-button'),
         musicPanel: document.getElementById('music-panel'),
@@ -703,6 +878,23 @@
         musicSourceIndex: -1,
         musicPlaying: false,
         latestWeather: null,
+        timer: {
+          selectedMinutes: 10,
+          durationMs: 10 * 60 * 1000,
+          remainingMs: 10 * 60 * 1000,
+          endAt: 0,
+          running: false,
+          paused: false,
+          alarmTime: '',
+          alarmAt: 0,
+          tickTimer: null,
+          alertTimer: null,
+          chimeTimer: null,
+          alerting: false,
+          audioContext: null,
+          musicDucked: false,
+          previousMusicVolume: null
+        },
         noticeTimer: null,
         cursorTimer: null
       };
@@ -771,6 +963,7 @@
         driftClock();
         setInterval(driftClock, CONFIG.driftRefreshMs);
         initMusic();
+        initTimer();
         bindControls();
         setupCursorAutoHide();
       }
@@ -807,6 +1000,15 @@
         if (params.art === 'off') CONFIG.enableArt = false;
         if (params.music === 'off') CONFIG.enableMusic = false;
         if (params.music === 'on') CONFIG.musicAutoStart = true;
+        if (params.timer === 'off') CONFIG.enableTimer = false;
+        if (isFiniteNumber(params.timerMinutes)) {
+          CONFIG.timerMinutes = Math.max(1, Math.min(999, Math.round(Number(params.timerMinutes))));
+          CONFIG.timerMinutesFromQuery = true;
+        }
+        if (params.alarm && isValidAlarmTime(params.alarm)) {
+          CONFIG.alarmTime = params.alarm;
+          CONFIG.alarmTimeFromQuery = true;
+        }
         if (params.track) CONFIG.musicTrack = params.track;
         if (params.musicMode || params.playMode) {
           var musicMode = normalizeMusicMode(params.musicMode || params.playMode);
@@ -953,6 +1155,8 @@
         if (!el.cityPanel.hidden && el.musicPanel) {
           el.musicPanel.hidden = true;
           el.musicPanelButton.setAttribute('aria-expanded', 'false');
+          el.timerPanel.hidden = true;
+          el.timerPanelButton.setAttribute('aria-expanded', 'false');
         }
       }
 
@@ -1556,6 +1760,8 @@
         if (!el.musicPanel.hidden && el.cityPanel) {
           el.cityPanel.hidden = true;
           el.cityPanelButton.setAttribute('aria-expanded', 'false');
+          el.timerPanel.hidden = true;
+          el.timerPanelButton.setAttribute('aria-expanded', 'false');
         }
       }
 
@@ -1619,7 +1825,12 @@
 
       function setMusicVolume(value) {
         value = clamp(value, 0, 1);
-        el.audio.volume = value;
+        if (state.timer.musicDucked) {
+          state.timer.previousMusicVolume = value;
+          el.audio.volume = Math.min(value, document.body.classList.contains('night-mode') ? 0.08 : 0.16);
+        } else {
+          el.audio.volume = value;
+        }
         CONFIG.musicVolume = value;
         saveMusicSettings({ volume: value });
         updateMusicUi();
@@ -1643,7 +1854,8 @@
       function updateMusicUi() {
         var track = state.musicTracks[state.musicTrackIndex];
         el.musicToggleButton.textContent = state.musicPlaying ? '음악정지' : '음악재생';
-        el.musicVolumeLabel.textContent = Math.round(el.audio.volume * 100) + '%';
+        var displayVolume = state.timer.musicDucked && state.timer.previousMusicVolume !== null ? state.timer.previousMusicVolume : el.audio.volume;
+        el.musicVolumeLabel.textContent = Math.round(displayVolume * 100) + '%';
         el.musicModeButton.textContent = musicModeLabel();
         if (!track) return;
 
@@ -1672,6 +1884,419 @@
         }
       }
 
+      function initTimer() {
+        if (!CONFIG.enableTimer) {
+          el.timerPanelButton.style.display = 'none';
+          el.timerPanel.hidden = true;
+          el.timerAlert.hidden = true;
+          return;
+        }
+
+        var saved = readTimerSettings();
+        var selected = CONFIG.timerMinutesFromQuery
+          ? CONFIG.timerMinutes
+          : normalizeTimerMinutes(saved.selectedMinutes || CONFIG.timerMinutes);
+        state.timer.selectedMinutes = selected;
+        state.timer.durationMs = selected * 60 * 1000;
+        state.timer.remainingMs = state.timer.durationMs;
+
+        if (CONFIG.alarmTimeFromQuery) {
+          state.timer.alarmTime = CONFIG.alarmTime;
+          el.alarmTimeInput.value = CONFIG.alarmTime;
+        } else if (saved.alarmTime && isValidAlarmTime(saved.alarmTime)) {
+          state.timer.alarmTime = saved.alarmTime;
+          el.alarmTimeInput.value = saved.alarmTime;
+        }
+
+        restoreSavedCountdown(saved);
+        restoreSavedAlarm(saved);
+        state.timer.tickTimer = setInterval(updateTimerTick, 500);
+        updateTimerUi();
+      }
+
+      function restoreSavedCountdown(saved) {
+        var now = Date.now();
+        if (saved && saved.running && isFiniteNumber(saved.endAt)) {
+          var remaining = Number(saved.endAt) - now;
+          if (remaining > 0) {
+            state.timer.running = true;
+            state.timer.paused = false;
+            state.timer.endAt = Number(saved.endAt);
+            state.timer.durationMs = Math.max(Number(saved.durationMs) || state.timer.durationMs, remaining);
+            state.timer.remainingMs = remaining;
+            return;
+          }
+          if (now - Number(saved.endAt) <= 10 * 60 * 1000) {
+            state.timer.remainingMs = 0;
+            triggerTimerAlert('timer', true);
+          }
+          saveTimerSettings();
+          return;
+        }
+
+        if (saved && saved.paused && isFiniteNumber(saved.remainingMs) && Number(saved.remainingMs) > 0) {
+          state.timer.running = false;
+          state.timer.paused = true;
+          state.timer.durationMs = Math.max(Number(saved.durationMs) || state.timer.durationMs, Number(saved.remainingMs));
+          state.timer.remainingMs = Number(saved.remainingMs);
+        }
+      }
+
+      function restoreSavedAlarm(saved) {
+        if (CONFIG.alarmTimeFromQuery || !saved || !saved.alarmAt || !isFiniteNumber(saved.alarmAt)) return;
+        var now = Date.now();
+        var alarmAt = Number(saved.alarmAt);
+        if (alarmAt > now) {
+          state.timer.alarmAt = alarmAt;
+          return;
+        }
+        if (now - alarmAt <= 10 * 60 * 1000) {
+          triggerTimerAlert('alarm', true);
+        }
+        state.timer.alarmAt = 0;
+        state.timer.alarmTime = '';
+        saveTimerSettings();
+      }
+
+      function selectTimerPreset(minutes) {
+        minutes = normalizeTimerMinutes(minutes);
+        state.timer.selectedMinutes = minutes;
+        state.timer.durationMs = minutes * 60 * 1000;
+        if (!state.timer.running) {
+          state.timer.paused = false;
+          state.timer.remainingMs = state.timer.durationMs;
+        }
+        saveTimerSettings();
+        updateTimerUi();
+        showMessage(minutes + '분 타이머를 선택했습니다.');
+      }
+
+      function startOrResumeTimer() {
+        if (!CONFIG.enableTimer) return;
+        ensureTimerAudio();
+        if (state.timer.paused && state.timer.remainingMs > 0) {
+          state.timer.endAt = Date.now() + state.timer.remainingMs;
+        } else {
+          state.timer.durationMs = state.timer.selectedMinutes * 60 * 1000;
+          state.timer.remainingMs = state.timer.durationMs;
+          state.timer.endAt = Date.now() + state.timer.remainingMs;
+        }
+        state.timer.running = true;
+        state.timer.paused = false;
+        clearTimerAlert();
+        saveTimerSettings();
+        updateTimerUi();
+        showMessage('타이머를 시작했습니다.');
+      }
+
+      function pauseTimer() {
+        if (!state.timer.running) return;
+        state.timer.remainingMs = Math.max(0, state.timer.endAt - Date.now());
+        state.timer.running = false;
+        state.timer.paused = true;
+        saveTimerSettings();
+        updateTimerUi();
+        showMessage('타이머를 일시정지했습니다.');
+      }
+
+      function resetTimer() {
+        state.timer.running = false;
+        state.timer.paused = false;
+        state.timer.endAt = 0;
+        state.timer.durationMs = state.timer.selectedMinutes * 60 * 1000;
+        state.timer.remainingMs = state.timer.durationMs;
+        clearTimerAlert();
+        saveTimerSettings();
+        updateTimerUi();
+        showMessage('타이머를 초기화했습니다.');
+      }
+
+      function addFiveMinutesToTimer() {
+        var extra = 5 * 60 * 1000;
+        if (state.timer.running) {
+          state.timer.endAt += extra;
+          state.timer.remainingMs = Math.max(0, state.timer.endAt - Date.now());
+        } else if (state.timer.paused) {
+          state.timer.remainingMs = Math.max(0, state.timer.remainingMs) + extra;
+          state.timer.durationMs = Math.max(state.timer.durationMs, state.timer.remainingMs);
+        } else {
+          state.timer.selectedMinutes = normalizeTimerMinutes(state.timer.selectedMinutes + 5);
+          state.timer.durationMs = state.timer.selectedMinutes * 60 * 1000;
+          state.timer.remainingMs = state.timer.durationMs;
+        }
+        saveTimerSettings();
+        updateTimerUi();
+        showMessage('타이머에 5분을 더했습니다.');
+      }
+
+      function updateTimerTick() {
+        var now = Date.now();
+        if (state.timer.running) {
+          state.timer.remainingMs = state.timer.endAt - now;
+          if (state.timer.remainingMs <= 0) {
+            finishCountdown();
+          }
+        }
+        if (state.timer.alarmAt && now >= state.timer.alarmAt) {
+          state.timer.alarmAt = 0;
+          saveTimerSettings();
+          triggerTimerAlert('alarm', false);
+        }
+        updateTimerUi();
+      }
+
+      function finishCountdown() {
+        state.timer.running = false;
+        state.timer.paused = false;
+        state.timer.endAt = 0;
+        state.timer.remainingMs = 0;
+        saveTimerSettings();
+        triggerTimerAlert('timer', false);
+      }
+
+      function setAlarmFromInput() {
+        var value = el.alarmTimeInput.value;
+        if (!isValidAlarmTime(value)) {
+          showMessage('알람 시간을 HH:MM으로 입력해 주세요.');
+          return;
+        }
+        ensureTimerAudio();
+        state.timer.alarmTime = value;
+        state.timer.alarmAt = computeNextKoreaAlarmTimestamp(value);
+        saveTimerSettings();
+        updateTimerUi();
+        showMessage('알람을 설정했습니다.');
+      }
+
+      function clearAlarm() {
+        state.timer.alarmAt = 0;
+        state.timer.alarmTime = '';
+        saveTimerSettings();
+        updateTimerUi();
+        showMessage('알람을 해제했습니다.');
+      }
+
+      function updateTimerUi() {
+        if (!CONFIG.enableTimer) return;
+        updateTimerPresetButtons();
+        el.timerCountdown.textContent = formatTimerRemaining(state.timer.remainingMs);
+        el.timerStartButton.textContent = state.timer.paused ? '재개' : '시작';
+        el.timerPauseButton.disabled = !state.timer.running;
+        el.timerResetButton.disabled = state.timer.running === false && state.timer.paused === false && state.timer.remainingMs === state.timer.durationMs;
+
+        if (state.timer.running) {
+          el.timerStatus.textContent = formatKoreaDateTime(state.timer.endAt) + ' 종료 예정 · 새로고침해도 이어집니다.';
+        } else if (state.timer.paused) {
+          el.timerStatus.textContent = '일시정지 중 · 시작을 누르면 이어서 갑니다.';
+        } else {
+          el.timerStatus.textContent = state.timer.selectedMinutes + '분 타이머 준비됨 · 프리셋을 고른 뒤 시작하세요.';
+        }
+
+        if (state.timer.alarmAt) {
+          el.alarmStatus.textContent = formatKoreaDateTime(state.timer.alarmAt) + ' 알람 예정';
+        } else if (state.timer.alarmTime) {
+          el.alarmStatus.textContent = state.timer.alarmTime + ' 입력됨 · 알람설정을 누르면 예약됩니다.';
+        } else {
+          el.alarmStatus.textContent = '알람 없음';
+        }
+      }
+
+      function updateTimerPresetButtons() {
+        for (var i = 0; i < el.timerPresetButtons.length; i++) {
+          var button = el.timerPresetButtons[i];
+          var minutes = Number(button.getAttribute('data-timer-minutes'));
+          button.classList.toggle('active', minutes === state.timer.selectedMinutes);
+        }
+      }
+
+      function triggerTimerAlert(kind, missed) {
+        clearTimerAlert();
+        state.timer.alerting = true;
+        var isAlarm = kind === 'alarm';
+        el.timerAlertTitle.textContent = isAlarm ? '알람 시간입니다' : '타이머 종료';
+        el.timerAlertTime.textContent = compactKoreaTime(Date.now());
+        el.timerAlertDetail.textContent = (missed ? '놓친 알림을 다시 보여드립니다. ' : '') + '60초 뒤 자동으로 조용해집니다.';
+        el.timerAlert.hidden = false;
+        document.body.classList.add('timer-alerting');
+        duckMusicForTimerAlert();
+        startChimeLoop();
+        state.timer.alertTimer = setTimeout(clearTimerAlert, 60 * 1000);
+        try {
+          el.timerAlertOkButton.focus();
+        } catch (err) {
+          // Some TV browsers do not allow focus changes during fullscreen.
+        }
+      }
+
+      function clearTimerAlert() {
+        if (state.timer.alertTimer) {
+          clearTimeout(state.timer.alertTimer);
+          state.timer.alertTimer = null;
+        }
+        stopChimeLoop();
+        restoreMusicAfterTimerAlert();
+        state.timer.alerting = false;
+        if (el.timerAlert) el.timerAlert.hidden = true;
+        document.body.classList.remove('timer-alerting');
+      }
+
+      function startChimeLoop() {
+        stopChimeLoop();
+        playTimerChime();
+        state.timer.chimeTimer = setInterval(playTimerChime, 4200);
+      }
+
+      function stopChimeLoop() {
+        if (state.timer.chimeTimer) {
+          clearInterval(state.timer.chimeTimer);
+          state.timer.chimeTimer = null;
+        }
+      }
+
+      function ensureTimerAudio() {
+        var AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextClass) return null;
+        try {
+          if (!state.timer.audioContext) {
+            state.timer.audioContext = new AudioContextClass();
+          }
+          if (state.timer.audioContext.state === 'suspended' && state.timer.audioContext.resume) {
+            var resumeResult = state.timer.audioContext.resume();
+            if (resumeResult && resumeResult.catch) resumeResult.catch(function () {});
+          }
+          return state.timer.audioContext;
+        } catch (err) {
+          return null;
+        }
+      }
+
+      function playTimerChime() {
+        var ctx = ensureTimerAudio();
+        if (!ctx) return;
+        var volume = document.body.classList.contains('night-mode') ? 0.035 : 0.085;
+        var notes = [880, 1174.66, 987.77];
+        for (var i = 0; i < notes.length; i++) {
+          var start = ctx.currentTime + i * 0.2;
+          var osc = ctx.createOscillator();
+          var gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(notes[i], start);
+          gain.gain.setValueAtTime(0, start);
+          gain.gain.linearRampToValueAtTime(volume, start + 0.03);
+          gain.gain.linearRampToValueAtTime(0, start + 0.18);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(start);
+          osc.stop(start + 0.22);
+        }
+      }
+
+      function duckMusicForTimerAlert() {
+        if (!el.audio || el.audio.paused || state.timer.musicDucked) return;
+        state.timer.previousMusicVolume = el.audio.volume;
+        el.audio.volume = Math.min(el.audio.volume, document.body.classList.contains('night-mode') ? 0.08 : 0.16);
+        state.timer.musicDucked = true;
+        updateMusicUi();
+      }
+
+      function restoreMusicAfterTimerAlert() {
+        if (!state.timer.musicDucked) return;
+        if (state.timer.previousMusicVolume !== null) {
+          el.audio.volume = state.timer.previousMusicVolume;
+        }
+        state.timer.musicDucked = false;
+        state.timer.previousMusicVolume = null;
+        updateMusicUi();
+      }
+
+      function formatTimerRemaining(ms) {
+        ms = Math.max(0, Math.ceil(Number(ms || 0) / 1000));
+        var minutes = Math.floor(ms / 60);
+        var seconds = ms % 60;
+        return pad(minutes) + ':' + pad(seconds);
+      }
+
+      function normalizeTimerMinutes(value) {
+        if (!isFiniteNumber(value)) return 10;
+        return Math.max(1, Math.min(999, Math.round(Number(value))));
+      }
+
+      function isValidAlarmTime(value) {
+        return /^([01]\d|2[0-3]):[0-5]\d$/.test(String(value || ''));
+      }
+
+      function parseAlarmTime(value) {
+        if (!isValidAlarmTime(value)) return null;
+        var parts = String(value).split(':');
+        return { hour: Number(parts[0]), minute: Number(parts[1]) };
+      }
+
+      function computeNextKoreaAlarmTimestamp(value) {
+        var parsed = parseAlarmTime(value);
+        if (!parsed) return 0;
+        var now = Date.now();
+        var kst = new Date(now + 9 * 60 * 60 * 1000);
+        var target = Date.UTC(
+          kst.getUTCFullYear(),
+          kst.getUTCMonth(),
+          kst.getUTCDate(),
+          parsed.hour - 9,
+          parsed.minute,
+          0,
+          0
+        );
+        if (target <= now) target += 24 * 60 * 60 * 1000;
+        return target;
+      }
+
+      function formatKoreaDateTime(timestamp) {
+        var kst = new Date(Number(timestamp) + 9 * 60 * 60 * 1000);
+        return (kst.getUTCMonth() + 1) + '월 ' + kst.getUTCDate() + '일 ' + pad(kst.getUTCHours()) + ':' + pad(kst.getUTCMinutes());
+      }
+
+      function compactKoreaTime(timestamp) {
+        var kst = new Date(Number(timestamp) + 9 * 60 * 60 * 1000);
+        return pad(kst.getUTCHours()) + ':' + pad(kst.getUTCMinutes());
+      }
+
+      function readTimerSettings() {
+        try {
+          return JSON.parse(localStorage.getItem('koreaArtClockTimer') || '{}') || {};
+        } catch (err) {
+          return {};
+        }
+      }
+
+      function saveTimerSettings() {
+        try {
+          var remaining = state.timer.running ? Math.max(0, state.timer.endAt - Date.now()) : Math.max(0, state.timer.remainingMs);
+          localStorage.setItem('koreaArtClockTimer', JSON.stringify({
+            selectedMinutes: state.timer.selectedMinutes,
+            durationMs: state.timer.durationMs,
+            remainingMs: remaining,
+            endAt: state.timer.endAt,
+            running: state.timer.running,
+            paused: state.timer.paused,
+            alarmTime: state.timer.alarmTime,
+            alarmAt: state.timer.alarmAt
+          }));
+        } catch (err) {
+          // URL options and in-memory timers still work if storage is blocked.
+        }
+      }
+
+      function toggleTimerPanel() {
+        if (!CONFIG.enableTimer) return;
+        el.timerPanel.hidden = !el.timerPanel.hidden;
+        el.timerPanelButton.setAttribute('aria-expanded', el.timerPanel.hidden ? 'false' : 'true');
+        if (!el.timerPanel.hidden) {
+          el.cityPanel.hidden = true;
+          el.cityPanelButton.setAttribute('aria-expanded', 'false');
+          el.musicPanel.hidden = true;
+          el.musicPanelButton.setAttribute('aria-expanded', 'false');
+        }
+      }
+
       function bindControls() {
         el.fullscreenButton.addEventListener('click', requestFullscreen);
         el.nextArtButton.addEventListener('click', function () {
@@ -1691,6 +2316,19 @@
           applyCity(findCityById(el.citySelect.value), true);
         });
         el.nightModeButton.addEventListener('click', cycleNightMode);
+        el.timerPanelButton.addEventListener('click', toggleTimerPanel);
+        for (var i = 0; i < el.timerPresetButtons.length; i++) {
+          el.timerPresetButtons[i].addEventListener('click', function () {
+            selectTimerPreset(this.getAttribute('data-timer-minutes'));
+          });
+        }
+        el.timerStartButton.addEventListener('click', startOrResumeTimer);
+        el.timerPauseButton.addEventListener('click', pauseTimer);
+        el.timerResetButton.addEventListener('click', resetTimer);
+        el.timerAddFiveButton.addEventListener('click', addFiveMinutesToTimer);
+        el.alarmSetButton.addEventListener('click', setAlarmFromInput);
+        el.alarmClearButton.addEventListener('click', clearAlarm);
+        el.timerAlertOkButton.addEventListener('click', clearTimerAlert);
         el.musicToggleButton.addEventListener('click', toggleMusicPlayback);
         el.musicPanelButton.addEventListener('click', toggleMusicPanel);
         el.musicSelect.addEventListener('change', function () {
@@ -1717,7 +2355,9 @@
           if (key === 'w' || key === 'W') updateWeather();
           if (key === 'm' || key === 'M') toggleMusicPlayback();
           if (key === 'c' || key === 'C') toggleCityPanel();
+          if (key === 't' || key === 'T') toggleTimerPanel();
           if (key === 'r' || key === 'R') cycleMusicMode();
+          if (key === 'Escape') clearTimerAlert();
         });
       }
 
