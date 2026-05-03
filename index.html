@@ -104,6 +104,7 @@
       -webkit-box-align: center;
       -ms-flex-align: center;
       align-items: center;
+      gap: 16px;
       text-align: center;
       padding: 5vh 4vw 9vh;
       transition: transform 2500ms ease;
@@ -119,8 +120,8 @@
       -webkit-box-pack: center;
       -ms-flex-pack: center;
       justify-content: center;
-      gap: 22px;
-      width: min(1320px, 96vw);
+      gap: clamp(14px, 1.4vw, 26px);
+      width: min(1500px, 96vw);
     }
 
     .clock-card {
@@ -232,10 +233,10 @@
     }
 
     .weather-summary {
-      width: min(360px, 30vw);
-      padding: 22px 24px;
+      width: clamp(320px, 25vw, 380px);
+      padding: 20px 22px;
       border: 1px solid rgba(255,255,255,0.16);
-      border-radius: 30px;
+      border-radius: 28px;
       background: rgba(0,0,0,0.24);
       box-shadow: 0 28px 72px rgba(0,0,0,0.38);
       text-align: left;
@@ -291,7 +292,7 @@
     }
 
     .summary-tips {
-      margin: 15px 0 0;
+      margin: 12px 0 0;
       padding-left: 18px;
       color: rgba(255,255,255,0.78);
       font-size: 14px;
@@ -299,15 +300,154 @@
     }
 
     .summary-night {
-      margin-top: 12px;
+      margin-top: 10px;
       font-size: 12px;
       color: rgba(255,255,255,0.58);
+    }
+
+    .summary-hourly {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 13px;
+    }
+
+    .hourly-slot {
+      min-width: 0;
+      min-height: 72px;
+      padding: 9px 10px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.075);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .hourly-slot span,
+    .forecast-day span {
+      display: block;
+      font-size: 11px;
+      font-weight: 900;
+      color: rgba(255,255,255,0.58);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .hourly-slot strong {
+      display: block;
+      margin-top: 5px;
+      font-size: 18px;
+      line-height: 1;
+      font-weight: 900;
+      color: rgba(255,255,255,0.94);
+    }
+
+    .hourly-slot em {
+      display: block;
+      margin-top: 6px;
+      font-style: normal;
+      font-size: 11px;
+      line-height: 1.25;
+      color: rgba(255,255,255,0.68);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .forecast-rail {
+      width: min(1500px, 94vw);
+      padding: 13px 18px 15px;
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 26px;
+      background: rgba(0,0,0,0.22);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.34);
+      text-align: left;
+      text-shadow: 0 5px 18px rgba(0,0,0,0.9);
+    }
+
+    .forecast-rail[hidden] { display: none; }
+
+    .forecast-rail-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 9px;
+    }
+
+    .forecast-rail-head span {
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      color: rgba(255,255,255,0.58);
+    }
+
+    .forecast-rail-head strong {
+      font-size: 13px;
+      font-weight: 800;
+      color: rgba(255,255,255,0.62);
+      white-space: nowrap;
+    }
+
+    .forecast-days {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 9px;
+    }
+
+    .forecast-day {
+      min-width: 0;
+      min-height: 82px;
+      padding: 10px 12px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.075);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .forecast-day.today {
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.18);
+    }
+
+    .forecast-day strong {
+      display: block;
+      margin-top: 6px;
+      font-size: clamp(15px, 1.3vw, 20px);
+      line-height: 1.05;
+      font-weight: 900;
+      color: rgba(255,255,255,0.94);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .forecast-day em {
+      display: block;
+      margin-top: 6px;
+      font-style: normal;
+      font-size: 12px;
+      line-height: 1.3;
+      font-weight: 800;
+      color: rgba(255,255,255,0.72);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .forecast-day.forecast-message {
+      grid-column: 1 / -1;
+      min-height: 62px;
     }
 
     body.night-mode .weather-summary {
       background: rgba(0,0,0,0.44);
       border-color: rgba(255,255,255,0.08);
       box-shadow: 0 18px 54px rgba(0,0,0,0.5);
+    }
+
+    body.night-mode .forecast-rail {
+      background: rgba(0,0,0,0.4);
+      border-color: rgba(255,255,255,0.08);
+      box-shadow: 0 18px 50px rgba(0,0,0,0.46);
     }
 
     .art-credit {
@@ -693,12 +833,29 @@
     }
 
     @media (max-width: 860px) {
-      .clock-card { border-radius: 24px; padding-left: 5vw; padding-right: 5vw; }
-      .time .hm { font-size: 86px; }
-      .time .sec { display: block; margin-left: 0; margin-top: 1vh; font-size: 34px; vertical-align: baseline; }
-      .dashboard { flex-direction: column; gap: 14px; }
-      .weather-summary { width: min(94vw, 520px); padding: 18px; }
-      .summary-title { font-size: 22px; }
+      .stage { justify-content: flex-start; gap: 8px; padding: 42px 3vw 24px; }
+      .clock-card { border-radius: 22px; padding: 12px 4vw 14px; }
+      .timezone-label { margin-bottom: 5px; }
+      .time .hm { font-size: 72px; }
+      .time .sec { display: inline-block; min-width: 1.6em; margin-left: 0.12em; margin-top: 0; font-size: 24px; vertical-align: super; }
+      .date { margin-top: 10px; font-size: 22px; }
+      .weather { gap: 7px; margin-top: 12px; }
+      .weather-item { min-width: 0; padding: 7px 11px; font-size: 14px; }
+      .weather-source { margin-top: 8px; font-size: 12px; }
+      .dashboard { flex-direction: column; gap: 8px; }
+      .weather-summary { width: min(94vw, 720px); padding: 13px 15px; border-radius: 22px; }
+      .summary-title { margin-top: 5px; font-size: 20px; }
+      .summary-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 7px; margin-top: 10px; }
+      .summary-metric { min-height: 50px; padding: 8px 10px; border-radius: 14px; }
+      .summary-metric strong { font-size: 16px; }
+      .summary-hourly { margin-top: 8px; }
+      .hourly-slot { min-height: 58px; padding: 7px 9px; border-radius: 14px; }
+      .hourly-slot strong { font-size: 16px; }
+      .summary-tips, .summary-night { display: none; }
+      .forecast-rail { width: min(94vw, 720px); padding: 10px 13px 12px; border-radius: 22px; }
+      .forecast-rail-head { margin-bottom: 7px; }
+      .forecast-days { grid-template-columns: repeat(5, minmax(126px, 1fr)); overflow-x: auto; padding-bottom: 3px; }
+      .forecast-day { min-height: 74px; padding: 9px 10px; border-radius: 15px; }
       .controls { top: 10px; right: 10px; }
       .music-panel { top: 94px; right: 10px; width: calc(100vw - 20px); }
       .city-panel { top: 148px; right: 10px; width: calc(100vw - 20px); }
@@ -707,6 +864,43 @@
       .timer-countdown { font-size: 34px; }
       button { padding: 8px 10px; font-size: 12px; }
       .art-credit { font-size: 13px; }
+    }
+
+    @media (max-width: 480px) {
+      html, body {
+        height: auto;
+        min-height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
+
+      .stage {
+        min-height: auto;
+        padding: 44px 10px 14px;
+      }
+
+      .clock-card,
+      .weather-summary,
+      .forecast-rail {
+        width: min(94vw, 420px);
+      }
+
+      .time .hm { font-size: 58px; }
+      .time .sec { font-size: 20px; }
+      .date { font-size: 20px; }
+      .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .summary-hourly { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .forecast-days { grid-template-columns: repeat(2, minmax(0, 1fr)); overflow: visible; }
+      .forecast-day { min-height: 72px; }
+      .forecast-rail-head { align-items: flex-start; flex-direction: column; gap: 4px; }
+      .art-credit {
+        position: relative;
+        left: auto;
+        right: auto;
+        bottom: auto;
+        width: calc(100% - 20px);
+        margin: 10px auto 14px;
+      }
     }
   </style>
 </head>
@@ -826,12 +1020,21 @@
           <div class="summary-metric"><span>바람</span><strong id="summary-wind">--</strong></div>
           <div class="summary-metric"><span>습도</span><strong id="summary-humidity">--</strong></div>
         </div>
+        <div id="summary-hourly" class="summary-hourly" aria-label="다음 6시간 예보" aria-live="polite"></div>
         <ul id="summary-tips" class="summary-tips">
           <li>날씨 요약을 준비하고 있습니다.</li>
         </ul>
         <div id="summary-night" class="summary-night">야간 자동</div>
       </aside>
     </div>
+
+    <section id="forecast-rail" class="forecast-rail" aria-label="오늘부터 5일 예보" hidden>
+      <div class="forecast-rail-head">
+        <span>5 DAY FORECAST</span>
+        <strong id="forecast-note">예보 기반 참고 정보</strong>
+      </div>
+      <div id="forecast-days" class="forecast-days" aria-live="polite"></div>
+    </section>
   </main>
 
   <div id="art-credit" class="art-credit">명화 배경을 불러오는 중</div>
@@ -933,8 +1136,12 @@
         summaryRain: document.getElementById('summary-rain'),
         summaryWind: document.getElementById('summary-wind'),
         summaryHumidity: document.getElementById('summary-humidity'),
+        summaryHourly: document.getElementById('summary-hourly'),
         summaryTips: document.getElementById('summary-tips'),
         summaryNight: document.getElementById('summary-night'),
+        forecastRail: document.getElementById('forecast-rail'),
+        forecastDays: document.getElementById('forecast-days'),
+        forecastNote: document.getElementById('forecast-note'),
         timerPanelButton: document.getElementById('timer-panel-button'),
         timerPanel: document.getElementById('timer-panel'),
         timerPresetButtons: document.querySelectorAll('[data-timer-minutes]'),
@@ -991,6 +1198,8 @@
         musicSourceIndex: -1,
         musicPlaying: false,
         latestWeather: null,
+        weatherRequestId: 0,
+        weatherForecastState: 'idle',
         timer: {
           selectedMinutes: 10,
           durationMs: 10 * 60 * 1000,
@@ -1060,17 +1269,20 @@
         setInterval(applyNightMode, 60 * 1000);
         if (!CONFIG.enableWeatherSummary) {
           el.weatherSummary.hidden = true;
+          if (el.forecastRail) el.forecastRail.hidden = true;
         }
 
         updateClock();
         setInterval(updateClock, 500);
 
         if (CONFIG.enableWeather) {
+          restoreCachedWeather();
           updateWeather();
           setInterval(updateWeather, CONFIG.weatherRefreshMs);
         } else {
           el.weather.style.display = 'none';
           el.weatherSummary.hidden = true;
+          if (el.forecastRail) el.forecastRail.hidden = true;
           el.source.textContent = '날씨 표시가 꺼져 있습니다.';
         }
 
@@ -1340,39 +1552,186 @@
       }
 
       function updateWeather() {
-        el.condition.textContent = '날씨 확인 중';
-        if (CONFIG.enableWeatherSummary) {
-          el.summaryTitle.textContent = CONFIG.city + ' 오늘 날씨 확인 중';
-          el.summaryTips.innerHTML = '<li>날씨 요약을 준비하고 있습니다.</li>';
-        }
+        var snapshot = weatherLocationSnapshot();
+        var requestId = ++state.weatherRequestId;
+        prepareWeatherRefresh(snapshot);
 
-        var url = 'https://api.open-meteo.com/v1/forecast' +
-          '?latitude=' + encodeURIComponent(CONFIG.latitude) +
-          '&longitude=' + encodeURIComponent(CONFIG.longitude) +
-          '&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m' +
-          '&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m' +
-          '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,wind_speed_10m_max' +
-          '&forecast_days=1' +
-          '&timezone=Asia%2FSeoul';
-
-        requestJSON(url, function (data) {
+        requestJSON(buildCurrentWeatherUrl(snapshot), function (data) {
+          if (!isActiveWeatherRequest(requestId)) return;
           var current = normalizeWeather(data);
           if (!current) {
-            weatherFailed('날씨 데이터 형식이 예상과 다릅니다.');
+            currentWeatherFailed('현재 날씨 데이터 형식이 예상과 다릅니다.');
             return;
           }
 
-          el.city.textContent = CONFIG.city;
-          el.temp.textContent = '온도 ' + formatNumber(current.temperature_2m) + '°';
-          el.humidity.textContent = '습도 ' + formatNumber(current.relative_humidity_2m) + '%';
-          el.feels.textContent = '체감 ' + formatNumber(current.apparent_temperature) + '°';
-          el.condition.textContent = codeToKorean(current.weather_code);
-          el.source.textContent = 'Open-Meteo 기준 · ' + CONFIG.city + ' · ' + compactWeatherTime(current.time);
-          state.latestWeather = { current: current, daily: normalizeDailyWeather(data) };
-          updateWeatherSummary(state.latestWeather);
+          var weather = mergeLatestWeather(snapshot, { current: current });
+          renderCurrentWeather(current, false);
+          updateWeatherSummary(weather, false);
+          persistLatestWeather();
         }, function () {
-          weatherFailed('날씨 API에 연결하지 못했습니다. 시계는 계속 정상 동작합니다.');
+          if (isActiveWeatherRequest(requestId)) {
+            currentWeatherFailed('현재 날씨 API에 연결하지 못했습니다. 시계는 계속 정상 동작합니다.');
+          }
         });
+
+        if (!CONFIG.enableWeatherSummary) return;
+
+        requestJSON(buildForecastWeatherUrl(snapshot), function (data) {
+          if (!isActiveWeatherRequest(requestId)) return;
+          var forecast = normalizeForecastWeather(data);
+          if (!forecast) {
+            forecastWeatherFailed('예보 데이터 형식이 예상과 다릅니다.');
+            return;
+          }
+
+          state.weatherForecastState = 'ready';
+          var weather = mergeLatestWeather(snapshot, forecast);
+          updateWeatherSummary(weather, false);
+          persistLatestWeather();
+        }, function () {
+          if (isActiveWeatherRequest(requestId)) {
+            forecastWeatherFailed('예보 API에 연결하지 못했습니다.');
+          }
+        });
+      }
+
+      function weatherLocationSnapshot() {
+        return {
+          city: CONFIG.city,
+          latitude: Number(CONFIG.latitude),
+          longitude: Number(CONFIG.longitude)
+        };
+      }
+
+      function buildCurrentWeatherUrl(snapshot) {
+        return 'https://api.open-meteo.com/v1/forecast' +
+          '?latitude=' + encodeURIComponent(snapshot.latitude) +
+          '&longitude=' + encodeURIComponent(snapshot.longitude) +
+          '&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m' +
+          '&timezone=Asia%2FSeoul';
+      }
+
+      function buildForecastWeatherUrl(snapshot) {
+        return 'https://api.open-meteo.com/v1/forecast' +
+          '?latitude=' + encodeURIComponent(snapshot.latitude) +
+          '&longitude=' + encodeURIComponent(snapshot.longitude) +
+          '&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,precipitation_probability,wind_speed_10m' +
+          '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,wind_speed_10m_max' +
+          '&forecast_days=5' +
+          '&timezone=Asia%2FSeoul';
+      }
+
+      function isActiveWeatherRequest(requestId) {
+        return requestId === state.weatherRequestId;
+      }
+
+      function prepareWeatherRefresh(snapshot) {
+        el.city.textContent = snapshot.city;
+        if (!isWeatherForSnapshot(state.latestWeather, snapshot) || !state.latestWeather.current) {
+          el.temp.textContent = '온도 --°';
+          el.humidity.textContent = '습도 --%';
+          el.feels.textContent = '체감 --°';
+          el.condition.textContent = '날씨 확인 중';
+          el.source.textContent = 'Open-Meteo 현재 날씨 확인 중 · ' + snapshot.city;
+        } else {
+          el.source.textContent = '마지막 저장 날씨 · ' + snapshot.city + ' · 새 정보 확인 중';
+        }
+
+        if (!CONFIG.enableWeatherSummary) return;
+        state.weatherForecastState = 'loading';
+        el.weatherSummary.hidden = false;
+        if (!hasForecast(state.latestWeather) || !isWeatherForSnapshot(state.latestWeather, snapshot)) {
+          el.summaryTitle.textContent = snapshot.city + ' 예보 확인 중';
+          el.summaryTemp.textContent = '-- / --';
+          el.summaryRain.textContent = '--';
+          el.summaryWind.textContent = '--';
+          el.summaryHumidity.textContent = '--';
+          renderHourlyLoading('확인 중');
+          renderSummaryTips(['예보를 준비하고 있습니다.']);
+          renderForecastLoading();
+        } else if (el.forecastNote) {
+          el.forecastNote.textContent = '새 예보 확인 중 · 마지막 정보 표시';
+        }
+      }
+
+      function currentWeatherFailed(message) {
+        if (isWeatherForCurrentLocation(state.latestWeather) && state.latestWeather.current) {
+          el.source.textContent = '현재 날씨 갱신 실패 · 마지막 정보 표시 중';
+          return;
+        }
+        el.temp.textContent = '온도 --°';
+        el.humidity.textContent = '습도 --%';
+        el.feels.textContent = '체감 --°';
+        el.condition.textContent = '날씨 연결 실패';
+        el.source.textContent = message;
+      }
+
+      function forecastWeatherFailed(message) {
+        if (!CONFIG.enableWeatherSummary || !el.weatherSummary) return;
+        state.weatherForecastState = 'failed';
+        if (isWeatherForCurrentLocation(state.latestWeather) && hasForecast(state.latestWeather)) {
+          if (el.forecastNote) el.forecastNote.textContent = '예보 갱신 실패 · 마지막 정보 표시 중';
+          return;
+        }
+        weatherSummaryFailed('예보를 불러오지 못했습니다.');
+        renderForecastError(message);
+      }
+
+      function mergeLatestWeather(snapshot, next) {
+        var existing = isWeatherForSnapshot(state.latestWeather, snapshot) ? state.latestWeather : {};
+        state.latestWeather = {
+          city: snapshot.city,
+          latitude: snapshot.latitude,
+          longitude: snapshot.longitude,
+          updatedAt: new Date().toISOString(),
+          current: next.current !== undefined ? next.current : (existing.current || null),
+          daily: next.daily !== undefined ? next.daily : (existing.daily || null),
+          dailyList: next.dailyList !== undefined ? next.dailyList : (existing.dailyList || []),
+          hourly: next.hourly !== undefined ? next.hourly : (existing.hourly || [])
+        };
+        return state.latestWeather;
+      }
+
+      function hasForecast(weather) {
+        return !!(weather && ((weather.dailyList && weather.dailyList.length) || (weather.hourly && weather.hourly.length) || weather.daily));
+      }
+
+      function isWeatherForCurrentLocation(weather) {
+        return isWeatherForSnapshot(weather, weatherLocationSnapshot());
+      }
+
+      function isWeatherForSnapshot(weather, snapshot) {
+        if (!weather || !snapshot) return false;
+        return weather.city === snapshot.city &&
+          Math.abs(Number(weather.latitude) - Number(snapshot.latitude)) < 0.0001 &&
+          Math.abs(Number(weather.longitude) - Number(snapshot.longitude)) < 0.0001;
+      }
+
+      function restoreCachedWeather() {
+        var cached = readWeatherCache();
+        if (!isWeatherForCurrentLocation(cached)) return;
+        state.latestWeather = cached;
+        if (cached.current) renderCurrentWeather(cached.current, true);
+        if (CONFIG.enableWeatherSummary && hasForecast(cached)) {
+          updateWeatherSummary(cached, true);
+        }
+      }
+
+      function readWeatherCache() {
+        try {
+          return JSON.parse(localStorage.getItem('koreaArtClockWeather') || 'null');
+        } catch (err) {
+          return null;
+        }
+      }
+
+      function persistLatestWeather() {
+        if (!isWeatherForCurrentLocation(state.latestWeather)) return;
+        try {
+          localStorage.setItem('koreaArtClockWeather', JSON.stringify(state.latestWeather));
+        } catch (err) {
+          // Some TV browsers disable storage; the live weather still works.
+        }
       }
 
       function normalizeWeather(data) {
@@ -1393,6 +1752,40 @@
         };
       }
 
+      function normalizeForecastWeather(data) {
+        var dailyList = normalizeDailyWeatherList(data);
+        var hourly = normalizeHourlyWeather(data);
+        if (!dailyList.length && !hourly.length) return null;
+        return {
+          daily: dailyList[0] || null,
+          dailyList: dailyList,
+          hourly: hourly
+        };
+      }
+
+      function normalizeHourlyWeather(data) {
+        if (!data || !data.hourly || !data.hourly.time) return [];
+        var times = data.hourly.time;
+        var start = nearestHourlyIndex(times);
+        if (start < 0) return [];
+        var offsets = [0, 3, 6];
+        var slots = [];
+        for (var i = 0; i < offsets.length; i++) {
+          var index = Math.min(start + offsets[i], times.length - 1);
+          slots.push({
+            offsetHours: offsets[i],
+            time: valueAt(times, index),
+            temperature_2m: valueAt(data.hourly.temperature_2m, index),
+            relative_humidity_2m: valueAt(data.hourly.relative_humidity_2m, index),
+            apparent_temperature: valueAt(data.hourly.apparent_temperature, index),
+            weather_code: valueAt(data.hourly.weather_code, index),
+            precipitation_probability: valueAt(data.hourly.precipitation_probability, index),
+            wind_speed_10m: valueAt(data.hourly.wind_speed_10m, index)
+          });
+        }
+        return slots;
+      }
+
       function nearestHourlyIndex(times) {
         var now = getKoreaDate();
         var nowKey = now.getUTCFullYear() + '-' + pad(now.getUTCMonth() + 1) + '-' + pad(now.getUTCDate()) + 'T' + pad(now.getUTCHours()) + ':00';
@@ -1406,47 +1799,71 @@
         return arr && arr.length > index ? arr[index] : null;
       }
 
-      function normalizeDailyWeather(data) {
+      function normalizeDailyWeather(data, index) {
+        index = index || 0;
         if (!data || !data.daily) return null;
         return {
-          time: valueAt(data.daily.time, 0),
-          weather_code: valueAt(data.daily.weather_code, 0),
-          temperature_2m_max: valueAt(data.daily.temperature_2m_max, 0),
-          temperature_2m_min: valueAt(data.daily.temperature_2m_min, 0),
-          precipitation_sum: valueAt(data.daily.precipitation_sum, 0),
-          precipitation_probability_max: valueAt(data.daily.precipitation_probability_max, 0),
-          wind_speed_10m_max: valueAt(data.daily.wind_speed_10m_max, 0)
+          time: valueAt(data.daily.time, index),
+          weather_code: valueAt(data.daily.weather_code, index),
+          temperature_2m_max: valueAt(data.daily.temperature_2m_max, index),
+          temperature_2m_min: valueAt(data.daily.temperature_2m_min, index),
+          precipitation_sum: valueAt(data.daily.precipitation_sum, index),
+          precipitation_probability_max: valueAt(data.daily.precipitation_probability_max, index),
+          wind_speed_10m_max: valueAt(data.daily.wind_speed_10m_max, index)
         };
       }
 
-      function updateWeatherSummary(weather) {
+      function normalizeDailyWeatherList(data) {
+        if (!data || !data.daily || !data.daily.time) return [];
+        var count = Math.min(5, data.daily.time.length);
+        var days = [];
+        for (var i = 0; i < count; i++) {
+          days.push(normalizeDailyWeather(data, i));
+        }
+        return days;
+      }
+
+      function renderCurrentWeather(current, isCached) {
+        el.city.textContent = CONFIG.city;
+        el.temp.textContent = '온도 ' + formatNumber(current.temperature_2m) + '°';
+        el.humidity.textContent = '습도 ' + formatNumber(current.relative_humidity_2m) + '%';
+        el.feels.textContent = '체감 ' + formatNumber(current.apparent_temperature) + '°';
+        el.condition.textContent = codeToKorean(current.weather_code);
+        el.source.textContent = (isCached ? '마지막 저장 날씨' : 'Open-Meteo 현재') +
+          ' · ' + CONFIG.city + ' · ' + compactWeatherTime(current.time) + ' · 실외 예보 기반';
+      }
+
+      function updateWeatherSummary(weather, isCached) {
         if (!CONFIG.enableWeatherSummary || !el.weatherSummary) {
           if (el.weatherSummary) el.weatherSummary.hidden = true;
+          if (el.forecastRail) el.forecastRail.hidden = true;
           return;
         }
         el.weatherSummary.hidden = false;
-        if (!weather || !weather.current) {
+        if (!weather || (!weather.current && !weather.daily && !(weather.dailyList && weather.dailyList.length))) {
           weatherSummaryFailed('날씨 요약을 불러오지 못했습니다.');
           return;
         }
 
-        var current = weather.current;
-        var daily = weather.daily || {};
+        var current = weather.current || {};
+        var daily = weather.daily || (weather.dailyList && weather.dailyList[0]) || {};
         var code = daily.weather_code !== null && daily.weather_code !== undefined ? daily.weather_code : current.weather_code;
-        var condition = codeToKorean(code);
-        var maxTemp = formatNumber(daily.temperature_2m_max);
-        var minTemp = formatNumber(daily.temperature_2m_min);
-        var rainMm = formatDecimal(daily.precipitation_sum, 1);
-        var rainProb = formatNumber(daily.precipitation_probability_max);
+        var condition = code !== null && code !== undefined ? codeToKorean(code) : '';
         var wind = formatNumber(daily.wind_speed_10m_max || current.wind_speed_10m);
         var humidity = formatNumber(current.relative_humidity_2m);
 
-        el.summaryTitle.textContent = CONFIG.city + ' 오늘은 ' + condition;
-        el.summaryTemp.textContent = maxTemp + '° / ' + minTemp + '°';
-        el.summaryRain.textContent = rainProb + '% · ' + rainMm + 'mm';
+        el.summaryTitle.textContent = condition ? CONFIG.city + ' 오늘은 ' + condition : CONFIG.city + ' 예보 확인 중';
+        el.summaryTemp.textContent = formatTempRange(daily, current);
+        el.summaryRain.textContent = formatRainSummary(daily);
         el.summaryWind.textContent = wind + 'km/h';
         el.summaryHumidity.textContent = humidity + '%';
+        renderHourlyForecast(weather.hourly || []);
         renderSummaryTips(buildWeatherTips(current, daily));
+        if (weather.dailyList && weather.dailyList.length) {
+          renderDailyForecast(weather.dailyList, isCached);
+        } else if (state.weatherForecastState !== 'failed') {
+          renderDailyForecast([], isCached);
+        }
         updateNightUi();
       }
 
@@ -1458,7 +1875,114 @@
         el.summaryRain.textContent = '--';
         el.summaryWind.textContent = '--';
         el.summaryHumidity.textContent = '--';
+        renderHourlyLoading('대기');
         el.summaryTips.innerHTML = '<li>잠시 후 날씨갱신을 다시 눌러 주세요.</li>';
+      }
+
+      function renderHourlyForecast(slots) {
+        if (!el.summaryHourly) return;
+        if (!slots || !slots.length) {
+          renderHourlyLoading('확인 중');
+          return;
+        }
+        el.summaryHourly.innerHTML = '';
+        for (var i = 0; i < Math.min(3, slots.length); i++) {
+          var slot = slots[i];
+          var item = document.createElement('div');
+          item.className = 'hourly-slot';
+
+          var label = document.createElement('span');
+          label.textContent = slot.offsetHours === 0 ? '지금' : '+' + slot.offsetHours + '시간';
+
+          var temp = document.createElement('strong');
+          temp.textContent = formatNumber(slot.temperature_2m) + '°';
+
+          var detail = document.createElement('em');
+          detail.textContent = compactWeatherCondition(slot.weather_code) + ' · ' + formatNumber(slot.precipitation_probability) + '%';
+
+          item.appendChild(label);
+          item.appendChild(temp);
+          item.appendChild(detail);
+          el.summaryHourly.appendChild(item);
+        }
+      }
+
+      function renderHourlyLoading(labelText) {
+        if (!el.summaryHourly) return;
+        var labels = ['지금', '+3시간', '+6시간'];
+        el.summaryHourly.innerHTML = '';
+        for (var i = 0; i < labels.length; i++) {
+          var item = document.createElement('div');
+          item.className = 'hourly-slot';
+          item.innerHTML = '<span>' + labels[i] + '</span><strong>--°</strong><em>' + labelText + '</em>';
+          el.summaryHourly.appendChild(item);
+        }
+      }
+
+      function renderDailyForecast(days, isCached) {
+        if (!CONFIG.enableWeatherSummary || !el.forecastRail || !el.forecastDays) return;
+        el.forecastRail.hidden = false;
+        if (el.forecastNote) {
+          el.forecastNote.textContent = (isCached ? '마지막 저장 예보' : 'Open-Meteo 5일 예보') + ' · 예보 기반 참고 정보';
+        }
+        if (!days || !days.length) {
+          renderForecastLoading();
+          return;
+        }
+
+        el.forecastDays.innerHTML = '';
+        for (var i = 0; i < Math.min(5, days.length); i++) {
+          var day = days[i];
+          var card = document.createElement('div');
+          card.className = 'forecast-day' + (i === 0 ? ' today' : '');
+
+          var label = document.createElement('span');
+          label.textContent = forecastDayLabel(day.time, i);
+
+          var condition = document.createElement('strong');
+          condition.textContent = codeToKorean(day.weather_code);
+
+          var detail = document.createElement('em');
+          detail.textContent = formatTempRange(day, null) + ' · 비 ' + formatNumber(day.precipitation_probability_max) + '%';
+
+          card.appendChild(label);
+          card.appendChild(condition);
+          card.appendChild(detail);
+          el.forecastDays.appendChild(card);
+        }
+      }
+
+      function renderForecastLoading() {
+        if (!el.forecastRail || !el.forecastDays) return;
+        el.forecastRail.hidden = false;
+        if (el.forecastNote) el.forecastNote.textContent = '예보 확인 중';
+        var labels = ['오늘', '내일', '+2일', '+3일', '+4일'];
+        el.forecastDays.innerHTML = '';
+        for (var i = 0; i < labels.length; i++) {
+          var card = document.createElement('div');
+          card.className = 'forecast-day';
+          card.innerHTML = '<span>' + labels[i] + '</span><strong>--</strong><em>비 --%</em>';
+          el.forecastDays.appendChild(card);
+        }
+      }
+
+      function renderForecastError(message) {
+        if (!el.forecastRail || !el.forecastDays) return;
+        el.forecastRail.hidden = false;
+        if (el.forecastNote) el.forecastNote.textContent = '예보 연결 실패';
+        el.forecastDays.innerHTML = '';
+        var card = document.createElement('div');
+        card.className = 'forecast-day forecast-message';
+        var label = document.createElement('span');
+        label.textContent = '예보';
+        var title = document.createElement('strong');
+        title.textContent = '연결 실패';
+        var detail = document.createElement('em');
+        detail.textContent = message;
+        card.appendChild(label);
+        card.appendChild(title);
+        card.appendChild(detail);
+        el.forecastDays.appendChild(card);
       }
 
       function renderSummaryTips(tips) {
@@ -1508,16 +2032,42 @@
           tips.push('바람이 강해 창문과 베란다 물건을 확인하세요.');
         }
 
-        return tips.slice(0, 4);
+        return tips.slice(0, 1);
       }
 
       function weatherFailed(message) {
-        el.temp.textContent = '온도 --°';
-        el.humidity.textContent = '습도 --%';
-        el.feels.textContent = '체감 --°';
-        el.condition.textContent = '날씨 연결 실패';
-        el.source.textContent = message;
+        currentWeatherFailed(message);
         weatherSummaryFailed('날씨 요약을 불러오지 못했습니다.');
+        renderForecastError(message);
+      }
+
+      function formatTempRange(daily, current) {
+        var maxTemp = daily ? formatNumber(daily.temperature_2m_max) : '--';
+        var minTemp = daily ? formatNumber(daily.temperature_2m_min) : '--';
+        if (maxTemp !== '--' || minTemp !== '--') return maxTemp + '° / ' + minTemp + '°';
+        if (current && current.temperature_2m !== undefined && current.temperature_2m !== null) {
+          return formatNumber(current.temperature_2m) + '° 현재';
+        }
+        return '-- / --';
+      }
+
+      function formatRainSummary(daily) {
+        var rainProb = formatNumber(daily && daily.precipitation_probability_max);
+        var rainMm = formatDecimal(daily && daily.precipitation_sum, 1);
+        if (rainProb === '--' && rainMm === '--') return '--';
+        if (rainProb !== '--' && rainMm !== '--') return rainProb + '% · ' + rainMm + 'mm';
+        if (rainProb !== '--') return rainProb + '%';
+        return rainMm + 'mm';
+      }
+
+      function forecastDayLabel(dateText, index) {
+        if (index === 0) return '오늘';
+        if (!dateText) return '+' + index + '일';
+        var parts = String(dateText).split('-');
+        if (parts.length !== 3) return String(dateText);
+        var date = new Date(Date.UTC(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2])));
+        var shortWeekdays = ['일', '월', '화', '수', '목', '금', '토'];
+        return shortWeekdays[date.getUTCDay()] + ' ' + Number(parts[1]) + '/' + Number(parts[2]);
       }
 
       function formatNumber(value) {
@@ -1540,7 +2090,9 @@
       }
 
       function codeToKorean(code) {
+        if (code === null || code === undefined || code === '') return '--';
         var c = Number(code);
+        if (!isFinite(c)) return '--';
         if (c === 0) return '맑음';
         if (c === 1) return '대체로 맑음';
         if (c === 2) return '구름 조금';
@@ -1557,6 +2109,15 @@
         if (c === 95) return '천둥번개';
         if (c === 96 || c === 99) return '우박 동반 폭풍';
         return '날씨 코드 ' + code;
+      }
+
+      function compactWeatherCondition(code) {
+        var condition = codeToKorean(code);
+        if (condition === '대체로 맑음') return '맑음';
+        if (condition === '구름 조금') return '구름';
+        if (condition === '천둥번개') return '천둥';
+        if (condition === '우박 동반 폭풍') return '폭풍';
+        return condition;
       }
 
       function loadLocalArtPool(showNotice) {
