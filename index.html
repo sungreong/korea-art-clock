@@ -219,7 +219,13 @@
       display: -webkit-box;
       display: -ms-flexbox;
       display: flex;
+      -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+      -webkit-box-pack: end;
+      -ms-flex-pack: end;
+      justify-content: flex-end;
       gap: 8px;
+      max-width: calc(100vw - 32px);
       opacity: 0.18;
       transition: opacity 180ms ease;
     }
@@ -243,6 +249,96 @@
     button:focus {
       outline: 2px solid rgba(255,255,255,0.75);
       outline-offset: 2px;
+    }
+
+    .music-panel {
+      position: fixed;
+      z-index: 4;
+      top: 66px;
+      right: 16px;
+      width: min(380px, calc(100vw - 32px));
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 22px;
+      background: rgba(0,0,0,0.62);
+      box-shadow: 0 24px 70px rgba(0,0,0,0.42);
+      color: rgba(255,255,255,0.9);
+      text-align: left;
+    }
+
+    .music-panel[hidden] { display: none; }
+
+    @supports ((-webkit-backdrop-filter: blur(8px)) or (backdrop-filter: blur(8px))) {
+      .music-panel {
+        -webkit-backdrop-filter: blur(12px) saturate(120%);
+        backdrop-filter: blur(12px) saturate(120%);
+      }
+    }
+
+    .music-label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 800;
+      color: rgba(255,255,255,0.72);
+    }
+
+    .music-select {
+      width: 100%;
+      margin-top: 6px;
+      padding: 10px 12px;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 14px;
+      background: rgba(0,0,0,0.54);
+      color: #fff;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .music-row {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .music-row button {
+      min-width: 44px;
+      min-height: 42px;
+      padding: 8px 12px;
+    }
+
+    .music-volume {
+      min-width: 48px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 800;
+      color: rgba(255,255,255,0.78);
+    }
+
+    .music-now {
+      margin-top: 10px;
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
+    .music-credit {
+      margin-top: 6px;
+      font-size: 12px;
+      line-height: 1.45;
+      color: rgba(255,255,255,0.66);
+    }
+
+    .music-credit a {
+      color: rgba(255,255,255,0.86);
+      text-decoration: underline;
+      text-underline-offset: 3px;
     }
 
     .notice {
@@ -273,6 +369,7 @@
       .time .hm { font-size: 86px; }
       .time .sec { display: block; margin-left: 0; margin-top: 1vh; font-size: 34px; vertical-align: baseline; }
       .controls { top: 10px; right: 10px; }
+      .music-panel { top: 94px; right: 10px; width: calc(100vw - 20px); }
       button { padding: 8px 10px; font-size: 12px; }
       .art-credit { font-size: 13px; }
     }
@@ -287,6 +384,28 @@
     <button id="fullscreen-button" type="button">전체화면</button>
     <button id="next-art-button" type="button">배경변경</button>
     <button id="weather-button" type="button">날씨갱신</button>
+    <button id="music-toggle-button" type="button">음악재생</button>
+    <button id="music-panel-button" type="button" aria-expanded="false" aria-controls="music-panel">음악선택</button>
+  </div>
+
+  <div id="music-panel" class="music-panel" hidden>
+    <label class="music-label" for="music-select">
+      반복 재생할 음악
+      <select id="music-select" class="music-select"></select>
+    </label>
+    <div class="music-row" aria-label="음악 조작">
+      <button id="music-prev-button" type="button">이전</button>
+      <button id="music-next-button" type="button">다음</button>
+      <button id="music-volume-down-button" type="button">-</button>
+      <span id="music-volume-label" class="music-volume">45%</span>
+      <button id="music-volume-up-button" type="button">+</button>
+    </div>
+    <div id="music-now" class="music-now">음악을 선택해 주세요.</div>
+    <div class="music-credit">
+      <span id="music-credit">무료/공개 라이선스 음원을 사용합니다.</span>
+      <a id="music-source-link" href="https://commons.wikimedia.org/" target="_blank" rel="noopener noreferrer">출처</a>
+      <a id="music-license-link" href="https://commons.wikimedia.org/wiki/Commons:Licensing" target="_blank" rel="noopener noreferrer">라이선스</a>
+    </div>
   </div>
 
   <main id="stage" class="stage">
@@ -309,12 +428,14 @@
 
   <div id="art-credit" class="art-credit">명화 배경을 불러오는 중</div>
   <div id="notice" class="notice" role="status" aria-live="polite"></div>
+  <audio id="music-audio" preload="metadata"></audio>
 
   <noscript>
     이 페이지는 시계와 날씨 표시를 위해 JavaScript가 필요합니다.
   </noscript>
 
   <script src="assets/artworks.js"></script>
+  <script src="assets/music.js"></script>
   <script>
     (function () {
       'use strict';
@@ -330,7 +451,12 @@
         preloadAhead: 3,
         showSeconds: true,
         enableWeather: true,
-        enableArt: true
+        enableArt: true,
+        enableMusic: true,
+        musicAutoStart: false,
+        musicTrack: '',
+        musicVolume: 0.45,
+        musicVolumeFromQuery: false
       };
 
       var el = {
@@ -349,9 +475,23 @@
         bgB: document.getElementById('bg-b'),
         stage: document.getElementById('stage'),
         notice: document.getElementById('notice'),
+        audio: document.getElementById('music-audio'),
         fullscreenButton: document.getElementById('fullscreen-button'),
         nextArtButton: document.getElementById('next-art-button'),
-        weatherButton: document.getElementById('weather-button')
+        weatherButton: document.getElementById('weather-button'),
+        musicToggleButton: document.getElementById('music-toggle-button'),
+        musicPanelButton: document.getElementById('music-panel-button'),
+        musicPanel: document.getElementById('music-panel'),
+        musicSelect: document.getElementById('music-select'),
+        musicPrevButton: document.getElementById('music-prev-button'),
+        musicNextButton: document.getElementById('music-next-button'),
+        musicVolumeDownButton: document.getElementById('music-volume-down-button'),
+        musicVolumeUpButton: document.getElementById('music-volume-up-button'),
+        musicVolumeLabel: document.getElementById('music-volume-label'),
+        musicNow: document.getElementById('music-now'),
+        musicCredit: document.getElementById('music-credit'),
+        musicSourceLink: document.getElementById('music-source-link'),
+        musicLicenseLink: document.getElementById('music-license-link')
       };
 
       var state = {
@@ -361,6 +501,10 @@
         fallbackIndex: 0,
         preloadCache: {},
         failedArt: {},
+        musicTracks: [],
+        musicTrackIndex: -1,
+        musicSourceIndex: -1,
+        musicPlaying: false,
         noticeTimer: null,
         cursorTimer: null
       };
@@ -399,6 +543,7 @@
 
         driftClock();
         setInterval(driftClock, CONFIG.driftRefreshMs);
+        initMusic();
         bindControls();
         setupCursorAutoHide();
       }
@@ -411,6 +556,13 @@
         if (params.seconds === 'off') CONFIG.showSeconds = false;
         if (params.weather === 'off') CONFIG.enableWeather = false;
         if (params.art === 'off') CONFIG.enableArt = false;
+        if (params.music === 'off') CONFIG.enableMusic = false;
+        if (params.music === 'on') CONFIG.musicAutoStart = true;
+        if (params.track) CONFIG.musicTrack = params.track;
+        if (isFiniteNumber(params.volume)) {
+          CONFIG.musicVolume = clamp(Number(params.volume), 0, 1);
+          CONFIG.musicVolumeFromQuery = true;
+        }
         if (isFiniteNumber(params.artSeconds)) CONFIG.artRefreshMs = Math.max(20, Number(params.artSeconds)) * 1000;
       }
 
@@ -431,6 +583,10 @@
       function isFiniteNumber(value) {
         if (value === undefined || value === null || value === '') return false;
         return isFinite(Number(value));
+      }
+
+      function clamp(value, min, max) {
+        return Math.min(max, Math.max(min, value));
       }
 
       function updateClock() {
@@ -753,6 +909,209 @@
         }
       }
 
+      function initMusic() {
+        var manifest = window.KOREA_ART_CLOCK_MUSIC || {};
+        state.musicTracks = manifest.tracks || [];
+
+        if (!CONFIG.enableMusic) {
+          el.musicToggleButton.style.display = 'none';
+          el.musicPanelButton.style.display = 'none';
+          el.musicPanel.hidden = true;
+          return;
+        }
+
+        if (!state.musicTracks.length) {
+          el.musicToggleButton.disabled = true;
+          el.musicPanelButton.disabled = true;
+          el.musicNow.textContent = '사용 가능한 음악 목록이 없습니다.';
+          return;
+        }
+
+        populateMusicSelect();
+
+        var saved = readMusicSettings();
+        if (!CONFIG.musicVolumeFromQuery && isFiniteNumber(saved.volume)) {
+          CONFIG.musicVolume = clamp(Number(saved.volume), 0, 1);
+        }
+
+        el.audio.loop = true;
+        el.audio.volume = CONFIG.musicVolume;
+        el.audio.addEventListener('play', function () {
+          state.musicPlaying = true;
+          saveMusicSettings({ enabled: true });
+          updateMusicUi();
+        });
+        el.audio.addEventListener('pause', function () {
+          state.musicPlaying = false;
+          saveMusicSettings({ enabled: false });
+          updateMusicUi();
+        });
+        el.audio.addEventListener('error', handleMusicError);
+
+        var trackId = CONFIG.musicTrack || saved.trackId || manifest.defaultTrack;
+        var index = findMusicTrackIndex(trackId);
+        loadMusicTrack(index >= 0 ? index : 0, false);
+
+        if (CONFIG.musicAutoStart || saved.enabled) {
+          tryPlayMusic(true);
+        }
+      }
+
+      function populateMusicSelect() {
+        el.musicSelect.innerHTML = '';
+        for (var i = 0; i < state.musicTracks.length; i++) {
+          var track = state.musicTracks[i];
+          var option = document.createElement('option');
+          option.value = track.id;
+          option.textContent = '[' + (track.mood || '음악') + '] ' + track.title;
+          el.musicSelect.appendChild(option);
+        }
+      }
+
+      function findMusicTrackIndex(trackId) {
+        for (var i = 0; i < state.musicTracks.length; i++) {
+          if (state.musicTracks[i].id === trackId) return i;
+        }
+        return -1;
+      }
+
+      function loadMusicTrack(index, shouldPlay) {
+        if (!state.musicTracks.length) return;
+        index = (index + state.musicTracks.length) % state.musicTracks.length;
+        var track = state.musicTracks[index];
+        var sourceIndex = pickMusicSourceIndex(track);
+        state.musicTrackIndex = index;
+        state.musicSourceIndex = sourceIndex;
+
+        if (sourceIndex < 0) {
+          el.audio.removeAttribute('src');
+          el.audio.load();
+          showMessage('이 음악은 현재 브라우저에서 지원되는 형식이 없습니다.');
+          updateMusicUi();
+          return;
+        }
+
+        el.audio.src = track.sources[sourceIndex].src;
+        el.audio.load();
+        el.musicSelect.value = track.id;
+        saveMusicSettings({ trackId: track.id });
+        updateMusicUi();
+
+        if (shouldPlay || state.musicPlaying) {
+          tryPlayMusic(false);
+        }
+      }
+
+      function pickMusicSourceIndex(track) {
+        var sources = track && track.sources ? track.sources : [];
+        if (!sources.length) return -1;
+        for (var i = 0; i < sources.length; i++) {
+          if (el.audio.canPlayType && el.audio.canPlayType(sources[i].type)) {
+            return i;
+          }
+        }
+        for (var j = 0; j < sources.length; j++) {
+          if (sources[j].type === 'audio/mpeg') return j;
+        }
+        return 0;
+      }
+
+      function tryPlayMusic(silent) {
+        if (!CONFIG.enableMusic || !state.musicTracks.length) return;
+        if (!el.audio.src && state.musicTrackIndex >= 0) {
+          loadMusicTrack(state.musicTrackIndex, false);
+        }
+
+        var playResult = el.audio.play();
+        if (playResult && playResult.then) {
+          playResult.then(function () {
+            state.musicPlaying = true;
+            saveMusicSettings({ enabled: true });
+            updateMusicUi();
+          }).catch(function () {
+            state.musicPlaying = false;
+            updateMusicUi();
+            if (!silent) showMessage('브라우저 정책상 음악재생 버튼을 한 번 눌러야 합니다.');
+          });
+        }
+      }
+
+      function toggleMusicPlayback() {
+        if (state.musicPlaying) {
+          el.audio.pause();
+          return;
+        }
+        tryPlayMusic(false);
+      }
+
+      function toggleMusicPanel() {
+        el.musicPanel.hidden = !el.musicPanel.hidden;
+        el.musicPanelButton.setAttribute('aria-expanded', el.musicPanel.hidden ? 'false' : 'true');
+      }
+
+      function selectMusicTrack(trackId) {
+        var index = findMusicTrackIndex(trackId);
+        if (index >= 0) loadMusicTrack(index, state.musicPlaying);
+      }
+
+      function stepMusicTrack(direction) {
+        loadMusicTrack(state.musicTrackIndex + direction, state.musicPlaying);
+      }
+
+      function setMusicVolume(value) {
+        value = clamp(value, 0, 1);
+        el.audio.volume = value;
+        CONFIG.musicVolume = value;
+        saveMusicSettings({ volume: value });
+        updateMusicUi();
+      }
+
+      function handleMusicError() {
+        var track = state.musicTracks[state.musicTrackIndex];
+        var sources = track && track.sources ? track.sources : [];
+        if (state.musicSourceIndex + 1 < sources.length) {
+          state.musicSourceIndex++;
+          el.audio.src = sources[state.musicSourceIndex].src;
+          el.audio.load();
+          if (state.musicPlaying) tryPlayMusic(false);
+          return;
+        }
+        state.musicPlaying = false;
+        updateMusicUi();
+        showMessage('이 음악을 재생하지 못했습니다. 다른 곡을 선택해 주세요.');
+      }
+
+      function updateMusicUi() {
+        var track = state.musicTracks[state.musicTrackIndex];
+        el.musicToggleButton.textContent = state.musicPlaying ? '음악정지' : '음악재생';
+        el.musicVolumeLabel.textContent = Math.round(el.audio.volume * 100) + '%';
+        if (!track) return;
+
+        el.musicSelect.value = track.id;
+        el.musicNow.textContent = track.title + ' · ' + cleanText(track.artist || '작가 미상');
+        el.musicCredit.textContent = track.license + ' · ' + track.source + ' · 선택한 곡 반복 재생';
+        el.musicSourceLink.href = track.sourceUrl || 'https://commons.wikimedia.org/';
+        el.musicLicenseLink.href = track.licenseUrl || 'https://commons.wikimedia.org/wiki/Commons:Licensing';
+      }
+
+      function readMusicSettings() {
+        try {
+          return JSON.parse(localStorage.getItem('koreaArtClockMusic') || '{}') || {};
+        } catch (err) {
+          return {};
+        }
+      }
+
+      function saveMusicSettings(next) {
+        try {
+          var current = readMusicSettings();
+          for (var key in next) current[key] = next[key];
+          localStorage.setItem('koreaArtClockMusic', JSON.stringify(current));
+        } catch (err) {
+          // Some TV browsers disable storage; music still works for this session.
+        }
+      }
+
       function bindControls() {
         el.fullscreenButton.addEventListener('click', requestFullscreen);
         el.nextArtButton.addEventListener('click', function () {
@@ -763,12 +1122,30 @@
           updateWeather();
           showMessage('날씨를 갱신합니다.');
         });
+        el.musicToggleButton.addEventListener('click', toggleMusicPlayback);
+        el.musicPanelButton.addEventListener('click', toggleMusicPanel);
+        el.musicSelect.addEventListener('change', function () {
+          selectMusicTrack(el.musicSelect.value);
+        });
+        el.musicPrevButton.addEventListener('click', function () {
+          stepMusicTrack(-1);
+        });
+        el.musicNextButton.addEventListener('click', function () {
+          stepMusicTrack(1);
+        });
+        el.musicVolumeDownButton.addEventListener('click', function () {
+          setMusicVolume(el.audio.volume - 0.1);
+        });
+        el.musicVolumeUpButton.addEventListener('click', function () {
+          setMusicVolume(el.audio.volume + 0.1);
+        });
 
         document.addEventListener('keydown', function (event) {
           var key = event.key || event.code;
           if (key === 'f' || key === 'F') requestFullscreen();
           if (key === 'n' || key === 'N') nextArtwork(false);
           if (key === 'w' || key === 'W') updateWeather();
+          if (key === 'm' || key === 'M') toggleMusicPlayback();
         });
       }
 
