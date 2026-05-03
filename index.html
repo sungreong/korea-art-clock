@@ -365,7 +365,7 @@
       outline-offset: 2px;
     }
 
-    .music-panel, .city-panel, .timer-panel {
+    .music-panel, .city-panel, .timer-panel, .protect-panel {
       position: fixed;
       z-index: 4;
       top: 66px;
@@ -382,17 +382,18 @@
 
     .city-panel { top: 120px; }
     .timer-panel { top: 174px; width: min(430px, calc(100vw - 32px)); }
+    .protect-panel { top: 228px; width: min(430px, calc(100vw - 32px)); }
 
-    .music-panel[hidden], .city-panel[hidden], .timer-panel[hidden] { display: none; }
+    .music-panel[hidden], .city-panel[hidden], .timer-panel[hidden], .protect-panel[hidden] { display: none; }
 
     @supports ((-webkit-backdrop-filter: blur(8px)) or (backdrop-filter: blur(8px))) {
-      .music-panel, .city-panel, .timer-panel {
+      .music-panel, .city-panel, .timer-panel, .protect-panel {
         -webkit-backdrop-filter: blur(12px) saturate(120%);
         backdrop-filter: blur(12px) saturate(120%);
       }
     }
 
-    .music-label, .city-label, .timer-label {
+    .music-label, .city-label, .timer-label, .protect-label {
       display: block;
       margin-bottom: 8px;
       font-size: 13px;
@@ -413,7 +414,7 @@
       font-weight: 700;
     }
 
-    .music-row, .city-row, .timer-row, .timer-presets {
+    .music-row, .city-row, .timer-row, .timer-presets, .protect-row {
       display: -webkit-box;
       display: -ms-flexbox;
       display: flex;
@@ -424,9 +425,9 @@
       margin-top: 10px;
     }
 
-    .city-row, .timer-row, .timer-presets { -ms-flex-wrap: wrap; flex-wrap: wrap; }
+    .city-row, .timer-row, .timer-presets, .protect-row { -ms-flex-wrap: wrap; flex-wrap: wrap; }
 
-    .music-row button, .city-row button, .timer-row button, .timer-presets button {
+    .music-row button, .city-row button, .timer-row button, .timer-presets button, .protect-row button {
       min-width: 44px;
       min-height: 42px;
       padding: 8px 12px;
@@ -456,6 +457,18 @@
       font-size: 13px;
       line-height: 1.45;
       color: rgba(255,255,255,0.7);
+    }
+
+    .protect-status, .protect-note {
+      margin-top: 8px;
+      font-size: 13px;
+      line-height: 1.45;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .protect-note {
+      font-size: 12px;
+      color: rgba(255,255,255,0.58);
     }
 
     .alarm-label {
@@ -587,6 +600,70 @@
       box-shadow: 0 28px 80px rgba(0,0,0,0.62);
     }
 
+    .screen-rest {
+      position: fixed;
+      inset: 0;
+      z-index: 6;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
+      -webkit-box-pack: center;
+      -ms-flex-pack: center;
+      justify-content: center;
+      padding: 8vw;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.018), rgba(0,0,0,0.98) 42%),
+        #000;
+      color: rgba(255,255,255,0.22);
+      text-align: center;
+      cursor: none;
+    }
+
+    .screen-rest[hidden] { display: none; }
+
+    .screen-rest-card {
+      max-width: 620px;
+      opacity: 0.64;
+      text-shadow: 0 0 24px rgba(255,255,255,0.08);
+      animation: restDrift 16s ease-in-out infinite alternate;
+    }
+
+    .screen-rest-dot {
+      width: 8px;
+      height: 8px;
+      margin: 0 auto 22px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.2);
+      box-shadow: 0 0 18px rgba(255,255,255,0.18);
+    }
+
+    .screen-rest-title {
+      font-size: clamp(22px, 4vw, 42px);
+      font-weight: 900;
+      letter-spacing: -0.05em;
+    }
+
+    .screen-rest-time {
+      margin-top: 12px;
+      font-size: clamp(16px, 2.5vw, 28px);
+      font-weight: 900;
+    }
+
+    .screen-rest-detail {
+      margin-top: 10px;
+      font-size: clamp(12px, 1.5vw, 16px);
+      line-height: 1.5;
+      color: rgba(255,255,255,0.18);
+    }
+
+    @keyframes restDrift {
+      from { transform: translate(-1.6vw, -1.2vh); }
+      to { transform: translate(1.4vw, 1.1vh); }
+    }
+
     @keyframes timerPulse {
       0%, 100% { opacity: 0.9; }
       50% { opacity: 1; }
@@ -626,6 +703,7 @@
       .music-panel { top: 94px; right: 10px; width: calc(100vw - 20px); }
       .city-panel { top: 148px; right: 10px; width: calc(100vw - 20px); }
       .timer-panel { top: 202px; right: 10px; width: calc(100vw - 20px); }
+      .protect-panel { top: 256px; right: 10px; width: calc(100vw - 20px); }
       .timer-countdown { font-size: 34px; }
       button { padding: 8px 10px; font-size: 12px; }
       .art-credit { font-size: 13px; }
@@ -643,6 +721,7 @@
     <button id="weather-button" type="button">날씨갱신</button>
     <button id="city-panel-button" type="button" aria-expanded="false" aria-controls="city-panel">도시선택</button>
     <button id="timer-panel-button" type="button" aria-expanded="false" aria-controls="timer-panel">타이머</button>
+    <button id="protect-panel-button" type="button" aria-expanded="false" aria-controls="protect-panel">화면보호</button>
     <button id="music-toggle-button" type="button">음악재생</button>
     <button id="music-panel-button" type="button" aria-expanded="false" aria-controls="music-panel">음악선택</button>
   </div>
@@ -710,6 +789,16 @@
     <div id="alarm-status" class="alarm-status">알람 없음</div>
   </div>
 
+  <div id="protect-panel" class="protect-panel" hidden>
+    <div class="protect-label">OLED 화면 보호</div>
+    <div class="protect-row" aria-label="화면 보호 조작">
+      <button id="protect-toggle-button" type="button">보호 켜짐</button>
+      <button id="protect-rest-now-button" type="button">지금 휴식</button>
+    </div>
+    <div id="protect-status" class="protect-status">50분마다 5분 휴식</div>
+    <div id="protect-note" class="protect-note">휴식 중에는 아무 키나 누르거나 리모컨 버튼을 누르면 바로 복귀합니다.</div>
+  </div>
+
   <main id="stage" class="stage">
     <div class="dashboard">
       <section class="clock-card" aria-label="대한민국 기준 현재 시각">
@@ -747,6 +836,14 @@
 
   <div id="art-credit" class="art-credit">명화 배경을 불러오는 중</div>
   <div id="notice" class="notice" role="status" aria-live="polite"></div>
+  <div id="screen-rest" class="screen-rest" role="status" aria-live="polite" hidden>
+    <div class="screen-rest-card">
+      <div class="screen-rest-dot"></div>
+      <div id="screen-rest-title" class="screen-rest-title">화면 휴식 중</div>
+      <div id="screen-rest-remaining" class="screen-rest-time">05:00</div>
+      <div id="screen-rest-detail" class="screen-rest-detail">아무 키나 누르면 바로 복귀합니다.</div>
+    </div>
+  </div>
   <div id="timer-alert" class="timer-alert" role="alertdialog" aria-modal="true" aria-labelledby="timer-alert-title" hidden>
     <div class="timer-alert-card">
       <div id="timer-alert-title" class="timer-alert-title">타이머 종료</div>
@@ -782,6 +879,12 @@
         enableArt: true,
         enableMusic: true,
         enableTimer: true,
+        enableProtection: true,
+        protectionFromQuery: false,
+        restAfterMinutes: 50,
+        restAfterFromQuery: false,
+        restMinutes: 5,
+        restMinutesFromQuery: false,
         timerMinutes: 10,
         timerMinutesFromQuery: false,
         alarmTime: '',
@@ -850,6 +953,16 @@
         timerAlertTime: document.getElementById('timer-alert-time'),
         timerAlertDetail: document.getElementById('timer-alert-detail'),
         timerAlertOkButton: document.getElementById('timer-alert-ok-button'),
+        protectPanelButton: document.getElementById('protect-panel-button'),
+        protectPanel: document.getElementById('protect-panel'),
+        protectToggleButton: document.getElementById('protect-toggle-button'),
+        protectRestNowButton: document.getElementById('protect-rest-now-button'),
+        protectStatus: document.getElementById('protect-status'),
+        protectNote: document.getElementById('protect-note'),
+        screenRest: document.getElementById('screen-rest'),
+        screenRestTitle: document.getElementById('screen-rest-title'),
+        screenRestRemaining: document.getElementById('screen-rest-remaining'),
+        screenRestDetail: document.getElementById('screen-rest-detail'),
         musicToggleButton: document.getElementById('music-toggle-button'),
         musicPanelButton: document.getElementById('music-panel-button'),
         musicPanel: document.getElementById('music-panel'),
@@ -894,6 +1007,16 @@
           audioContext: null,
           musicDucked: false,
           previousMusicVolume: null
+        },
+        protection: {
+          enabled: true,
+          restAfterMs: 50 * 60 * 1000,
+          restDurationMs: 5 * 60 * 1000,
+          activeStartedAt: Date.now(),
+          restEndsAt: 0,
+          resting: false,
+          tickTimer: null,
+          ignoreInputUntil: 0
         },
         noticeTimer: null,
         cursorTimer: null
@@ -964,6 +1087,7 @@
         setInterval(driftClock, CONFIG.driftRefreshMs);
         initMusic();
         initTimer();
+        initDisplayProtection();
         bindControls();
         setupCursorAutoHide();
       }
@@ -1001,6 +1125,18 @@
         if (params.music === 'off') CONFIG.enableMusic = false;
         if (params.music === 'on') CONFIG.musicAutoStart = true;
         if (params.timer === 'off') CONFIG.enableTimer = false;
+        if (params.protect === 'off' || params.protect === 'on') {
+          CONFIG.enableProtection = params.protect !== 'off';
+          CONFIG.protectionFromQuery = true;
+        }
+        if (isFiniteNumber(params.restAfter)) {
+          CONFIG.restAfterMinutes = normalizeProtectionMinutes(params.restAfter, 1, 240, 50);
+          CONFIG.restAfterFromQuery = true;
+        }
+        if (isFiniteNumber(params.restMinutes)) {
+          CONFIG.restMinutes = normalizeProtectionMinutes(params.restMinutes, 1, 60, 5);
+          CONFIG.restMinutesFromQuery = true;
+        }
         if (isFiniteNumber(params.timerMinutes)) {
           CONFIG.timerMinutes = Math.max(1, Math.min(999, Math.round(Number(params.timerMinutes))));
           CONFIG.timerMinutesFromQuery = true;
@@ -1157,6 +1293,8 @@
           el.musicPanelButton.setAttribute('aria-expanded', 'false');
           el.timerPanel.hidden = true;
           el.timerPanelButton.setAttribute('aria-expanded', 'false');
+          el.protectPanel.hidden = true;
+          el.protectPanelButton.setAttribute('aria-expanded', 'false');
         }
       }
 
@@ -1762,6 +1900,8 @@
           el.cityPanelButton.setAttribute('aria-expanded', 'false');
           el.timerPanel.hidden = true;
           el.timerPanelButton.setAttribute('aria-expanded', 'false');
+          el.protectPanel.hidden = true;
+          el.protectPanelButton.setAttribute('aria-expanded', 'false');
         }
       }
 
@@ -2110,6 +2250,7 @@
       }
 
       function triggerTimerAlert(kind, missed) {
+        endScreenRest(false);
         clearTimerAlert();
         state.timer.alerting = true;
         var isAlarm = kind === 'alarm';
@@ -2294,7 +2435,178 @@
           el.cityPanelButton.setAttribute('aria-expanded', 'false');
           el.musicPanel.hidden = true;
           el.musicPanelButton.setAttribute('aria-expanded', 'false');
+          el.protectPanel.hidden = true;
+          el.protectPanelButton.setAttribute('aria-expanded', 'false');
         }
+      }
+
+      function initDisplayProtection() {
+        var saved = readDisplayProtectionSettings();
+        if (!CONFIG.protectionFromQuery && typeof saved.enabled === 'boolean') {
+          CONFIG.enableProtection = saved.enabled;
+        }
+        if (!CONFIG.restAfterFromQuery && isFiniteNumber(saved.restAfterMinutes)) {
+          CONFIG.restAfterMinutes = normalizeProtectionMinutes(saved.restAfterMinutes, 1, 240, 50);
+        }
+        if (!CONFIG.restMinutesFromQuery && isFiniteNumber(saved.restMinutes)) {
+          CONFIG.restMinutes = normalizeProtectionMinutes(saved.restMinutes, 1, 60, 5);
+        }
+
+        state.protection.enabled = CONFIG.enableProtection;
+        state.protection.restAfterMs = CONFIG.restAfterMinutes * 60 * 1000;
+        state.protection.restDurationMs = CONFIG.restMinutes * 60 * 1000;
+        state.protection.activeStartedAt = Date.now();
+        state.protection.restEndsAt = 0;
+        state.protection.resting = false;
+        state.protection.tickTimer = setInterval(updateDisplayProtectionTick, 1000);
+        updateDisplayProtectionUi();
+      }
+
+      function toggleProtectPanel() {
+        el.protectPanel.hidden = !el.protectPanel.hidden;
+        el.protectPanelButton.setAttribute('aria-expanded', el.protectPanel.hidden ? 'false' : 'true');
+        if (!el.protectPanel.hidden) {
+          el.cityPanel.hidden = true;
+          el.cityPanelButton.setAttribute('aria-expanded', 'false');
+          el.timerPanel.hidden = true;
+          el.timerPanelButton.setAttribute('aria-expanded', 'false');
+          el.musicPanel.hidden = true;
+          el.musicPanelButton.setAttribute('aria-expanded', 'false');
+        }
+      }
+
+      function toggleDisplayProtection() {
+        state.protection.enabled = !state.protection.enabled;
+        CONFIG.enableProtection = state.protection.enabled;
+        if (!state.protection.enabled) {
+          endScreenRest(false);
+        }
+        resetDisplayProtectionCycle();
+        saveDisplayProtectionSettings();
+        updateDisplayProtectionUi();
+        showMessage(state.protection.enabled ? '화면 보호를 켰습니다.' : '화면 보호를 껐습니다.');
+      }
+
+      function resetDisplayProtectionCycle() {
+        state.protection.activeStartedAt = Date.now();
+        state.protection.restEndsAt = 0;
+      }
+
+      function updateDisplayProtectionTick() {
+        if (!state.protection.enabled) {
+          updateDisplayProtectionUi();
+          return;
+        }
+
+        var now = Date.now();
+        if (state.protection.resting) {
+          if (now >= state.protection.restEndsAt) {
+            endScreenRest(false);
+          } else {
+            updateDisplayProtectionUi();
+          }
+          return;
+        }
+
+        if (now - state.protection.activeStartedAt >= state.protection.restAfterMs) {
+          startScreenRest(false);
+          return;
+        }
+        updateDisplayProtectionUi();
+      }
+
+      function startScreenRest(manual) {
+        if (!state.protection.enabled && !manual) return;
+        state.protection.resting = true;
+        state.protection.restEndsAt = Date.now() + state.protection.restDurationMs;
+        state.protection.ignoreInputUntil = Date.now() + 700;
+        el.screenRest.hidden = false;
+        document.body.classList.add('screen-resting');
+        closeAllPanels();
+        updateDisplayProtectionUi();
+      }
+
+      function endScreenRest(showNotice) {
+        if (!state.protection.resting) return;
+        state.protection.resting = false;
+        state.protection.restEndsAt = 0;
+        el.screenRest.hidden = true;
+        document.body.classList.remove('screen-resting');
+        resetDisplayProtectionCycle();
+        updateDisplayProtectionUi();
+        if (showNotice) showMessage('화면 보호에서 복귀했습니다.');
+      }
+
+      function handleDisplayProtectionInput(event) {
+        if (!state.protection.resting) return;
+        if (Date.now() < state.protection.ignoreInputUntil) return;
+        endScreenRest(true);
+        if (event && event.preventDefault) event.preventDefault();
+        if (event && event.stopPropagation) event.stopPropagation();
+      }
+
+      function updateDisplayProtectionUi() {
+        var schedule = CONFIG.restAfterMinutes + '분마다 ' + CONFIG.restMinutes + '분 휴식';
+        el.protectToggleButton.textContent = state.protection.enabled ? '보호 켜짐' : '보호 꺼짐';
+        el.protectRestNowButton.disabled = state.protection.resting;
+        if (state.protection.resting) {
+          var remaining = Math.max(0, state.protection.restEndsAt - Date.now());
+          el.protectStatus.textContent = '화면 휴식 중 · ' + formatTimerRemaining(remaining) + ' 뒤 자동 복귀';
+          el.screenRestRemaining.textContent = formatTimerRemaining(remaining);
+          el.screenRestDetail.textContent = '아무 키나 누르거나 리모컨 버튼을 누르면 바로 복귀합니다.';
+        } else if (state.protection.enabled) {
+          var nextRest = Math.max(0, state.protection.restAfterMs - (Date.now() - state.protection.activeStartedAt));
+          el.protectStatus.textContent = schedule + ' · 다음 휴식까지 ' + formatProtectionLongRemaining(nextRest);
+          el.screenRestRemaining.textContent = formatTimerRemaining(state.protection.restDurationMs);
+        } else {
+          el.protectStatus.textContent = '화면 보호 꺼짐 · 자동 휴식이 시작되지 않습니다.';
+          el.screenRestRemaining.textContent = formatTimerRemaining(state.protection.restDurationMs);
+        }
+        el.protectNote.textContent = schedule + ' · 휴식 중 음악은 계속 재생됩니다.';
+      }
+
+      function formatProtectionLongRemaining(ms) {
+        ms = Math.max(0, Math.ceil(Number(ms || 0) / 1000));
+        var minutes = Math.floor(ms / 60);
+        var seconds = ms % 60;
+        if (minutes >= 1) return minutes + '분 ' + pad(seconds) + '초';
+        return seconds + '초';
+      }
+
+      function normalizeProtectionMinutes(value, min, max, fallback) {
+        if (!isFiniteNumber(value)) return fallback;
+        return Math.max(min, Math.min(max, Math.round(Number(value))));
+      }
+
+      function readDisplayProtectionSettings() {
+        try {
+          return JSON.parse(localStorage.getItem('koreaArtClockDisplayProtection') || '{}') || {};
+        } catch (err) {
+          return {};
+        }
+      }
+
+      function saveDisplayProtectionSettings() {
+        try {
+          localStorage.setItem('koreaArtClockDisplayProtection', JSON.stringify({
+            enabled: state.protection.enabled,
+            restAfterMinutes: CONFIG.restAfterMinutes,
+            restMinutes: CONFIG.restMinutes
+          }));
+        } catch (err) {
+          // Display protection still works for the current session if storage is blocked.
+        }
+      }
+
+      function closeAllPanels() {
+        el.cityPanel.hidden = true;
+        el.cityPanelButton.setAttribute('aria-expanded', 'false');
+        el.timerPanel.hidden = true;
+        el.timerPanelButton.setAttribute('aria-expanded', 'false');
+        el.protectPanel.hidden = true;
+        el.protectPanelButton.setAttribute('aria-expanded', 'false');
+        el.musicPanel.hidden = true;
+        el.musicPanelButton.setAttribute('aria-expanded', 'false');
       }
 
       function bindControls() {
@@ -2329,6 +2641,11 @@
         el.alarmSetButton.addEventListener('click', setAlarmFromInput);
         el.alarmClearButton.addEventListener('click', clearAlarm);
         el.timerAlertOkButton.addEventListener('click', clearTimerAlert);
+        el.protectPanelButton.addEventListener('click', toggleProtectPanel);
+        el.protectToggleButton.addEventListener('click', toggleDisplayProtection);
+        el.protectRestNowButton.addEventListener('click', function () {
+          startScreenRest(true);
+        });
         el.musicToggleButton.addEventListener('click', toggleMusicPlayback);
         el.musicPanelButton.addEventListener('click', toggleMusicPanel);
         el.musicSelect.addEventListener('change', function () {
@@ -2356,9 +2673,15 @@
           if (key === 'm' || key === 'M') toggleMusicPlayback();
           if (key === 'c' || key === 'C') toggleCityPanel();
           if (key === 't' || key === 'T') toggleTimerPanel();
+          if (key === 'p' || key === 'P') toggleProtectPanel();
           if (key === 'r' || key === 'R') cycleMusicMode();
           if (key === 'Escape') clearTimerAlert();
         });
+
+        document.addEventListener('keydown', handleDisplayProtectionInput, true);
+        document.addEventListener('mousemove', handleDisplayProtectionInput, true);
+        document.addEventListener('click', handleDisplayProtectionInput, true);
+        document.addEventListener('touchstart', handleDisplayProtectionInput, true);
       }
 
       function requestFullscreen() {
