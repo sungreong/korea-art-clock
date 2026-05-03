@@ -20,6 +20,10 @@
 
     body.hide-cursor { cursor: none; }
 
+    body.night-mode {
+      background: #020203;
+    }
+
     .bg {
       position: fixed;
       top: -1.5%;
@@ -72,6 +76,16 @@
         linear-gradient(to bottom, rgba(0,0,0,0.18), rgba(0,0,0,0.05) 28%, rgba(0,0,0,0.55));
     }
 
+    body.night-mode .bg {
+      filter: brightness(0.52) saturate(0.82);
+    }
+
+    body.night-mode .vignette {
+      background:
+        radial-gradient(circle at center, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.48) 50%, rgba(0,0,0,0.9) 100%),
+        linear-gradient(to bottom, rgba(0,0,0,0.34), rgba(0,0,0,0.18) 28%, rgba(0,0,0,0.74));
+    }
+
     .stage {
       position: relative;
       z-index: 2;
@@ -95,6 +109,20 @@
       transition: transform 2500ms ease;
     }
 
+    .dashboard {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
+      -webkit-box-pack: center;
+      -ms-flex-pack: center;
+      justify-content: center;
+      gap: 22px;
+      width: min(1320px, 96vw);
+    }
+
     .clock-card {
       max-width: 94vw;
       padding: 2.4vh 4vw 2.6vh;
@@ -103,6 +131,13 @@
       background: rgba(0,0,0,0.22);
       box-shadow: 0 36px 90px rgba(0,0,0,0.45);
       text-shadow: 0 8px 28px rgba(0,0,0,0.9), 0 1px 4px rgba(0,0,0,0.9);
+    }
+
+    body.night-mode .clock-card {
+      background: rgba(0,0,0,0.44);
+      border-color: rgba(255,255,255,0.1);
+      box-shadow: 0 22px 64px rgba(0,0,0,0.55);
+      text-shadow: 0 5px 18px rgba(0,0,0,0.92);
     }
 
     @supports ((-webkit-backdrop-filter: blur(8px)) or (backdrop-filter: blur(8px))) {
@@ -196,6 +231,85 @@
       color: rgba(255,255,255,0.58);
     }
 
+    .weather-summary {
+      width: min(360px, 30vw);
+      padding: 22px 24px;
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 30px;
+      background: rgba(0,0,0,0.24);
+      box-shadow: 0 28px 72px rgba(0,0,0,0.38);
+      text-align: left;
+      text-shadow: 0 5px 18px rgba(0,0,0,0.9);
+    }
+
+    .weather-summary[hidden] { display: none; }
+
+    .summary-kicker {
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      color: rgba(255,255,255,0.62);
+    }
+
+    .summary-title {
+      margin-top: 9px;
+      font-size: 26px;
+      line-height: 1.2;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      color: rgba(255,255,255,0.94);
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+      margin-top: 16px;
+    }
+
+    .summary-metric {
+      min-height: 62px;
+      padding: 10px 12px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .summary-metric span {
+      display: block;
+      font-size: 12px;
+      font-weight: 800;
+      color: rgba(255,255,255,0.58);
+    }
+
+    .summary-metric strong {
+      display: block;
+      margin-top: 5px;
+      font-size: 18px;
+      font-weight: 900;
+      color: rgba(255,255,255,0.94);
+    }
+
+    .summary-tips {
+      margin: 15px 0 0;
+      padding-left: 18px;
+      color: rgba(255,255,255,0.78);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .summary-night {
+      margin-top: 12px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.58);
+    }
+
+    body.night-mode .weather-summary {
+      background: rgba(0,0,0,0.44);
+      border-color: rgba(255,255,255,0.08);
+      box-shadow: 0 18px 54px rgba(0,0,0,0.5);
+    }
+
     .art-credit {
       position: fixed;
       left: 3vw;
@@ -251,7 +365,7 @@
       outline-offset: 2px;
     }
 
-    .music-panel {
+    .music-panel, .city-panel {
       position: fixed;
       z-index: 4;
       top: 66px;
@@ -266,16 +380,18 @@
       text-align: left;
     }
 
-    .music-panel[hidden] { display: none; }
+    .city-panel { top: 120px; }
+
+    .music-panel[hidden], .city-panel[hidden] { display: none; }
 
     @supports ((-webkit-backdrop-filter: blur(8px)) or (backdrop-filter: blur(8px))) {
-      .music-panel {
+      .music-panel, .city-panel {
         -webkit-backdrop-filter: blur(12px) saturate(120%);
         backdrop-filter: blur(12px) saturate(120%);
       }
     }
 
-    .music-label {
+    .music-label, .city-label {
       display: block;
       margin-bottom: 8px;
       font-size: 13px;
@@ -283,7 +399,7 @@
       color: rgba(255,255,255,0.72);
     }
 
-    .music-select {
+    .music-select, .city-select {
       width: 100%;
       margin-top: 6px;
       padding: 10px 12px;
@@ -296,7 +412,7 @@
       font-weight: 700;
     }
 
-    .music-row {
+    .music-row, .city-row {
       display: -webkit-box;
       display: -ms-flexbox;
       display: flex;
@@ -307,10 +423,16 @@
       margin-top: 10px;
     }
 
-    .music-row button {
+    .city-row { -ms-flex-wrap: wrap; flex-wrap: wrap; }
+
+    .music-row button, .city-row button {
       min-width: 44px;
       min-height: 42px;
       padding: 8px 12px;
+    }
+
+    .music-row .music-mode-button {
+      min-width: 96px;
     }
 
     .music-volume {
@@ -341,6 +463,23 @@
       text-underline-offset: 3px;
     }
 
+    .city-note {
+      margin-top: 10px;
+      font-size: 12px;
+      line-height: 1.45;
+      color: rgba(255,255,255,0.66);
+    }
+
+    body.night-mode .controls { opacity: 0.11; }
+
+    body.night-mode button,
+    body.night-mode .music-select,
+    body.night-mode .city-select {
+      background: rgba(0,0,0,0.62);
+      border-color: rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.78);
+    }
+
     .notice {
       position: fixed;
       left: 50%;
@@ -368,8 +507,12 @@
       .clock-card { border-radius: 24px; padding-left: 5vw; padding-right: 5vw; }
       .time .hm { font-size: 86px; }
       .time .sec { display: block; margin-left: 0; margin-top: 1vh; font-size: 34px; vertical-align: baseline; }
+      .dashboard { flex-direction: column; gap: 14px; }
+      .weather-summary { width: min(94vw, 520px); padding: 18px; }
+      .summary-title { font-size: 22px; }
       .controls { top: 10px; right: 10px; }
       .music-panel { top: 94px; right: 10px; width: calc(100vw - 20px); }
+      .city-panel { top: 148px; right: 10px; width: calc(100vw - 20px); }
       button { padding: 8px 10px; font-size: 12px; }
       .art-credit { font-size: 13px; }
     }
@@ -384,18 +527,20 @@
     <button id="fullscreen-button" type="button">전체화면</button>
     <button id="next-art-button" type="button">배경변경</button>
     <button id="weather-button" type="button">날씨갱신</button>
+    <button id="city-panel-button" type="button" aria-expanded="false" aria-controls="city-panel">도시선택</button>
     <button id="music-toggle-button" type="button">음악재생</button>
     <button id="music-panel-button" type="button" aria-expanded="false" aria-controls="music-panel">음악선택</button>
   </div>
 
   <div id="music-panel" class="music-panel" hidden>
     <label class="music-label" for="music-select">
-      반복 재생할 음악
+      재생할 음악
       <select id="music-select" class="music-select"></select>
     </label>
     <div class="music-row" aria-label="음악 조작">
       <button id="music-prev-button" type="button">이전</button>
       <button id="music-next-button" type="button">다음</button>
+      <button id="music-mode-button" class="music-mode-button" type="button">연속재생</button>
       <button id="music-volume-down-button" type="button">-</button>
       <span id="music-volume-label" class="music-volume">45%</span>
       <button id="music-volume-up-button" type="button">+</button>
@@ -408,22 +553,52 @@
     </div>
   </div>
 
+  <div id="city-panel" class="city-panel" hidden>
+    <label class="city-label" for="city-select">
+      날씨 도시
+      <select id="city-select" class="city-select"></select>
+    </label>
+    <div class="city-row" aria-label="도시와 야간 모드 조작">
+      <button id="city-apply-button" type="button">적용</button>
+      <button id="city-seoul-button" type="button">서울기본</button>
+      <button id="night-mode-button" type="button">야간자동</button>
+    </div>
+    <div id="city-note" class="city-note">기본 도시는 서울입니다. 선택한 도시는 이 브라우저에 저장됩니다.</div>
+  </div>
+
   <main id="stage" class="stage">
-    <section class="clock-card" aria-label="대한민국 기준 현재 시각">
-      <div class="timezone-label">Korea Standard Time</div>
-      <div class="time" aria-live="polite">
-        <span id="hm" class="hm">--:--</span><span id="sec" class="sec">--</span>
-      </div>
-      <div id="date" class="date">대한민국 기준 날짜를 불러오는 중</div>
-      <div id="weather" class="weather" aria-label="현재 날씨">
-        <div class="weather-item" id="weather-city">서울</div>
-        <div class="weather-item" id="weather-temp">온도 --°</div>
-        <div class="weather-item" id="weather-humidity">습도 --%</div>
-        <div class="weather-item" id="weather-feels">체감 --°</div>
-        <div class="weather-item" id="weather-condition">날씨 확인 중</div>
-      </div>
-      <div id="weather-source" class="weather-source">실내 습도가 아니라 선택한 좌표의 실외 예보/관측 기반 습도입니다.</div>
-    </section>
+    <div class="dashboard">
+      <section class="clock-card" aria-label="대한민국 기준 현재 시각">
+        <div class="timezone-label">Korea Standard Time</div>
+        <div class="time" aria-live="polite">
+          <span id="hm" class="hm">--:--</span><span id="sec" class="sec">--</span>
+        </div>
+        <div id="date" class="date">대한민국 기준 날짜를 불러오는 중</div>
+        <div id="weather" class="weather" aria-label="현재 날씨">
+          <div class="weather-item" id="weather-city">서울</div>
+          <div class="weather-item" id="weather-temp">온도 --°</div>
+          <div class="weather-item" id="weather-humidity">습도 --%</div>
+          <div class="weather-item" id="weather-feels">체감 --°</div>
+          <div class="weather-item" id="weather-condition">날씨 확인 중</div>
+        </div>
+        <div id="weather-source" class="weather-source">실내 습도가 아니라 선택한 좌표의 실외 예보/관측 기반 습도입니다.</div>
+      </section>
+
+      <aside id="weather-summary" class="weather-summary" aria-label="오늘의 날씨 요약">
+        <div class="summary-kicker">TODAY WEATHER</div>
+        <div id="summary-title" class="summary-title">오늘의 날씨를 불러오는 중</div>
+        <div class="summary-grid">
+          <div class="summary-metric"><span>최고 / 최저</span><strong id="summary-temp">-- / --</strong></div>
+          <div class="summary-metric"><span>강수</span><strong id="summary-rain">--</strong></div>
+          <div class="summary-metric"><span>바람</span><strong id="summary-wind">--</strong></div>
+          <div class="summary-metric"><span>습도</span><strong id="summary-humidity">--</strong></div>
+        </div>
+        <ul id="summary-tips" class="summary-tips">
+          <li>날씨 요약을 준비하고 있습니다.</li>
+        </ul>
+        <div id="summary-night" class="summary-night">야간 자동</div>
+      </aside>
+    </div>
   </main>
 
   <div id="art-credit" class="art-credit">명화 배경을 불러오는 중</div>
@@ -451,12 +626,18 @@
         preloadAhead: 3,
         showSeconds: true,
         enableWeather: true,
+        enableWeatherSummary: true,
         enableArt: true,
         enableMusic: true,
         musicAutoStart: false,
         musicTrack: '',
+        musicMode: 'playlist',
+        musicModeFromQuery: false,
         musicVolume: 0.45,
-        musicVolumeFromQuery: false
+        musicVolumeFromQuery: false,
+        nightMode: 'auto',
+        nightModeFromQuery: false,
+        cityFromQuery: false
       };
 
       var el = {
@@ -479,12 +660,28 @@
         fullscreenButton: document.getElementById('fullscreen-button'),
         nextArtButton: document.getElementById('next-art-button'),
         weatherButton: document.getElementById('weather-button'),
+        cityPanelButton: document.getElementById('city-panel-button'),
+        cityPanel: document.getElementById('city-panel'),
+        citySelect: document.getElementById('city-select'),
+        cityApplyButton: document.getElementById('city-apply-button'),
+        citySeoulButton: document.getElementById('city-seoul-button'),
+        cityNote: document.getElementById('city-note'),
+        nightModeButton: document.getElementById('night-mode-button'),
+        weatherSummary: document.getElementById('weather-summary'),
+        summaryTitle: document.getElementById('summary-title'),
+        summaryTemp: document.getElementById('summary-temp'),
+        summaryRain: document.getElementById('summary-rain'),
+        summaryWind: document.getElementById('summary-wind'),
+        summaryHumidity: document.getElementById('summary-humidity'),
+        summaryTips: document.getElementById('summary-tips'),
+        summaryNight: document.getElementById('summary-night'),
         musicToggleButton: document.getElementById('music-toggle-button'),
         musicPanelButton: document.getElementById('music-panel-button'),
         musicPanel: document.getElementById('music-panel'),
         musicSelect: document.getElementById('music-select'),
         musicPrevButton: document.getElementById('music-prev-button'),
         musicNextButton: document.getElementById('music-next-button'),
+        musicModeButton: document.getElementById('music-mode-button'),
         musicVolumeDownButton: document.getElementById('music-volume-down-button'),
         musicVolumeUpButton: document.getElementById('music-volume-up-button'),
         musicVolumeLabel: document.getElementById('music-volume-label'),
@@ -505,13 +702,36 @@
         musicTrackIndex: -1,
         musicSourceIndex: -1,
         musicPlaying: false,
+        latestWeather: null,
         noticeTimer: null,
         cursorTimer: null
       };
 
       var weekdays = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
       var fallbackClasses = ['fallback-bg-1', 'fallback-bg-2', 'fallback-bg-3'];
+      var cityPresets = [
+        { id: 'seoul', name: '서울', lat: 37.5665, lon: 126.9780 },
+        { id: 'busan', name: '부산', lat: 35.1796, lon: 129.0756 },
+        { id: 'daegu', name: '대구', lat: 35.8714, lon: 128.6014 },
+        { id: 'incheon', name: '인천', lat: 37.4563, lon: 126.7052 },
+        { id: 'gwangju', name: '광주', lat: 35.1595, lon: 126.8526 },
+        { id: 'daejeon', name: '대전', lat: 36.3504, lon: 127.3845 },
+        { id: 'ulsan', name: '울산', lat: 35.5384, lon: 129.3114 },
+        { id: 'sejong', name: '세종', lat: 36.4800, lon: 127.2890 },
+        { id: 'jeju', name: '제주', lat: 33.4996, lon: 126.5312 },
+        { id: 'suwon', name: '수원', lat: 37.2636, lon: 127.0286 },
+        { id: 'goyang', name: '고양', lat: 37.6584, lon: 126.8320 },
+        { id: 'yongin', name: '용인', lat: 37.2411, lon: 127.1776 },
+        { id: 'seongnam', name: '성남', lat: 37.4200, lon: 127.1265 },
+        { id: 'cheongju', name: '청주', lat: 36.6424, lon: 127.4890 },
+        { id: 'jeonju', name: '전주', lat: 35.8242, lon: 127.1480 },
+        { id: 'changwon', name: '창원', lat: 35.2279, lon: 128.6811 },
+        { id: 'pohang', name: '포항', lat: 36.0190, lon: 129.3435 },
+        { id: 'gangneung', name: '강릉', lat: 37.7519, lon: 128.8761 },
+        { id: 'chuncheon', name: '춘천', lat: 37.8813, lon: 127.7298 }
+      ];
 
+      applySavedSettings();
       applyQuerySettings();
       init();
 
@@ -520,6 +740,12 @@
           el.sec.style.display = 'none';
         }
         el.city.textContent = CONFIG.city;
+        populateCitySelect();
+        applyNightMode();
+        setInterval(applyNightMode, 60 * 1000);
+        if (!CONFIG.enableWeatherSummary) {
+          el.weatherSummary.hidden = true;
+        }
 
         updateClock();
         setInterval(updateClock, 500);
@@ -529,6 +755,7 @@
           setInterval(updateWeather, CONFIG.weatherRefreshMs);
         } else {
           el.weather.style.display = 'none';
+          el.weatherSummary.hidden = true;
           el.source.textContent = '날씨 표시가 꺼져 있습니다.';
         }
 
@@ -548,17 +775,50 @@
         setupCursorAutoHide();
       }
 
+      function applySavedSettings() {
+        var saved = readAppSettings();
+        if (saved.city && isFiniteNumber(saved.latitude) && isFiniteNumber(saved.longitude)) {
+          CONFIG.city = saved.city;
+          CONFIG.latitude = Number(saved.latitude);
+          CONFIG.longitude = Number(saved.longitude);
+        }
+        if (saved.nightMode === 'auto' || saved.nightMode === 'on' || saved.nightMode === 'off') {
+          CONFIG.nightMode = saved.nightMode;
+        }
+      }
+
       function applyQuerySettings() {
         var params = parseQuery();
-        if (params.city) CONFIG.city = params.city;
+        var hasUrlCity = params.city || (isFiniteNumber(params.lat) && isFiniteNumber(params.lon));
+        if (params.city) {
+          var preset = findCityByName(params.city);
+          CONFIG.city = preset ? preset.name : params.city;
+          if (preset) {
+            CONFIG.latitude = preset.lat;
+            CONFIG.longitude = preset.lon;
+          }
+        }
         if (isFiniteNumber(params.lat)) CONFIG.latitude = Number(params.lat);
         if (isFiniteNumber(params.lon)) CONFIG.longitude = Number(params.lon);
+        if (hasUrlCity) CONFIG.cityFromQuery = true;
         if (params.seconds === 'off') CONFIG.showSeconds = false;
         if (params.weather === 'off') CONFIG.enableWeather = false;
+        if (params.summary === 'off' || params.weatherSummary === 'off') CONFIG.enableWeatherSummary = false;
         if (params.art === 'off') CONFIG.enableArt = false;
         if (params.music === 'off') CONFIG.enableMusic = false;
         if (params.music === 'on') CONFIG.musicAutoStart = true;
         if (params.track) CONFIG.musicTrack = params.track;
+        if (params.musicMode || params.playMode) {
+          var musicMode = normalizeMusicMode(params.musicMode || params.playMode);
+          if (musicMode) {
+            CONFIG.musicMode = musicMode;
+            CONFIG.musicModeFromQuery = true;
+          }
+        }
+        if (params.night === 'on' || params.night === 'off' || params.night === 'auto') {
+          CONFIG.nightMode = params.night;
+          CONFIG.nightModeFromQuery = true;
+        }
         if (isFiniteNumber(params.volume)) {
           CONFIG.musicVolume = clamp(Number(params.volume), 0, 1);
           CONFIG.musicVolumeFromQuery = true;
@@ -589,6 +849,24 @@
         return Math.min(max, Math.max(min, value));
       }
 
+      function readAppSettings() {
+        try {
+          return JSON.parse(localStorage.getItem('koreaArtClockSettings') || '{}') || {};
+        } catch (err) {
+          return {};
+        }
+      }
+
+      function saveAppSettings(next) {
+        try {
+          var current = readAppSettings();
+          for (var key in next) current[key] = next[key];
+          localStorage.setItem('koreaArtClockSettings', JSON.stringify(current));
+        } catch (err) {
+          // Some TV browsers disable storage; URL options still work.
+        }
+      }
+
       function updateClock() {
         var kst = getKoreaDate();
         var hour = kst.getUTCHours();
@@ -615,14 +893,123 @@
         return value < 10 ? '0' + value : String(value);
       }
 
+      function populateCitySelect() {
+        el.citySelect.innerHTML = '';
+        for (var i = 0; i < cityPresets.length; i++) {
+          var city = cityPresets[i];
+          var option = document.createElement('option');
+          option.value = city.id;
+          option.textContent = city.name;
+          el.citySelect.appendChild(option);
+        }
+        syncCitySelect();
+        updateNightUi();
+      }
+
+      function syncCitySelect() {
+        var city = findCityByName(CONFIG.city);
+        el.citySelect.value = city ? city.id : 'seoul';
+      }
+
+      function findCityById(id) {
+        for (var i = 0; i < cityPresets.length; i++) {
+          if (cityPresets[i].id === id) return cityPresets[i];
+        }
+        return null;
+      }
+
+      function findCityByName(name) {
+        var target = cleanText(String(name || '')).toLowerCase();
+        for (var i = 0; i < cityPresets.length; i++) {
+          if (cityPresets[i].name.toLowerCase() === target || cityPresets[i].id === target) {
+            return cityPresets[i];
+          }
+        }
+        return null;
+      }
+
+      function applyCity(city, persist) {
+        if (!city) return;
+        CONFIG.city = city.name;
+        CONFIG.latitude = city.lat;
+        CONFIG.longitude = city.lon;
+        el.city.textContent = CONFIG.city;
+        syncCitySelect();
+        if (persist) {
+          saveAppSettings({ city: city.name, latitude: city.lat, longitude: city.lon });
+        }
+        if (CONFIG.enableWeather) updateWeather();
+        updateNightUi();
+        showMessage(CONFIG.city + ' 날씨로 바꿨습니다.');
+      }
+
+      function resetCityToSeoul() {
+        applyCity(cityPresets[0], true);
+      }
+
+      function toggleCityPanel() {
+        el.cityPanel.hidden = !el.cityPanel.hidden;
+        el.cityPanelButton.setAttribute('aria-expanded', el.cityPanel.hidden ? 'false' : 'true');
+        if (!el.cityPanel.hidden && el.musicPanel) {
+          el.musicPanel.hidden = true;
+          el.musicPanelButton.setAttribute('aria-expanded', 'false');
+        }
+      }
+
+      function cycleNightMode() {
+        var next = CONFIG.nightMode === 'auto' ? 'on' : CONFIG.nightMode === 'on' ? 'off' : 'auto';
+        CONFIG.nightMode = next;
+        CONFIG.nightModeFromQuery = false;
+        saveAppSettings({ nightMode: next });
+        applyNightMode();
+        showMessage(nightModeLabel() + '으로 설정했습니다.');
+      }
+
+      function applyNightMode() {
+        var active = CONFIG.nightMode === 'on' || (CONFIG.nightMode === 'auto' && isKoreaNightNow());
+        document.body.classList.toggle('night-mode', active);
+        updateNightUi();
+      }
+
+      function isKoreaNightNow() {
+        var kst = getKoreaDate();
+        return isKoreaNightByMinutes(kst.getUTCHours() * 60 + kst.getUTCMinutes());
+      }
+
+      function isKoreaNightByMinutes(minutes) {
+        return minutes >= 22 * 60 || minutes < 6 * 60 + 30;
+      }
+
+      function nightModeLabel() {
+        if (CONFIG.nightMode === 'on') return '야간 켜짐';
+        if (CONFIG.nightMode === 'off') return '야간 꺼짐';
+        return '야간 자동';
+      }
+
+      function updateNightUi() {
+        var label = nightModeLabel();
+        el.nightModeButton.textContent = label;
+        if (el.summaryNight) {
+          el.summaryNight.textContent = label + ' · 한국시간 22:00~06:30 눈부심 완화';
+        }
+        if (el.cityNote) {
+          el.cityNote.textContent = '기본 도시는 서울입니다. 현재 ' + CONFIG.city + ' · ' + label;
+        }
+      }
+
       function updateWeather() {
         el.condition.textContent = '날씨 확인 중';
+        if (CONFIG.enableWeatherSummary) {
+          el.summaryTitle.textContent = CONFIG.city + ' 오늘 날씨 확인 중';
+          el.summaryTips.innerHTML = '<li>날씨 요약을 준비하고 있습니다.</li>';
+        }
 
         var url = 'https://api.open-meteo.com/v1/forecast' +
           '?latitude=' + encodeURIComponent(CONFIG.latitude) +
           '&longitude=' + encodeURIComponent(CONFIG.longitude) +
           '&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m' +
           '&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m' +
+          '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,wind_speed_10m_max' +
           '&forecast_days=1' +
           '&timezone=Asia%2FSeoul';
 
@@ -639,6 +1026,8 @@
           el.feels.textContent = '체감 ' + formatNumber(current.apparent_temperature) + '°';
           el.condition.textContent = codeToKorean(current.weather_code);
           el.source.textContent = 'Open-Meteo 기준 · ' + CONFIG.city + ' · ' + compactWeatherTime(current.time);
+          state.latestWeather = { current: current, daily: normalizeDailyWeather(data) };
+          updateWeatherSummary(state.latestWeather);
         }, function () {
           weatherFailed('날씨 API에 연결하지 못했습니다. 시계는 계속 정상 동작합니다.');
         });
@@ -675,12 +1064,118 @@
         return arr && arr.length > index ? arr[index] : null;
       }
 
+      function normalizeDailyWeather(data) {
+        if (!data || !data.daily) return null;
+        return {
+          time: valueAt(data.daily.time, 0),
+          weather_code: valueAt(data.daily.weather_code, 0),
+          temperature_2m_max: valueAt(data.daily.temperature_2m_max, 0),
+          temperature_2m_min: valueAt(data.daily.temperature_2m_min, 0),
+          precipitation_sum: valueAt(data.daily.precipitation_sum, 0),
+          precipitation_probability_max: valueAt(data.daily.precipitation_probability_max, 0),
+          wind_speed_10m_max: valueAt(data.daily.wind_speed_10m_max, 0)
+        };
+      }
+
+      function updateWeatherSummary(weather) {
+        if (!CONFIG.enableWeatherSummary || !el.weatherSummary) {
+          if (el.weatherSummary) el.weatherSummary.hidden = true;
+          return;
+        }
+        el.weatherSummary.hidden = false;
+        if (!weather || !weather.current) {
+          weatherSummaryFailed('날씨 요약을 불러오지 못했습니다.');
+          return;
+        }
+
+        var current = weather.current;
+        var daily = weather.daily || {};
+        var code = daily.weather_code !== null && daily.weather_code !== undefined ? daily.weather_code : current.weather_code;
+        var condition = codeToKorean(code);
+        var maxTemp = formatNumber(daily.temperature_2m_max);
+        var minTemp = formatNumber(daily.temperature_2m_min);
+        var rainMm = formatDecimal(daily.precipitation_sum, 1);
+        var rainProb = formatNumber(daily.precipitation_probability_max);
+        var wind = formatNumber(daily.wind_speed_10m_max || current.wind_speed_10m);
+        var humidity = formatNumber(current.relative_humidity_2m);
+
+        el.summaryTitle.textContent = CONFIG.city + ' 오늘은 ' + condition;
+        el.summaryTemp.textContent = maxTemp + '° / ' + minTemp + '°';
+        el.summaryRain.textContent = rainProb + '% · ' + rainMm + 'mm';
+        el.summaryWind.textContent = wind + 'km/h';
+        el.summaryHumidity.textContent = humidity + '%';
+        renderSummaryTips(buildWeatherTips(current, daily));
+        updateNightUi();
+      }
+
+      function weatherSummaryFailed(message) {
+        if (!CONFIG.enableWeatherSummary || !el.weatherSummary) return;
+        el.weatherSummary.hidden = false;
+        el.summaryTitle.textContent = message;
+        el.summaryTemp.textContent = '-- / --';
+        el.summaryRain.textContent = '--';
+        el.summaryWind.textContent = '--';
+        el.summaryHumidity.textContent = '--';
+        el.summaryTips.innerHTML = '<li>잠시 후 날씨갱신을 다시 눌러 주세요.</li>';
+      }
+
+      function renderSummaryTips(tips) {
+        el.summaryTips.innerHTML = '';
+        for (var i = 0; i < tips.length; i++) {
+          var li = document.createElement('li');
+          li.textContent = tips[i];
+          el.summaryTips.appendChild(li);
+        }
+      }
+
+      function buildWeatherTips(current, daily) {
+        var tips = [];
+        var rainProb = Number(daily.precipitation_probability_max || 0);
+        var rainMm = Number(daily.precipitation_sum || 0);
+        var minTemp = Number(daily.temperature_2m_min);
+        var maxTemp = Number(daily.temperature_2m_max);
+        var feels = Number(current.apparent_temperature);
+        var humidity = Number(current.relative_humidity_2m);
+        var wind = Number(daily.wind_speed_10m_max || current.wind_speed_10m || 0);
+
+        if (rainProb >= 50 || rainMm >= 1) {
+          tips.push('우산을 챙기면 마음이 편한 날입니다.');
+        } else {
+          tips.push('큰 비 가능성은 낮아 보입니다.');
+        }
+
+        if (isFinite(minTemp) && minTemp <= 5) {
+          tips.push('아침·밤에는 두꺼운 외투가 좋겠습니다.');
+        } else if (isFinite(feels) && feels <= 12) {
+          tips.push('체감온도가 낮아 가벼운 겉옷을 추천합니다.');
+        } else if (isFinite(maxTemp) && maxTemp >= 30) {
+          tips.push('한낮 더위가 강해 물과 그늘을 챙기세요.');
+        } else {
+          tips.push('옷차림은 평소 계절감대로 무난합니다.');
+        }
+
+        if ((rainProb >= 40 || rainMm > 0.3) && humidity >= 75) {
+          tips.push('빨래 건조와 장시간 환기는 신중히 보세요.');
+        } else if (humidity <= 45 && wind < 30) {
+          tips.push('짧은 환기와 실내 정리에 좋은 조건입니다.');
+        } else {
+          tips.push('환기는 짧게, 실내 습도 변화를 확인하세요.');
+        }
+
+        if (wind >= 35) {
+          tips.push('바람이 강해 창문과 베란다 물건을 확인하세요.');
+        }
+
+        return tips.slice(0, 4);
+      }
+
       function weatherFailed(message) {
         el.temp.textContent = '온도 --°';
         el.humidity.textContent = '습도 --%';
         el.feels.textContent = '체감 --°';
         el.condition.textContent = '날씨 연결 실패';
         el.source.textContent = message;
+        weatherSummaryFailed('날씨 요약을 불러오지 못했습니다.');
       }
 
       function formatNumber(value) {
@@ -688,6 +1183,13 @@
         var n = Number(value);
         if (!isFinite(n)) return '--';
         return String(Math.round(n));
+      }
+
+      function formatDecimal(value, digits) {
+        if (value === null || value === undefined || value === '') return '--';
+        var n = Number(value);
+        if (!isFinite(n)) return '--';
+        return String(Number(n.toFixed(digits)));
       }
 
       function compactWeatherTime(timeText) {
@@ -933,8 +1435,11 @@
         if (!CONFIG.musicVolumeFromQuery && isFiniteNumber(saved.volume)) {
           CONFIG.musicVolume = clamp(Number(saved.volume), 0, 1);
         }
+        if (!CONFIG.musicModeFromQuery && saved.mode) {
+          CONFIG.musicMode = normalizeMusicMode(saved.mode) || CONFIG.musicMode;
+        }
 
-        el.audio.loop = true;
+        applyMusicModeToAudio();
         el.audio.volume = CONFIG.musicVolume;
         el.audio.addEventListener('play', function () {
           state.musicPlaying = true;
@@ -947,6 +1452,7 @@
           updateMusicUi();
         });
         el.audio.addEventListener('error', handleMusicError);
+        el.audio.addEventListener('ended', handleMusicEnded);
 
         var trackId = CONFIG.musicTrack || saved.trackId || manifest.defaultTrack;
         var index = findMusicTrackIndex(trackId);
@@ -1047,6 +1553,10 @@
       function toggleMusicPanel() {
         el.musicPanel.hidden = !el.musicPanel.hidden;
         el.musicPanelButton.setAttribute('aria-expanded', el.musicPanel.hidden ? 'false' : 'true');
+        if (!el.musicPanel.hidden && el.cityPanel) {
+          el.cityPanel.hidden = true;
+          el.cityPanelButton.setAttribute('aria-expanded', 'false');
+        }
       }
 
       function selectMusicTrack(trackId) {
@@ -1055,7 +1565,56 @@
       }
 
       function stepMusicTrack(direction) {
-        loadMusicTrack(state.musicTrackIndex + direction, state.musicPlaying);
+        loadMusicTrack(nextMusicIndex(direction), state.musicPlaying);
+      }
+
+      function cycleMusicMode() {
+        var next = CONFIG.musicMode === 'playlist' ? 'repeat-one' : CONFIG.musicMode === 'repeat-one' ? 'shuffle' : 'playlist';
+        setMusicMode(next, true);
+        showMessage(musicModeLabel() + ' 모드입니다.');
+      }
+
+      function setMusicMode(mode, persist) {
+        CONFIG.musicMode = normalizeMusicMode(mode) || 'playlist';
+        CONFIG.musicModeFromQuery = false;
+        applyMusicModeToAudio();
+        if (persist) saveMusicSettings({ mode: CONFIG.musicMode });
+        updateMusicUi();
+      }
+
+      function applyMusicModeToAudio() {
+        el.audio.loop = CONFIG.musicMode === 'repeat-one';
+      }
+
+      function normalizeMusicMode(mode) {
+        mode = String(mode || '').toLowerCase();
+        if (mode === 'repeat' || mode === 'repeat-one' || mode === 'one') return 'repeat-one';
+        if (mode === 'shuffle' || mode === 'random') return 'shuffle';
+        if (mode === 'playlist' || mode === 'next' || mode === 'all') return 'playlist';
+        return '';
+      }
+
+      function musicModeLabel() {
+        if (CONFIG.musicMode === 'repeat-one') return '한곡반복';
+        if (CONFIG.musicMode === 'shuffle') return '무작위';
+        return '연속재생';
+      }
+
+      function nextMusicIndex(direction) {
+        if (!state.musicTracks.length) return 0;
+        if (CONFIG.musicMode === 'shuffle' && state.musicTracks.length > 1) {
+          var randomIndex = state.musicTrackIndex;
+          while (randomIndex === state.musicTrackIndex) {
+            randomIndex = Math.floor(Math.random() * state.musicTracks.length);
+          }
+          return randomIndex;
+        }
+        return state.musicTrackIndex + direction;
+      }
+
+      function handleMusicEnded() {
+        if (CONFIG.musicMode === 'repeat-one') return;
+        loadMusicTrack(nextMusicIndex(1), true);
       }
 
       function setMusicVolume(value) {
@@ -1085,11 +1644,12 @@
         var track = state.musicTracks[state.musicTrackIndex];
         el.musicToggleButton.textContent = state.musicPlaying ? '음악정지' : '음악재생';
         el.musicVolumeLabel.textContent = Math.round(el.audio.volume * 100) + '%';
+        el.musicModeButton.textContent = musicModeLabel();
         if (!track) return;
 
         el.musicSelect.value = track.id;
         el.musicNow.textContent = track.title + ' · ' + cleanText(track.artist || '작가 미상');
-        el.musicCredit.textContent = track.license + ' · ' + track.source + ' · 선택한 곡 반복 재생';
+        el.musicCredit.textContent = track.license + ' · ' + track.source + ' · ' + musicModeLabel();
         el.musicSourceLink.href = track.sourceUrl || 'https://commons.wikimedia.org/';
         el.musicLicenseLink.href = track.licenseUrl || 'https://commons.wikimedia.org/wiki/Commons:Licensing';
       }
@@ -1122,6 +1682,15 @@
           updateWeather();
           showMessage('날씨를 갱신합니다.');
         });
+        el.cityPanelButton.addEventListener('click', toggleCityPanel);
+        el.cityApplyButton.addEventListener('click', function () {
+          applyCity(findCityById(el.citySelect.value), true);
+        });
+        el.citySeoulButton.addEventListener('click', resetCityToSeoul);
+        el.citySelect.addEventListener('change', function () {
+          applyCity(findCityById(el.citySelect.value), true);
+        });
+        el.nightModeButton.addEventListener('click', cycleNightMode);
         el.musicToggleButton.addEventListener('click', toggleMusicPlayback);
         el.musicPanelButton.addEventListener('click', toggleMusicPanel);
         el.musicSelect.addEventListener('change', function () {
@@ -1133,6 +1702,7 @@
         el.musicNextButton.addEventListener('click', function () {
           stepMusicTrack(1);
         });
+        el.musicModeButton.addEventListener('click', cycleMusicMode);
         el.musicVolumeDownButton.addEventListener('click', function () {
           setMusicVolume(el.audio.volume - 0.1);
         });
@@ -1146,6 +1716,8 @@
           if (key === 'n' || key === 'N') nextArtwork(false);
           if (key === 'w' || key === 'W') updateWeather();
           if (key === 'm' || key === 'M') toggleMusicPlayback();
+          if (key === 'c' || key === 'C') toggleCityPanel();
+          if (key === 'r' || key === 'R') cycleMusicMode();
         });
       }
 
