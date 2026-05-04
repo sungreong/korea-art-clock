@@ -276,7 +276,7 @@
     }
 
     .weather-summary {
-      width: clamp(320px, 25vw, 380px);
+      width: clamp(400px, 32vw, 560px);
       padding: 20px 22px;
       border: 1px solid rgba(255,255,255,0.16);
       border-radius: 28px;
@@ -350,18 +350,21 @@
 
     .summary-hourly {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(7, minmax(62px, 1fr));
       gap: 8px;
       margin-top: 13px;
+      overflow-x: auto;
+      padding-bottom: 3px;
     }
 
     .hourly-slot {
       min-width: 0;
-      min-height: 72px;
-      padding: 9px 10px;
+      min-height: 96px;
+      padding: 9px 8px;
       border-radius: 16px;
       background: rgba(255,255,255,0.075);
       border: 1px solid rgba(255,255,255,0.08);
+      text-align: center;
     }
 
     .hourly-slot span,
@@ -377,16 +380,23 @@
 
     .hourly-slot strong {
       display: block;
-      margin-top: 5px;
+      margin-top: 6px;
       font-size: 18px;
       line-height: 1;
       font-weight: 900;
       color: rgba(255,255,255,0.94);
     }
 
+    .hourly-icon {
+      margin-top: 6px;
+      font-size: 22px;
+      line-height: 1;
+      filter: drop-shadow(0 4px 9px rgba(0,0,0,0.42));
+    }
+
     .hourly-slot em {
       display: block;
-      margin-top: 6px;
+      margin-top: 7px;
       font-style: normal;
       font-size: 11px;
       line-height: 1.25;
@@ -913,7 +923,8 @@
       .summary-metric { min-height: 50px; padding: 8px 10px; border-radius: 14px; }
       .summary-metric strong { font-size: 16px; }
       .summary-hourly { margin-top: 8px; }
-      .hourly-slot { min-height: 58px; padding: 7px 9px; border-radius: 14px; }
+      .hourly-slot { min-height: 88px; padding: 7px 8px; border-radius: 14px; }
+      .hourly-icon { font-size: 20px; }
       .hourly-slot strong { font-size: 16px; }
       .summary-tips, .summary-night { display: none; }
       .forecast-rail { width: min(94vw, 720px); padding: 10px 13px 12px; border-radius: 22px; }
@@ -961,7 +972,7 @@
       .date { font-size: 20px; }
       body.time-focus-mode .date { font-size: clamp(20px, 5vw, 26px); }
       .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .summary-hourly { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .summary-hourly { grid-template-columns: repeat(7, minmax(58px, 1fr)); }
       .forecast-days { grid-template-columns: repeat(2, minmax(0, 1fr)); overflow: visible; }
       .forecast-day { min-height: 72px; }
       .forecast-rail-head { align-items: flex-start; flex-direction: column; gap: 4px; }
@@ -1921,7 +1932,7 @@
         var times = data.hourly.time;
         var start = nearestHourlyIndex(times);
         if (start < 0) return [];
-        var offsets = [0, 3, 6];
+        var offsets = [0, 1, 2, 3, 4, 5, 6];
         var slots = [];
         for (var i = 0; i < offsets.length; i++) {
           var index = Math.min(start + offsets[i], times.length - 1);
@@ -2039,21 +2050,28 @@
           return;
         }
         el.summaryHourly.innerHTML = '';
-        for (var i = 0; i < Math.min(3, slots.length); i++) {
+        for (var i = 0; i < Math.min(7, slots.length); i++) {
           var slot = slots[i];
           var item = document.createElement('div');
           item.className = 'hourly-slot';
+          item.setAttribute('aria-label', hourlyAriaLabel(slot));
 
           var label = document.createElement('span');
-          label.textContent = slot.offsetHours === 0 ? '지금' : '+' + slot.offsetHours + '시간';
+          label.textContent = hourlySlotLabel(slot);
+
+          var icon = document.createElement('div');
+          icon.className = 'hourly-icon';
+          icon.setAttribute('aria-hidden', 'true');
+          icon.textContent = weatherIcon(slot.weather_code);
 
           var temp = document.createElement('strong');
           temp.textContent = formatNumber(slot.temperature_2m) + '°';
 
           var detail = document.createElement('em');
-          detail.textContent = compactWeatherCondition(slot.weather_code) + ' · ' + formatNumber(slot.precipitation_probability) + '%';
+          detail.textContent = '비 ' + formatNumber(slot.precipitation_probability) + '%';
 
           item.appendChild(label);
+          item.appendChild(icon);
           item.appendChild(temp);
           item.appendChild(detail);
           el.summaryHourly.appendChild(item);
@@ -2062,14 +2080,34 @@
 
       function renderHourlyLoading(labelText) {
         if (!el.summaryHourly) return;
-        var labels = ['지금', '+3시간', '+6시간'];
+        var labels = ['지금', '+1', '+2', '+3', '+4', '+5', '+6'];
         el.summaryHourly.innerHTML = '';
         for (var i = 0; i < labels.length; i++) {
           var item = document.createElement('div');
           item.className = 'hourly-slot';
-          item.innerHTML = '<span>' + labels[i] + '</span><strong>--°</strong><em>' + labelText + '</em>';
+          item.innerHTML = '<span>' + labels[i] + '</span><div class="hourly-icon" aria-hidden="true">·</div><strong>--°</strong><em>' + labelText + '</em>';
           el.summaryHourly.appendChild(item);
         }
+      }
+
+      function hourlySlotLabel(slot) {
+        if (!slot || slot.offsetHours === 0) return '지금';
+        if (slot.time) {
+          var timeParts = String(slot.time).split('T');
+          if (timeParts.length === 2) {
+            var hour = Number(timeParts[1].split(':')[0]);
+            if (isFinite(hour)) return hour + '시';
+          }
+        }
+        return '+' + slot.offsetHours;
+      }
+
+      function hourlyAriaLabel(slot) {
+        var label = hourlySlotLabel(slot);
+        var condition = compactWeatherCondition(slot && slot.weather_code);
+        var temp = formatNumber(slot && slot.temperature_2m) + '도';
+        var rain = formatNumber(slot && slot.precipitation_probability) + '%';
+        return label + ' 예보, ' + condition + ', 온도 ' + temp + ', 비 올 확률 ' + rain;
       }
 
       function renderDailyForecast(days, isCached) {
@@ -2271,6 +2309,20 @@
         if (condition === '천둥번개') return '천둥';
         if (condition === '우박 동반 폭풍') return '폭풍';
         return condition;
+      }
+
+      function weatherIcon(code) {
+        if (code === null || code === undefined || code === '') return '·';
+        var c = Number(code);
+        if (!isFinite(c)) return '·';
+        if (c === 0) return '☀';
+        if (c === 1 || c === 2) return '⛅';
+        if (c === 3) return '☁';
+        if (c === 45 || c === 48) return '≋';
+        if ((c >= 51 && c <= 67) || (c >= 80 && c <= 82)) return '☂';
+        if ((c >= 71 && c <= 77) || c === 85 || c === 86) return '❄';
+        if (c >= 95) return '⚡';
+        return '·';
       }
 
       function loadLocalArtPool(showNotice) {
