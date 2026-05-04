@@ -124,6 +124,14 @@
       width: min(1500px, 96vw);
     }
 
+    body.time-focus-mode .stage {
+      padding: clamp(54px, 7vh, 96px) 3vw clamp(70px, 10vh, 130px);
+    }
+
+    body.time-focus-mode .dashboard {
+      width: min(1720px, 98vw);
+    }
+
     .clock-card {
       max-width: 94vw;
       padding: 2.4vh 4vw 2.6vh;
@@ -139,6 +147,14 @@
       border-color: rgba(255,255,255,0.1);
       box-shadow: 0 22px 64px rgba(0,0,0,0.55);
       text-shadow: 0 5px 18px rgba(0,0,0,0.92);
+    }
+
+    body.time-focus-mode .clock-card {
+      width: min(1480px, 94vw);
+      padding: clamp(26px, 5vh, 70px) clamp(26px, 5vw, 90px) clamp(30px, 5.4vh, 76px);
+      background: rgba(0,0,0,0.18);
+      border-color: rgba(255,255,255,0.14);
+      box-shadow: 0 34px 105px rgba(0,0,0,0.4);
     }
 
     @supports ((-webkit-backdrop-filter: blur(8px)) or (backdrop-filter: blur(8px))) {
@@ -165,6 +181,11 @@
       font-weight: 800;
     }
 
+    body.time-focus-mode .time {
+      letter-spacing: 0;
+      line-height: 0.9;
+    }
+
     .time .hm {
       font-size: 180px;
     }
@@ -180,9 +201,17 @@
       color: rgba(255,255,255,0.84);
     }
 
+    body.time-focus-mode .time .sec {
+      min-width: 1.5em;
+      margin-left: 0.2em;
+      letter-spacing: 0;
+      font-size: 0.28em;
+    }
+
     @supports (font-size: clamp(1px, 2vw, 3px)) {
       .time .hm { font-size: clamp(92px, 17vw, 330px); }
       .timezone-label { font-size: clamp(13px, 1.2vw, 23px); }
+      body.time-focus-mode .time .hm { font-size: clamp(112px, 23vw, 430px); }
     }
 
     .date {
@@ -193,8 +222,15 @@
       letter-spacing: -0.02em;
     }
 
+    body.time-focus-mode .date {
+      margin-top: clamp(16px, 2.4vh, 34px);
+      letter-spacing: 0;
+      color: rgba(255,255,255,0.88);
+    }
+
     @supports (font-size: clamp(1px, 2vw, 3px)) {
       .date { font-size: clamp(20px, 2.5vw, 44px); }
+      body.time-focus-mode .date { font-size: clamp(24px, 3.2vw, 58px); }
     }
 
     .weather {
@@ -230,6 +266,13 @@
       margin-top: 1.1vh;
       font-size: 14px;
       color: rgba(255,255,255,0.58);
+    }
+
+    body.time-focus-mode .weather,
+    body.time-focus-mode .weather-source,
+    body.time-focus-mode .weather-summary,
+    body.time-focus-mode .forecast-rail {
+      display: none !important;
     }
 
     .weather-summary {
@@ -505,6 +548,12 @@
       outline-offset: 2px;
     }
 
+    #focus-mode-button[aria-pressed="true"] {
+      background: rgba(255,255,255,0.2);
+      border-color: rgba(255,255,255,0.42);
+      color: rgba(255,255,255,0.98);
+    }
+
     .music-panel, .city-panel, .timer-panel, .protect-panel {
       position: fixed;
       z-index: 4;
@@ -521,7 +570,7 @@
     }
 
     .city-panel { top: 120px; }
-    .timer-panel { top: 174px; width: min(430px, calc(100vw - 32px)); }
+    .timer-panel { top: 174px; width: min(470px, calc(100vw - 32px)); }
     .protect-panel { top: 228px; width: min(430px, calc(100vw - 32px)); }
 
     .music-panel[hidden], .city-panel[hidden], .timer-panel[hidden], .protect-panel[hidden] { display: none; }
@@ -541,7 +590,7 @@
       color: rgba(255,255,255,0.72);
     }
 
-    .music-select, .city-select, .timer-input {
+    .music-select, .city-select, .timer-input, .alert-select {
       width: 100%;
       margin-top: 6px;
       padding: 10px 12px;
@@ -577,7 +626,8 @@
       min-width: 96px;
     }
 
-    .timer-presets button.active {
+    .timer-presets button.active,
+    .alert-duration-button.active {
       background: rgba(255,255,255,0.2);
       border-color: rgba(255,255,255,0.42);
     }
@@ -617,6 +667,15 @@
       font-size: 13px;
       font-weight: 800;
       color: rgba(255,255,255,0.72);
+    }
+
+    .alert-settings-label {
+      margin-top: 18px;
+      margin-bottom: 0;
+    }
+
+    .timer-alert-credit {
+      margin-top: 8px;
     }
 
     .music-volume {
@@ -659,7 +718,8 @@
     body.night-mode button,
     body.night-mode .music-select,
     body.night-mode .city-select,
-    body.night-mode .timer-input {
+    body.night-mode .timer-input,
+    body.night-mode .alert-select {
       background: rgba(0,0,0,0.62);
       border-color: rgba(255,255,255,0.12);
       color: rgba(255,255,255,0.78);
@@ -834,11 +894,15 @@
 
     @media (max-width: 860px) {
       .stage { justify-content: flex-start; gap: 8px; padding: 42px 3vw 24px; }
+      body.time-focus-mode .stage { justify-content: center; padding: 76px 3vw 44px; }
       .clock-card { border-radius: 22px; padding: 12px 4vw 14px; }
+      body.time-focus-mode .clock-card { width: min(94vw, 760px); padding: 24px 5vw 28px; }
       .timezone-label { margin-bottom: 5px; }
       .time .hm { font-size: 72px; }
+      body.time-focus-mode .time .hm { font-size: clamp(82px, 24vw, 160px); }
       .time .sec { display: inline-block; min-width: 1.6em; margin-left: 0.12em; margin-top: 0; font-size: 24px; vertical-align: super; }
       .date { margin-top: 10px; font-size: 22px; }
+      body.time-focus-mode .date { font-size: clamp(22px, 5vw, 34px); }
       .weather { gap: 7px; margin-top: 12px; }
       .weather-item { min-width: 0; padding: 7px 11px; font-size: 14px; }
       .weather-source { margin-top: 8px; font-size: 12px; }
@@ -879,6 +943,11 @@
         padding: 44px 10px 14px;
       }
 
+      body.time-focus-mode .stage {
+        min-height: 100vh;
+        padding: 76px 10px 34px;
+      }
+
       .clock-card,
       .weather-summary,
       .forecast-rail {
@@ -886,8 +955,11 @@
       }
 
       .time .hm { font-size: 58px; }
+      body.time-focus-mode .time .hm { font-size: clamp(66px, 22vw, 104px); }
       .time .sec { font-size: 20px; }
+      body.time-focus-mode .time .sec { font-size: 0.3em; }
       .date { font-size: 20px; }
+      body.time-focus-mode .date { font-size: clamp(20px, 5vw, 26px); }
       .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .summary-hourly { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .forecast-days { grid-template-columns: repeat(2, minmax(0, 1fr)); overflow: visible; }
@@ -913,6 +985,7 @@
     <button id="fullscreen-button" type="button">전체화면</button>
     <button id="next-art-button" type="button">배경변경</button>
     <button id="weather-button" type="button">날씨갱신</button>
+    <button id="focus-mode-button" type="button" aria-pressed="false">시계집중</button>
     <button id="city-panel-button" type="button" aria-expanded="false" aria-controls="city-panel">도시선택</button>
     <button id="timer-panel-button" type="button" aria-expanded="false" aria-controls="timer-panel">타이머</button>
     <button id="protect-panel-button" type="button" aria-expanded="false" aria-controls="protect-panel">화면보호</button>
@@ -955,7 +1028,7 @@
   </div>
 
   <div id="timer-panel" class="timer-panel" hidden>
-    <div class="timer-label">생활 타이머</div>
+    <div class="timer-label">타이머 / 알림</div>
     <div class="timer-presets" aria-label="타이머 프리셋">
       <button type="button" data-timer-minutes="3">3분</button>
       <button type="button" data-timer-minutes="5">5분</button>
@@ -981,6 +1054,23 @@
       <button id="alarm-clear-button" type="button">알람해제</button>
     </div>
     <div id="alarm-status" class="alarm-status">알람 없음</div>
+    <div class="timer-label alert-settings-label">알림 설정</div>
+    <label class="alarm-label" for="alert-sound-select">
+      알림음
+      <select id="alert-sound-select" class="alert-select"></select>
+    </label>
+    <div class="timer-row" aria-label="알림 유지 시간">
+      <button class="alert-duration-button" type="button" data-alert-minutes="1">1분</button>
+      <button class="alert-duration-button" type="button" data-alert-minutes="3">3분</button>
+      <button class="alert-duration-button" type="button" data-alert-minutes="5">5분</button>
+      <button class="alert-duration-button" type="button" data-alert-minutes="10">10분</button>
+    </div>
+    <div id="alert-settings-note" class="timer-status">알림음과 유지 시간을 선택해 주세요.</div>
+    <div class="music-credit timer-alert-credit">
+      <span id="alert-credit">알림음 출처를 불러오는 중입니다.</span>
+      <a id="alert-source-link" href="https://commons.wikimedia.org/" target="_blank" rel="noopener noreferrer">출처</a>
+      <a id="alert-license-link" href="https://commons.wikimedia.org/wiki/Commons:Licensing" target="_blank" rel="noopener noreferrer">라이선스</a>
+    </div>
   </div>
 
   <div id="protect-panel" class="protect-panel" hidden>
@@ -1056,6 +1146,7 @@
     </div>
   </div>
   <audio id="music-audio" preload="metadata"></audio>
+  <audio id="alert-audio" preload="auto"></audio>
 
   <noscript>
     이 페이지는 시계와 날씨 표시를 위해 JavaScript가 필요합니다.
@@ -1063,6 +1154,7 @@
 
   <script src="assets/artworks.js"></script>
   <script src="assets/music.js"></script>
+  <script src="assets/alerts.js"></script>
   <script>
     (function () {
       'use strict';
@@ -1083,6 +1175,8 @@
         enableMusic: true,
         enableTimer: true,
         enableProtection: true,
+        focusMode: false,
+        focusModeFromQuery: false,
         protectionFromQuery: false,
         restAfterMinutes: 50,
         restAfterFromQuery: false,
@@ -1092,6 +1186,10 @@
         timerMinutesFromQuery: false,
         alarmTime: '',
         alarmTimeFromQuery: false,
+        alertSoundId: 'cuckoo',
+        alertSoundFromQuery: false,
+        alertMinutes: 1,
+        alertMinutesFromQuery: false,
         musicAutoStart: false,
         musicTrack: '',
         musicMode: 'playlist',
@@ -1120,9 +1218,11 @@
         stage: document.getElementById('stage'),
         notice: document.getElementById('notice'),
         audio: document.getElementById('music-audio'),
+        alertAudio: document.getElementById('alert-audio'),
         fullscreenButton: document.getElementById('fullscreen-button'),
         nextArtButton: document.getElementById('next-art-button'),
         weatherButton: document.getElementById('weather-button'),
+        focusModeButton: document.getElementById('focus-mode-button'),
         cityPanelButton: document.getElementById('city-panel-button'),
         cityPanel: document.getElementById('city-panel'),
         citySelect: document.getElementById('city-select'),
@@ -1155,6 +1255,12 @@
         alarmSetButton: document.getElementById('alarm-set-button'),
         alarmClearButton: document.getElementById('alarm-clear-button'),
         alarmStatus: document.getElementById('alarm-status'),
+        alertSoundSelect: document.getElementById('alert-sound-select'),
+        alertDurationButtons: document.querySelectorAll('[data-alert-minutes]'),
+        alertSettingsNote: document.getElementById('alert-settings-note'),
+        alertCredit: document.getElementById('alert-credit'),
+        alertSourceLink: document.getElementById('alert-source-link'),
+        alertLicenseLink: document.getElementById('alert-license-link'),
         timerAlert: document.getElementById('timer-alert'),
         timerAlertTitle: document.getElementById('timer-alert-title'),
         timerAlertTime: document.getElementById('timer-alert-time'),
@@ -1209,6 +1315,8 @@
           paused: false,
           alarmTime: '',
           alarmAt: 0,
+          alertSoundId: 'cuckoo',
+          alertMinutes: 1,
           tickTimer: null,
           alertTimer: null,
           chimeTimer: null,
@@ -1254,6 +1362,7 @@
         { id: 'gangneung', name: '강릉', lat: 37.7519, lon: 128.8761 },
         { id: 'chuncheon', name: '춘천', lat: 37.8813, lon: 127.7298 }
       ];
+      var alertDurations = [1, 3, 5, 10];
 
       applySavedSettings();
       applyQuerySettings();
@@ -1266,6 +1375,7 @@
         el.city.textContent = CONFIG.city;
         populateCitySelect();
         applyNightMode();
+        applyFocusMode(false);
         setInterval(applyNightMode, 60 * 1000);
         if (!CONFIG.enableWeatherSummary) {
           el.weatherSummary.hidden = true;
@@ -1314,6 +1424,9 @@
         if (saved.nightMode === 'auto' || saved.nightMode === 'on' || saved.nightMode === 'off') {
           CONFIG.nightMode = saved.nightMode;
         }
+        if (typeof saved.focusMode === 'boolean') {
+          CONFIG.focusMode = saved.focusMode;
+        }
       }
 
       function applyQuerySettings() {
@@ -1337,6 +1450,14 @@
         if (params.music === 'off') CONFIG.enableMusic = false;
         if (params.music === 'on') CONFIG.musicAutoStart = true;
         if (params.timer === 'off') CONFIG.enableTimer = false;
+        if (params.mode === 'time' || params.focus === 'time') {
+          CONFIG.focusMode = true;
+          CONFIG.focusModeFromQuery = true;
+        }
+        if (params.mode === 'mixed' || params.focus === 'mixed') {
+          CONFIG.focusMode = false;
+          CONFIG.focusModeFromQuery = true;
+        }
         if (params.protect === 'off' || params.protect === 'on') {
           CONFIG.enableProtection = params.protect !== 'off';
           CONFIG.protectionFromQuery = true;
@@ -1356,6 +1477,14 @@
         if (params.alarm && isValidAlarmTime(params.alarm)) {
           CONFIG.alarmTime = params.alarm;
           CONFIG.alarmTimeFromQuery = true;
+        }
+        if (params.alertSound) {
+          CONFIG.alertSoundId = normalizeAlertSoundId(params.alertSound);
+          CONFIG.alertSoundFromQuery = true;
+        }
+        if (isFiniteNumber(params.alertMinutes)) {
+          CONFIG.alertMinutes = normalizeAlertMinutes(params.alertMinutes);
+          CONFIG.alertMinutesFromQuery = true;
         }
         if (params.track) CONFIG.musicTrack = params.track;
         if (params.musicMode || params.playMode) {
@@ -1523,6 +1652,30 @@
         var active = CONFIG.nightMode === 'on' || (CONFIG.nightMode === 'auto' && isKoreaNightNow());
         document.body.classList.toggle('night-mode', active);
         updateNightUi();
+      }
+
+      function toggleFocusMode() {
+        CONFIG.focusMode = !CONFIG.focusMode;
+        CONFIG.focusModeFromQuery = false;
+        applyFocusMode(true);
+        closeAllPanels();
+        showMessage(CONFIG.focusMode ? '시계 집중 모드입니다.' : '시계와 날씨를 함께 봅니다.');
+      }
+
+      function applyFocusMode(persist) {
+        document.body.classList.toggle('time-focus-mode', !!CONFIG.focusMode);
+        var hidden = CONFIG.focusMode ? 'true' : 'false';
+        if (el.weather) el.weather.setAttribute('aria-hidden', hidden);
+        if (el.source) el.source.setAttribute('aria-hidden', hidden);
+        if (el.weatherSummary) el.weatherSummary.setAttribute('aria-hidden', hidden);
+        if (el.forecastRail) el.forecastRail.setAttribute('aria-hidden', hidden);
+        if (el.focusModeButton) {
+          el.focusModeButton.textContent = CONFIG.focusMode ? '혼합보기' : '시계집중';
+          el.focusModeButton.setAttribute('aria-pressed', CONFIG.focusMode ? 'true' : 'false');
+        }
+        if (persist) {
+          saveAppSettings({ focusMode: !!CONFIG.focusMode });
+        }
       }
 
       function isKoreaNightNow() {
@@ -2594,12 +2747,20 @@
         }
 
         var saved = readTimerSettings();
+        populateAlertSoundSelect();
         var selected = CONFIG.timerMinutesFromQuery
           ? CONFIG.timerMinutes
           : normalizeTimerMinutes(saved.selectedMinutes || CONFIG.timerMinutes);
         state.timer.selectedMinutes = selected;
         state.timer.durationMs = selected * 60 * 1000;
         state.timer.remainingMs = state.timer.durationMs;
+        state.timer.alertSoundId = CONFIG.alertSoundFromQuery
+          ? normalizeAlertSoundId(CONFIG.alertSoundId)
+          : normalizeAlertSoundId(saved.alertSoundId || CONFIG.alertSoundId);
+        state.timer.alertMinutes = CONFIG.alertMinutesFromQuery
+          ? normalizeAlertMinutes(CONFIG.alertMinutes)
+          : normalizeAlertMinutes(saved.alertMinutes || CONFIG.alertMinutes);
+        if (el.alertSoundSelect) el.alertSoundSelect.value = state.timer.alertSoundId;
 
         if (CONFIG.alarmTimeFromQuery) {
           state.timer.alarmTime = CONFIG.alarmTime;
@@ -2611,6 +2772,9 @@
 
         restoreSavedCountdown(saved);
         restoreSavedAlarm(saved);
+        if (el.alertAudio) {
+          el.alertAudio.addEventListener('error', handleAlertAudioError);
+        }
         state.timer.tickTimer = setInterval(updateTimerTick, 500);
         updateTimerUi();
       }
@@ -2800,6 +2964,7 @@
         } else {
           el.alarmStatus.textContent = '알람 없음';
         }
+        updateAlertSettingsUi();
       }
 
       function updateTimerPresetButtons() {
@@ -2810,6 +2975,102 @@
         }
       }
 
+      function getAlertSounds() {
+        var manifest = window.KOREA_ART_CLOCK_ALERTS;
+        return manifest && manifest.sounds && manifest.sounds.length ? manifest.sounds : [];
+      }
+
+      function populateAlertSoundSelect() {
+        if (!el.alertSoundSelect) return;
+        var sounds = getAlertSounds();
+        el.alertSoundSelect.innerHTML = '';
+        if (!sounds.length) {
+          var fallbackOption = document.createElement('option');
+          fallbackOption.value = 'chime';
+          fallbackOption.textContent = '기본 차임';
+          el.alertSoundSelect.appendChild(fallbackOption);
+          return;
+        }
+        for (var i = 0; i < sounds.length; i++) {
+          var option = document.createElement('option');
+          option.value = sounds[i].id;
+          option.textContent = sounds[i].title;
+          el.alertSoundSelect.appendChild(option);
+        }
+      }
+
+      function selectAlertSound(value) {
+        state.timer.alertSoundId = normalizeAlertSoundId(value);
+        if (el.alertSoundSelect) el.alertSoundSelect.value = state.timer.alertSoundId;
+        saveTimerSettings();
+        updateAlertSettingsUi();
+        showMessage(alertSoundLabel(state.timer.alertSoundId) + ' 알림음으로 설정했습니다.');
+      }
+
+      function selectAlertDuration(value) {
+        state.timer.alertMinutes = normalizeAlertMinutes(value);
+        saveTimerSettings();
+        updateAlertSettingsUi();
+        showMessage(state.timer.alertMinutes + '분 동안 알림을 유지합니다.');
+      }
+
+      function updateAlertSettingsUi() {
+        updateAlertDurationButtons();
+        var sound = alertSoundById(state.timer.alertSoundId);
+        if (el.alertSettingsNote) {
+          el.alertSettingsNote.textContent = alertSoundLabel(state.timer.alertSoundId) + ' · ' + state.timer.alertMinutes + '분 유지';
+        }
+        if (el.alertCredit) {
+          if (sound) {
+            el.alertCredit.textContent = sound.title + ' · ' + sound.author + ' · ' + sound.license;
+            el.alertSourceLink.href = sound.sourceUrl || 'https://commons.wikimedia.org/';
+            el.alertLicenseLink.href = sound.licenseUrl || 'https://commons.wikimedia.org/wiki/Commons:Licensing';
+          } else {
+            el.alertCredit.textContent = '로컬 알림음을 사용할 수 없으면 기본 차임으로 울립니다.';
+            el.alertSourceLink.href = 'https://commons.wikimedia.org/';
+            el.alertLicenseLink.href = 'https://commons.wikimedia.org/wiki/Commons:Licensing';
+          }
+        }
+      }
+
+      function updateAlertDurationButtons() {
+        for (var i = 0; i < el.alertDurationButtons.length; i++) {
+          var button = el.alertDurationButtons[i];
+          var minutes = Number(button.getAttribute('data-alert-minutes'));
+          button.classList.toggle('active', minutes === state.timer.alertMinutes);
+        }
+      }
+
+      function normalizeAlertSoundId(value) {
+        var id = cleanText(String(value || '')).toLowerCase();
+        var sounds = getAlertSounds();
+        for (var i = 0; i < sounds.length; i++) {
+          if (sounds[i].id === id) return sounds[i].id;
+        }
+        return sounds.length ? sounds[0].id : 'chime';
+      }
+
+      function normalizeAlertMinutes(value) {
+        var minutes = isFiniteNumber(value) ? Math.round(Number(value)) : 1;
+        for (var i = 0; i < alertDurations.length; i++) {
+          if (alertDurations[i] === minutes) return minutes;
+        }
+        return 1;
+      }
+
+      function alertSoundById(id) {
+        var sounds = getAlertSounds();
+        for (var i = 0; i < sounds.length; i++) {
+          if (sounds[i].id === id) return sounds[i];
+        }
+        return null;
+      }
+
+      function alertSoundLabel(id) {
+        var sound = alertSoundById(id);
+        return sound ? sound.title : '기본 차임';
+      }
+
       function triggerTimerAlert(kind, missed) {
         endScreenRest(false);
         clearTimerAlert();
@@ -2817,12 +3078,13 @@
         var isAlarm = kind === 'alarm';
         el.timerAlertTitle.textContent = isAlarm ? '알람 시간입니다' : '타이머 종료';
         el.timerAlertTime.textContent = compactKoreaTime(Date.now());
-        el.timerAlertDetail.textContent = (missed ? '놓친 알림을 다시 보여드립니다. ' : '') + '60초 뒤 자동으로 조용해집니다.';
+        el.timerAlertDetail.textContent = (missed ? '놓친 알림을 다시 보여드립니다. ' : '') +
+          alertSoundLabel(state.timer.alertSoundId) + ' · ' + state.timer.alertMinutes + '분 뒤 자동으로 조용해집니다.';
         el.timerAlert.hidden = false;
         document.body.classList.add('timer-alerting');
         duckMusicForTimerAlert();
-        startChimeLoop();
-        state.timer.alertTimer = setTimeout(clearTimerAlert, 60 * 1000);
+        startSelectedAlertSound();
+        state.timer.alertTimer = setTimeout(clearTimerAlert, state.timer.alertMinutes * 60 * 1000);
         try {
           el.timerAlertOkButton.focus();
         } catch (err) {
@@ -2835,11 +3097,63 @@
           clearTimeout(state.timer.alertTimer);
           state.timer.alertTimer = null;
         }
+        stopAlertSound();
         stopChimeLoop();
         restoreMusicAfterTimerAlert();
         state.timer.alerting = false;
         if (el.timerAlert) el.timerAlert.hidden = true;
         document.body.classList.remove('timer-alerting');
+      }
+
+      function startSelectedAlertSound() {
+        stopAlertSound();
+        stopChimeLoop();
+        var sound = alertSoundById(state.timer.alertSoundId);
+        var source = bestAlertAudioSource(sound);
+        if (!el.alertAudio || !source) {
+          startChimeLoop();
+          return;
+        }
+        try {
+          el.alertAudio.loop = true;
+          el.alertAudio.volume = document.body.classList.contains('night-mode') ? 0.42 : 0.72;
+          el.alertAudio.src = source.src;
+          el.alertAudio.load();
+          var playResult = el.alertAudio.play();
+          if (playResult && playResult.catch) {
+            playResult.catch(function () {
+              if (state.timer.alerting) startChimeLoop();
+            });
+          }
+        } catch (err) {
+          startChimeLoop();
+        }
+      }
+
+      function stopAlertSound() {
+        if (!el.alertAudio) return;
+        try {
+          el.alertAudio.pause();
+          el.alertAudio.removeAttribute('src');
+          el.alertAudio.load();
+        } catch (err) {
+          // Alert cleanup should never block dismissing the visible notification.
+        }
+      }
+
+      function handleAlertAudioError() {
+        if (state.timer.alerting) startChimeLoop();
+      }
+
+      function bestAlertAudioSource(sound) {
+        if (!sound || !sound.sources || !sound.sources.length) return null;
+        if (!el.alertAudio || !el.alertAudio.canPlayType) return sound.sources[0];
+        for (var i = 0; i < sound.sources.length; i++) {
+          if (!sound.sources[i].type || el.alertAudio.canPlayType(sound.sources[i].type)) {
+            return sound.sources[i];
+          }
+        }
+        return null;
       }
 
       function startChimeLoop() {
@@ -2980,7 +3294,9 @@
             running: state.timer.running,
             paused: state.timer.paused,
             alarmTime: state.timer.alarmTime,
-            alarmAt: state.timer.alarmAt
+            alarmAt: state.timer.alarmAt,
+            alertSoundId: state.timer.alertSoundId,
+            alertMinutes: state.timer.alertMinutes
           }));
         } catch (err) {
           // URL options and in-memory timers still work if storage is blocked.
@@ -3180,6 +3496,7 @@
           updateWeather();
           showMessage('날씨를 갱신합니다.');
         });
+        el.focusModeButton.addEventListener('click', toggleFocusMode);
         el.cityPanelButton.addEventListener('click', toggleCityPanel);
         el.cityApplyButton.addEventListener('click', function () {
           applyCity(findCityById(el.citySelect.value), true);
@@ -3201,6 +3518,14 @@
         el.timerAddFiveButton.addEventListener('click', addFiveMinutesToTimer);
         el.alarmSetButton.addEventListener('click', setAlarmFromInput);
         el.alarmClearButton.addEventListener('click', clearAlarm);
+        el.alertSoundSelect.addEventListener('change', function () {
+          selectAlertSound(el.alertSoundSelect.value);
+        });
+        for (var j = 0; j < el.alertDurationButtons.length; j++) {
+          el.alertDurationButtons[j].addEventListener('click', function () {
+            selectAlertDuration(this.getAttribute('data-alert-minutes'));
+          });
+        }
         el.timerAlertOkButton.addEventListener('click', clearTimerAlert);
         el.protectPanelButton.addEventListener('click', toggleProtectPanel);
         el.protectToggleButton.addEventListener('click', toggleDisplayProtection);
@@ -3231,6 +3556,7 @@
           if (key === 'f' || key === 'F') requestFullscreen();
           if (key === 'n' || key === 'N') nextArtwork(false);
           if (key === 'w' || key === 'W') updateWeather();
+          if (key === 'x' || key === 'X') toggleFocusMode();
           if (key === 'm' || key === 'M') toggleMusicPlayback();
           if (key === 'c' || key === 'C') toggleCityPanel();
           if (key === 't' || key === 'T') toggleTimerPanel();
