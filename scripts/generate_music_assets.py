@@ -55,6 +55,14 @@ def main() -> int:
         make_pachelbel_canon(),
         make_gymnopedie(),
         make_chopin_nocturne(),
+        make_evangelion_piano(),
+        make_gurenge_piano(),
+        make_unravel_piano(),
+        make_blue_bird_piano(),
+        make_butter_fly_piano(),
+        make_tank_piano(),
+        make_one_summers_day_piano(),
+        *make_healing_anime_piano_tracks(),
         make_rain_night(),
         make_ocean_waves(),
     ]
@@ -119,6 +127,22 @@ def add_note(
 def add_chord(samples: list[float], notes: list[str], start: float, duration: float, amp: float = 0.08) -> None:
     for note in notes:
         add_note(samples, note, start, duration, amp / max(1, len(notes) ** 0.5), "pad")
+
+
+def add_broken_chord(
+    samples: list[float],
+    notes: list[str],
+    start: float,
+    duration: float,
+    step: float = 0.24,
+    amp: float = 0.09,
+) -> None:
+    time = start
+    index = 0
+    while time < start + duration:
+        add_note(samples, notes[index % len(notes)], time, min(step * 1.75, start + duration - time), amp, "soft")
+        time += step
+        index += 1
 
 
 def add_delay(samples: list[float], delay: float = 0.22, decay: float = 0.22) -> None:
@@ -247,6 +271,325 @@ def make_chopin_nocturne() -> dict[str, object]:
     return track("chopin-nocturne-loop", "Nocturne-Style Loop", "Frédéric Chopin", "클래식", samples)
 
 
+def make_evangelion_piano() -> dict[str, object]:
+    chords = [
+        ["C3", "Eb3", "G3"], ["Ab2", "Eb3", "C4"], ["Bb2", "F3", "D4"], ["G2", "D3", "Bb3"],
+        ["C3", "G3", "Eb4"], ["F2", "C3", "Ab3"], ["Bb2", "F3", "D4"], ["G2", "D3", "B3"],
+    ]
+    melody = ["G4", "C5", "Bb4", "G4", "Eb5", "D5", "C5", "Bb4", "C5", "G4", "Ab4", "Bb4", "C5", "D5", "Eb5", "D5"]
+    samples = make_anime_piano_loop(chords, melody, 0.38, 4)
+    return anime_track("anime-evangelion-piano", "A Cruel Angel's Thesis Piano Tribute", "Neon Genesis Evangelion", samples)
+
+
+def make_gurenge_piano() -> dict[str, object]:
+    chords = [
+        ["D3", "F3", "A3"], ["Bb2", "F3", "D4"], ["C3", "G3", "E4"], ["A2", "E3", "C4"],
+        ["D3", "A3", "F4"], ["G2", "D3", "Bb3"], ["C3", "G3", "E4"], ["A2", "E3", "C#4"],
+    ]
+    melody = ["D5", "F5", "E5", "D5", "A4", "C5", "D5", "E5", "F5", "E5", "D5", "C5", "A4", "D5", "E5", "F5"]
+    samples = make_anime_piano_loop(chords, melody, 0.32, 4)
+    return anime_track("anime-gurenge-piano", "Gurenge Piano Tribute", "Demon Slayer: Kimetsu no Yaiba", samples)
+
+
+def make_unravel_piano() -> dict[str, object]:
+    chords = [
+        ["E3", "G3", "B3"], ["C3", "G3", "E4"], ["D3", "A3", "F#4"], ["B2", "F#3", "D4"],
+        ["E3", "B3", "G4"], ["A2", "E3", "C4"], ["D3", "A3", "F#4"], ["B2", "F#3", "D#4"],
+    ]
+    melody = ["E5", "B4", "G4", "B4", "D5", "E5", "F#5", "E5", "D5", "B4", "A4", "B4", "D5", "E5", "G5", "F#5"]
+    samples = make_anime_piano_loop(chords, melody, 0.34, 4)
+    return anime_track("anime-unravel-piano", "Unravel Piano Tribute", "Tokyo Ghoul", samples)
+
+
+def make_blue_bird_piano() -> dict[str, object]:
+    chords = [
+        ["G3", "B3", "D4"], ["D3", "A3", "F#4"], ["E3", "B3", "G4"], ["C3", "G3", "E4"],
+        ["G3", "D4", "B4"], ["D3", "A3", "F#4"], ["C3", "G3", "E4"], ["D3", "A3", "F#4"],
+    ]
+    melody = ["B4", "D5", "E5", "D5", "G5", "F#5", "E5", "D5", "B4", "A4", "G4", "A4", "B4", "D5", "E5", "D5"]
+    samples = make_anime_piano_loop(chords, melody, 0.36, 4)
+    return anime_track("anime-blue-bird-piano", "Blue Bird Piano Tribute", "Naruto Shippuden", samples)
+
+
+def make_butter_fly_piano() -> dict[str, object]:
+    chords = [
+        ["C3", "E3", "G3"], ["G2", "D3", "B3"], ["A2", "E3", "C4"], ["F2", "C3", "A3"],
+        ["C3", "G3", "E4"], ["G2", "D3", "B3"], ["F2", "C3", "A3"], ["G2", "D3", "B3"],
+    ]
+    melody = ["E4", "G4", "C5", "B4", "A4", "G4", "E4", "G4", "A4", "C5", "D5", "C5", "B4", "G4", "A4", "B4"]
+    samples = make_anime_piano_loop(chords, melody, 0.35, 4)
+    return anime_track("anime-butter-fly-piano", "Butter-Fly Piano Tribute", "Digimon Adventure", samples)
+
+
+def make_tank_piano() -> dict[str, object]:
+    chords = [
+        ["C3", "Eb3", "G3", "Bb3"], ["F2", "Eb3", "A3", "C4"], ["C3", "Eb3", "G3", "Bb3"], ["G2", "F3", "B3", "D4"],
+        ["C3", "G3", "Bb3", "Eb4"], ["Ab2", "Eb3", "G3", "C4"], ["D3", "A3", "C4", "F#4"], ["G2", "D3", "F3", "B3"],
+    ]
+    melody = ["C5", "Eb5", "G5", "Bb4", "C5", "G4", "F4", "Eb4", "G4", "Bb4", "C5", "Eb5", "D5", "C5", "Bb4", "G4"]
+    samples = make_anime_piano_loop(chords, melody, 0.26, 5, swing=True)
+    return anime_track("anime-tank-piano", "Tank! Piano Jazz Tribute", "Cowboy Bebop", samples)
+
+
+def make_one_summers_day_piano() -> dict[str, object]:
+    chords = [
+        ["A2", "E3", "C#4"], ["E2", "B2", "G#3"], ["F#2", "C#3", "A3"], ["D2", "A2", "F#3"],
+        ["A2", "E3", "C#4"], ["C#3", "G#3", "E4"], ["D3", "A3", "F#4"], ["E3", "B3", "G#4"],
+    ]
+    melody = ["E5", "C#5", "A4", "B4", "C#5", "E5", "F#5", "E5", "C#5", "B4", "A4", "B4", "C#5", "B4", "A4", "E4"]
+    samples = make_anime_piano_loop(chords, melody, 0.48, 3)
+    return anime_track("anime-one-summers-day-piano", "One Summer's Day Piano Tribute", "Spirited Away", samples)
+
+
+HEALING_ANIME_PIANO_TRACKS = [
+    {
+        "id": "anime-merry-go-round-life-piano",
+        "title": "Merry-Go-Round of Life Piano Tribute",
+        "series": "Howl's Moving Castle",
+        "beat": 0.44,
+        "repeats": 3,
+        "chords": [
+            ["G2", "D3", "B3"], ["B2", "F#3", "D4"], ["E3", "B3", "G4"], ["C3", "G3", "E4"],
+            ["A2", "E3", "C4"], ["D3", "A3", "F#4"], ["G2", "D3", "B3"], ["D3", "A3", "C4"],
+        ],
+        "melody": ["B4", "D5", "G5", "F#5", "E5", "D5", "B4", "A4", "G4", "B4", "D5", "E5", "D5", "B4", "A4", "G4"],
+    },
+    {
+        "id": "anime-ocean-view-town-piano",
+        "title": "A Town with an Ocean View Piano Tribute",
+        "series": "Kiki's Delivery Service",
+        "beat": 0.4,
+        "repeats": 3,
+        "chords": [
+            ["C3", "E3", "G3"], ["G2", "D3", "B3"], ["A2", "E3", "C4"], ["E2", "B2", "G3"],
+            ["F2", "C3", "A3"], ["C3", "G3", "E4"], ["D3", "A3", "F4"], ["G2", "D3", "B3"],
+        ],
+        "melody": ["E5", "G5", "E5", "D5", "C5", "D5", "E5", "G5", "A5", "G5", "E5", "D5", "C5", "E5", "D5", "C5"],
+    },
+    {
+        "id": "anime-path-of-wind-piano",
+        "title": "Path of the Wind Piano Tribute",
+        "series": "My Neighbor Totoro",
+        "beat": 0.5,
+        "repeats": 3,
+        "chords": [
+            ["F2", "C3", "A3"], ["C3", "G3", "E4"], ["D3", "A3", "F4"], ["Bb2", "F3", "D4"],
+            ["F2", "C3", "A3"], ["A2", "E3", "C4"], ["Bb2", "F3", "D4"], ["C3", "G3", "E4"],
+        ],
+        "melody": ["A4", "C5", "F5", "E5", "D5", "C5", "A4", "G4", "A4", "C5", "D5", "F5", "E5", "C5", "A4", "G4"],
+    },
+    {
+        "id": "anime-ashitaka-san-piano",
+        "title": "Ashitaka and San Piano Tribute",
+        "series": "Princess Mononoke",
+        "beat": 0.56,
+        "repeats": 3,
+        "chords": [
+            ["D2", "A2", "F3"], ["Bb2", "F3", "D4"], ["C3", "G3", "E4"], ["A2", "E3", "C4"],
+            ["D2", "A2", "F3"], ["G2", "D3", "Bb3"], ["Bb2", "F3", "D4"], ["A2", "E3", "C#4"],
+        ],
+        "melody": ["A4", "D5", "F5", "E5", "D5", "C5", "A4", "F4", "G4", "A4", "C5", "D5", "F5", "E5", "D5", "A4"],
+    },
+    {
+        "id": "anime-sincerely-piano",
+        "title": "Sincerely Piano Tribute",
+        "series": "Violet Evergarden",
+        "beat": 0.42,
+        "repeats": 3,
+        "chords": [
+            ["Eb3", "G3", "Bb3"], ["Bb2", "F3", "D4"], ["C3", "G3", "Eb4"], ["Ab2", "Eb3", "C4"],
+            ["F2", "C3", "Ab3"], ["Bb2", "F3", "D4"], ["Eb3", "Bb3", "G4"], ["Ab2", "Eb3", "C4"],
+        ],
+        "melody": ["G4", "Bb4", "Eb5", "D5", "C5", "Bb4", "G4", "Ab4", "Bb4", "C5", "Eb5", "F5", "Eb5", "D5", "C5", "Bb4"],
+    },
+    {
+        "id": "anime-michishirube-piano",
+        "title": "Michishirube Piano Tribute",
+        "series": "Violet Evergarden",
+        "beat": 0.54,
+        "repeats": 3,
+        "chords": [
+            ["A2", "E3", "C#4"], ["F#2", "C#3", "A3"], ["D3", "A3", "F#4"], ["E3", "B3", "G#4"],
+            ["A2", "E3", "C#4"], ["C#3", "G#3", "E4"], ["F#2", "C#3", "A3"], ["D3", "A3", "F#4"],
+        ],
+        "melody": ["E5", "C#5", "A4", "C#5", "B4", "A4", "F#4", "A4", "B4", "C#5", "E5", "F#5", "E5", "C#5", "B4", "A4"],
+    },
+    {
+        "id": "anime-sparkle-piano",
+        "title": "Sparkle Piano Tribute",
+        "series": "Your Name",
+        "beat": 0.36,
+        "repeats": 4,
+        "chords": [
+            ["D3", "A3", "F#4"], ["A2", "E3", "C#4"], ["B2", "F#3", "D4"], ["G2", "D3", "B3"],
+            ["D3", "A3", "F#4"], ["A2", "E3", "C#4"], ["G2", "D3", "B3"], ["A2", "E3", "C#4"],
+        ],
+        "melody": ["F#5", "E5", "D5", "A4", "B4", "D5", "E5", "F#5", "A5", "F#5", "E5", "D5", "B4", "D5", "E5", "F#5"],
+    },
+    {
+        "id": "anime-nandemonaiya-piano",
+        "title": "Nandemonaiya Piano Tribute",
+        "series": "Your Name",
+        "beat": 0.48,
+        "repeats": 3,
+        "chords": [
+            ["G2", "D3", "B3"], ["D3", "A3", "F#4"], ["E3", "B3", "G4"], ["C3", "G3", "E4"],
+            ["G2", "D3", "B3"], ["B2", "F#3", "D4"], ["C3", "G3", "E4"], ["D3", "A3", "F#4"],
+        ],
+        "melody": ["B4", "A4", "G4", "D5", "E5", "D5", "B4", "A4", "G4", "B4", "D5", "E5", "D5", "B4", "A4", "G4"],
+    },
+    {
+        "id": "anime-natsu-yuuzora-piano",
+        "title": "Natsu Yuuzora Piano Tribute",
+        "series": "Natsume's Book of Friends",
+        "beat": 0.52,
+        "repeats": 3,
+        "chords": [
+            ["C3", "G3", "E4"], ["G2", "D3", "B3"], ["A2", "E3", "C4"], ["E2", "B2", "G3"],
+            ["F2", "C3", "A3"], ["C3", "G3", "E4"], ["F2", "C3", "A3"], ["G2", "D3", "B3"],
+        ],
+        "melody": ["G4", "C5", "E5", "D5", "C5", "B4", "A4", "G4", "A4", "C5", "D5", "E5", "D5", "C5", "A4", "G4"],
+    },
+    {
+        "id": "anime-yasashisa-piano",
+        "title": "Yasashisa ni Tsutsumareta Nara Piano Tribute",
+        "series": "Kiki's Delivery Service",
+        "beat": 0.42,
+        "repeats": 3,
+        "chords": [
+            ["F2", "C3", "A3"], ["C3", "G3", "E4"], ["D3", "A3", "F4"], ["A2", "E3", "C4"],
+            ["Bb2", "F3", "D4"], ["F2", "C3", "A3"], ["G2", "D3", "Bb3"], ["C3", "G3", "E4"],
+        ],
+        "melody": ["A4", "C5", "F5", "E5", "D5", "C5", "A4", "C5", "D5", "F5", "G5", "F5", "E5", "C5", "D5", "C5"],
+    },
+    {
+        "id": "anime-always-with-me-piano",
+        "title": "Always With Me Piano Tribute",
+        "series": "Spirited Away",
+        "beat": 0.5,
+        "repeats": 3,
+        "chords": [
+            ["C3", "E3", "G3"], ["E2", "B2", "G3"], ["A2", "E3", "C4"], ["F2", "C3", "A3"],
+            ["D3", "A3", "F4"], ["G2", "D3", "B3"], ["C3", "G3", "E4"], ["G2", "D3", "B3"],
+        ],
+        "melody": ["E5", "D5", "C5", "G4", "A4", "C5", "D5", "E5", "F5", "E5", "D5", "C5", "A4", "G4", "A4", "C5"],
+    },
+    {
+        "id": "anime-sixth-station-piano",
+        "title": "The Sixth Station Piano Tribute",
+        "series": "Spirited Away",
+        "beat": 0.62,
+        "repeats": 3,
+        "chords": [
+            ["F2", "C3", "A3"], ["G2", "D3", "Bb3"], ["C3", "G3", "E4"], ["A2", "E3", "C4"],
+            ["D3", "A3", "F4"], ["Bb2", "F3", "D4"], ["F2", "C3", "A3"], ["C3", "G3", "E4"],
+        ],
+        "melody": ["C5", "A4", "F4", "A4", "Bb4", "C5", "D5", "C5", "A4", "G4", "F4", "G4", "A4", "C5", "D5", "C5"],
+    },
+    {
+        "id": "anime-lit-piano",
+        "title": "Lit Piano Tribute",
+        "series": "A Silent Voice",
+        "beat": 0.5,
+        "repeats": 3,
+        "chords": [
+            ["E3", "G3", "B3"], ["G2", "D3", "B3"], ["C3", "G3", "E4"], ["D3", "A3", "F#4"],
+            ["E3", "B3", "G4"], ["C3", "G3", "E4"], ["A2", "E3", "C4"], ["B2", "F#3", "D4"],
+        ],
+        "melody": ["G4", "B4", "E5", "D5", "B4", "A4", "G4", "A4", "B4", "D5", "E5", "G5", "E5", "D5", "B4", "A4"],
+    },
+    {
+        "id": "anime-secret-base-piano",
+        "title": "Secret Base Piano Tribute",
+        "series": "Anohana",
+        "beat": 0.46,
+        "repeats": 3,
+        "chords": [
+            ["D3", "A3", "F#4"], ["A2", "E3", "C#4"], ["B2", "F#3", "D4"], ["G2", "D3", "B3"],
+            ["D3", "A3", "F#4"], ["F#2", "C#3", "A3"], ["G2", "D3", "B3"], ["A2", "E3", "C#4"],
+        ],
+        "melody": ["A4", "D5", "F#5", "E5", "D5", "C#5", "B4", "A4", "B4", "D5", "E5", "F#5", "E5", "D5", "B4", "A4"],
+    },
+    {
+        "id": "anime-fukashigi-carte-piano",
+        "title": "Fukashigi no Carte Piano Tribute",
+        "series": "Rascal Does Not Dream of Bunny Girl Senpai",
+        "beat": 0.44,
+        "repeats": 3,
+        "swing": True,
+        "chords": [
+            ["F2", "A2", "C3", "E3"], ["Bb2", "D3", "F3", "A3"], ["E2", "G#2", "B2", "D3"], ["A2", "C3", "E3", "G3"],
+            ["D3", "F3", "A3", "C4"], ["G2", "B2", "D3", "F3"], ["C3", "E3", "G3", "B3"], ["C3", "E3", "G3", "Bb3"],
+        ],
+        "melody": ["A4", "C5", "E5", "D5", "C5", "A4", "G4", "A4", "Bb4", "C5", "D5", "E5", "D5", "C5", "A4", "G4"],
+    },
+    {
+        "id": "anime-isabellas-lullaby-piano",
+        "title": "Isabella's Lullaby Piano Tribute",
+        "series": "The Promised Neverland",
+        "beat": 0.58,
+        "repeats": 3,
+        "chords": [
+            ["A2", "E3", "C4"], ["E2", "B2", "G3"], ["F2", "C3", "A3"], ["C3", "G3", "E4"],
+            ["D3", "A3", "F4"], ["A2", "E3", "C4"], ["Bb2", "F3", "D4"], ["E2", "B2", "G#3"],
+        ],
+        "melody": ["E5", "C5", "A4", "C5", "B4", "A4", "F4", "A4", "C5", "D5", "E5", "D5", "C5", "A4", "G#4", "A4"],
+    },
+    {
+        "id": "anime-kimi-shiranai-piano",
+        "title": "Kimi no Shiranai Monogatari Piano Tribute",
+        "series": "Bakemonogatari",
+        "beat": 0.38,
+        "repeats": 4,
+        "chords": [
+            ["G3", "B3", "D4"], ["D3", "A3", "F#4"], ["E3", "B3", "G4"], ["C3", "G3", "E4"],
+            ["G3", "D4", "B4"], ["B2", "F#3", "D4"], ["C3", "G3", "E4"], ["D3", "A3", "F#4"],
+        ],
+        "melody": ["B4", "D5", "G5", "F#5", "E5", "D5", "B4", "A4", "G4", "A4", "B4", "D5", "E5", "D5", "B4", "G4"],
+    },
+]
+
+
+def make_healing_anime_piano_tracks() -> list[dict[str, object]]:
+    tracks = []
+    for item in HEALING_ANIME_PIANO_TRACKS:
+        samples = make_anime_piano_loop(
+            item["chords"],
+            item["melody"],
+            item["beat"],
+            item["repeats"],
+            item.get("swing", False),
+        )
+        tracks.append(anime_track(item["id"], item["title"], item["series"], samples))
+    return tracks
+
+
+def make_anime_piano_loop(
+    chords: list[list[str]],
+    melody: list[str],
+    beat: float,
+    repeats: int,
+    swing: bool = False,
+) -> list[float]:
+    bar = beat * 4
+    samples = make_buffer(len(chords) * bar * repeats + 1.5)
+    melody_index = 0
+    for repeat in range(repeats):
+        for chord_index, chord in enumerate(chords):
+            start = (repeat * len(chords) + chord_index) * bar
+            add_chord(samples, chord, start, bar, 0.075)
+            add_broken_chord(samples, chord + chord[::-1], start, bar, beat / 2, 0.074)
+            for step in range(2):
+                note_start = start + step * beat * 2
+                length = beat * (1.58 if not swing or step == 0 else 1.28)
+                add_note(samples, melody[melody_index % len(melody)], note_start, length, 0.13, "bell")
+                if swing:
+                    add_note(samples, melody[(melody_index + 1) % len(melody)], note_start + beat * 0.72, beat * 0.75, 0.09, "soft")
+                melody_index += 1
+    add_delay(samples, 0.28 if not swing else 0.18, 0.24)
+    return samples
+
+
 def make_rain_night() -> dict[str, object]:
     rng = random.Random(20260503)
     samples = make_buffer(50)
@@ -291,6 +634,20 @@ def track(track_id: str, title: str, artist: str, mood: str, samples: list[float
         "source": "Generated locally by scripts/generate_music_assets.py",
         "sourceUrl": "https://github.com/sungreong/korea-art-clock",
         "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+        "_samples": samples,
+    }
+
+
+def anime_track(track_id: str, title: str, series: str, samples: list[float]) -> dict[str, object]:
+    return {
+        "id": track_id,
+        "title": title,
+        "artist": series,
+        "mood": "애니 피아노",
+        "license": "Project-generated piano tribute loop; no third-party recording",
+        "source": "Generated locally by scripts/generate_music_assets.py",
+        "sourceUrl": "https://github.com/sungreong/korea-art-clock",
+        "licenseUrl": "https://github.com/sungreong/korea-art-clock",
         "_samples": samples,
     }
 
