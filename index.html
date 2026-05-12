@@ -262,6 +262,74 @@
       display: none;
     }
 
+    .object-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      font-family: inherit;
+    }
+
+    .svg-clock-text {
+      fill: rgba(86,52,58,0.9);
+      font-size: 26px;
+      font-weight: 950;
+      text-anchor: middle;
+      dominant-baseline: middle;
+    }
+
+    .svg-tick-ring {
+      fill: none;
+      stroke: rgba(83,57,48,0.38);
+      stroke-width: 4;
+      stroke-linecap: round;
+      stroke-dasharray: 1 4;
+      opacity: 0.62;
+    }
+
+    .svg-soft-highlight {
+      fill: none;
+      stroke: rgba(255,255,255,0.58);
+      stroke-width: 8;
+      stroke-linecap: round;
+      opacity: 0.72;
+    }
+
+    .svg-hand {
+      transform-box: view-box;
+      transition: transform 480ms linear;
+    }
+
+    .svg-hour-hand {
+      transform: rotate(var(--hour-angle, 0deg));
+    }
+
+    .svg-minute-hand {
+      transform: rotate(var(--minute-angle, 0deg));
+    }
+
+    .svg-second-hand {
+      transform: rotate(var(--second-angle, 0deg));
+    }
+
+    .clock-milk .svg-hand { transform-origin: 240px 252px; }
+    .clock-alarm .svg-hand { transform-origin: 240px 246px; }
+    .clock-splash .svg-hand { transform-origin: 240px 236px; }
+    .clock-face .svg-hand { transform-origin: 240px 248px; }
+    .clock-melt-object .svg-hand { transform-origin: 240px 205px; }
+    .clock-karakuri .svg-hand { transform-origin: 240px 236px; }
+
+    .svg-gear {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: gearTurn 20s linear infinite;
+    }
+
+    .svg-gear.reverse {
+      animation-direction: reverse;
+    }
+
     .object-dial {
       position: absolute;
       left: 50%;
@@ -334,8 +402,8 @@
     }
 
     .clock-milk {
-      width: min(300px, 70%);
-      height: min(430px, 100%);
+      width: min(360px, 82%);
+      height: min(450px, 100%);
     }
 
     .milk-bottle {
@@ -595,7 +663,7 @@
     }
 
     .clock-face .object-time {
-      bottom: 4%;
+      bottom: -2%;
     }
 
     .clock-sand-object {
@@ -655,7 +723,7 @@
     }
 
     .clock-sand-object .object-time {
-      bottom: 5%;
+      bottom: -2%;
     }
 
     .clock-melt-object {
@@ -714,7 +782,7 @@
     }
 
     .clock-melt-object .object-time {
-      bottom: 1%;
+      bottom: -3%;
     }
 
     @keyframes meltDrift {
@@ -788,7 +856,7 @@
     }
 
     .clock-karakuri .object-time {
-      bottom: 5%;
+      bottom: -2%;
     }
 
     .clock-flip {
@@ -891,6 +959,38 @@
       transform: translateX(-50%);
       text-shadow: 0 0 14px rgba(159,209,184,0.32);
       white-space: nowrap;
+    }
+
+    body.time-focus-mode .clock-milk {
+      width: min(440px, 82%);
+      height: min(520px, 100%);
+    }
+
+    body.time-focus-mode .clock-alarm {
+      width: min(500px, 88%);
+      height: min(470px, 100%);
+    }
+
+    body.time-focus-mode .clock-splash,
+    body.time-focus-mode .clock-face {
+      width: min(560px, 92%);
+      height: min(500px, 100%);
+    }
+
+    body.time-focus-mode .clock-face .object-svg {
+      transform: scale(1.1);
+      transform-origin: center;
+    }
+
+    body.time-focus-mode .clock-sand-object {
+      width: min(430px, 72%);
+      height: min(520px, 100%);
+    }
+
+    body.time-focus-mode .clock-melt-object,
+    body.time-focus-mode .clock-karakuri {
+      width: min(620px, 94%);
+      height: min(500px, 100%);
     }
 
     .timezone-label {
@@ -1885,7 +1985,7 @@
       }
 
       .clock-scene {
-        height: clamp(260px, 36vh, 360px);
+        height: clamp(280px, 38vh, 380px);
       }
 
       body.time-focus-mode .clock-scene {
@@ -2214,74 +2314,203 @@
         <div class="timezone-label">Korea Standard Time</div>
         <div id="clock-scene" class="clock-scene" aria-hidden="true">
           <div class="clock-object clock-milk">
-            <div class="milk-bottle"></div>
-            <div class="milk-cap"></div>
-            <div class="milk-label">Milk</div>
-            <div class="object-dial">
-              <span class="dial-num n12">12</span><span class="dial-num n3">3</span><span class="dial-num n6">6</span><span class="dial-num n9">9</span>
-              <span class="analog-hand analog-hour"></span><span class="analog-hand analog-minute"></span><span class="analog-hand analog-second"></span><span class="dial-pin"></span>
-            </div>
+            <svg class="object-svg" viewBox="0 0 480 520" focusable="false">
+              <defs>
+                <linearGradient id="milkGlass" x1="120" x2="360" y1="72" y2="475" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#fffdf0"/>
+                  <stop offset="0.58" stop-color="#f4f0d9"/>
+                  <stop offset="1" stop-color="#d7ddc4"/>
+                </linearGradient>
+                <linearGradient id="milkCapGrad" x1="0" x2="0" y1="20" y2="94">
+                  <stop stop-color="#f04b54"/>
+                  <stop offset="1" stop-color="#a70f1e"/>
+                </linearGradient>
+                <filter id="milkSvgShadow" x="-20%" y="-20%" width="140%" height="150%">
+                  <feDropShadow dx="0" dy="18" stdDeviation="16" flood-color="#000" flood-opacity="0.34"/>
+                </filter>
+              </defs>
+              <path filter="url(#milkSvgShadow)" d="M154 96 C157 72 178 58 208 58 H272 C302 58 323 72 326 96 C359 103 376 129 376 165 V418 C376 465 338 486 240 486 C142 486 104 465 104 418 V165 C104 129 121 103 154 96Z" fill="url(#milkGlass)" stroke="#2b8f73" stroke-width="7" stroke-linejoin="round"/>
+              <path d="M146 108 C154 90 172 82 207 82 H273 C308 82 326 90 334 108" fill="none" stroke="rgba(255,255,255,0.78)" stroke-width="7" stroke-linecap="round"/>
+              <path d="M163 55 H317 C334 55 349 72 349 95 H131 C131 72 146 55 163 55Z" fill="url(#milkCapGrad)" stroke="#f3ddc9" stroke-width="5" stroke-linejoin="round"/>
+              <path d="M125 168 C141 142 165 128 196 126" fill="none" stroke="rgba(255,255,255,0.48)" stroke-width="12" stroke-linecap="round"/>
+              <path d="M350 158 C362 194 363 273 353 340" fill="none" stroke="rgba(61,142,111,0.2)" stroke-width="10" stroke-linecap="round"/>
+              <text x="240" y="157" fill="#d23442" font-size="40" font-weight="950" text-anchor="middle" transform="rotate(-2 240 157)">Milk</text>
+              <circle cx="240" cy="252" r="106" fill="#fbf8e8" stroke="rgba(77,67,56,0.42)" stroke-width="3"/>
+              <circle cx="240" cy="252" r="92" fill="none" stroke="rgba(120,90,70,0.12)" stroke-width="18"/>
+              <circle class="svg-tick-ring" cx="240" cy="252" r="78" pathLength="60"/>
+              <path class="svg-soft-highlight" d="M179 207 C205 184 273 179 306 203"/>
+              <text class="svg-clock-text" x="240" y="166">12</text><text class="svg-clock-text" x="326" y="252">3</text><text class="svg-clock-text" x="240" y="338">6</text><text class="svg-clock-text" x="154" y="252">9</text>
+              <g class="svg-hand svg-hour-hand"><line x1="240" y1="252" x2="240" y2="202" stroke="#33312d" stroke-width="8" stroke-linecap="round"/></g>
+              <g class="svg-hand svg-minute-hand"><line x1="240" y1="252" x2="240" y2="176" stroke="#7d3d42" stroke-width="5" stroke-linecap="round"/></g>
+              <g class="svg-hand svg-second-hand"><line x1="240" y1="260" x2="240" y2="164" stroke="#2b9b8b" stroke-width="2.5" stroke-linecap="round"/></g>
+              <circle cx="240" cy="252" r="10" fill="#a97854" stroke="#f8f1de" stroke-width="4"/>
+            </svg>
             <div class="object-time clock-time-text">--:--</div>
             <div class="object-caption">milk clock</div>
           </div>
           <div class="clock-object clock-alarm">
-            <span class="alarm-zap left"></span><span class="alarm-zap right"></span>
-            <div class="alarm-bell left"></div><div class="alarm-bell right"></div>
-            <div class="alarm-body">
-              <div class="object-dial">
-                <span class="dial-num n12">12</span><span class="dial-num n3">3</span><span class="dial-num n6">6</span><span class="dial-num n9">9</span>
-                <span class="analog-hand analog-hour"></span><span class="analog-hand analog-minute"></span><span class="analog-hand analog-second"></span><span class="dial-pin"></span>
-              </div>
-            </div>
-            <span class="alarm-leg left"></span><span class="alarm-leg right"></span>
+            <svg class="object-svg" viewBox="0 0 480 480" focusable="false">
+              <defs>
+                <radialGradient id="alarmRed" cx="42%" cy="28%" r="70%">
+                  <stop stop-color="#ff5d64"/><stop offset="0.55" stop-color="#d82031"/><stop offset="1" stop-color="#8e0d18"/>
+                </radialGradient>
+                <filter id="alarmSvgShadow" x="-20%" y="-20%" width="140%" height="150%">
+                  <feDropShadow dx="0" dy="18" stdDeviation="15" flood-color="#000" flood-opacity="0.38"/>
+                </filter>
+              </defs>
+              <path d="M74 96 L84 60 L96 98 L116 82 L104 126" fill="none" stroke="#f1d985" stroke-width="10" stroke-linejoin="round"/>
+              <path d="M406 96 L396 60 L384 98 L364 82 L376 126" fill="none" stroke="#f1d985" stroke-width="10" stroke-linejoin="round"/>
+              <ellipse cx="151" cy="103" rx="70" ry="54" transform="rotate(-18 151 103)" fill="url(#alarmRed)" stroke="#641019" stroke-width="7"/>
+              <ellipse cx="329" cy="103" rx="70" ry="54" transform="rotate(18 329 103)" fill="url(#alarmRed)" stroke="#641019" stroke-width="7"/>
+              <circle filter="url(#alarmSvgShadow)" cx="240" cy="248" r="154" fill="url(#alarmRed)" stroke="#651019" stroke-width="8"/>
+              <path d="M129 366 L78 396" stroke="#651019" stroke-width="15" stroke-linecap="round"/>
+              <path d="M351 366 L402 396" stroke="#651019" stroke-width="15" stroke-linecap="round"/>
+              <circle cx="240" cy="246" r="102" fill="#fff4df" stroke="rgba(76,46,34,0.42)" stroke-width="4"/>
+              <circle cx="240" cy="246" r="84" fill="none" stroke="rgba(187,125,91,0.12)" stroke-width="17"/>
+              <circle class="svg-tick-ring" cx="240" cy="246" r="75" pathLength="60"/>
+              <path class="svg-soft-highlight" d="M181 204 C205 183 273 178 304 202"/>
+              <text class="svg-clock-text" x="240" y="162">12</text><text class="svg-clock-text" x="323" y="246">3</text><text class="svg-clock-text" x="240" y="330">6</text><text class="svg-clock-text" x="157" y="246">9</text>
+              <g class="svg-hand svg-hour-hand"><line x1="240" y1="246" x2="240" y2="197" stroke="#34322e" stroke-width="8" stroke-linecap="round"/></g>
+              <g class="svg-hand svg-minute-hand"><line x1="240" y1="246" x2="240" y2="174" stroke="#814449" stroke-width="5" stroke-linecap="round"/></g>
+              <g class="svg-hand svg-second-hand"><line x1="240" y1="254" x2="240" y2="158" stroke="#2a9f8e" stroke-width="2.4" stroke-linecap="round"/></g>
+              <circle cx="240" cy="246" r="10" fill="#a97854" stroke="#f8f1de" stroke-width="4"/>
+              <path d="M155 122 C185 98 292 98 326 123" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="10" stroke-linecap="round"/>
+            </svg>
             <div class="object-time clock-time-text">--:--</div>
             <div class="object-caption">wake up</div>
           </div>
           <div class="clock-object clock-splash">
-            <div class="splash-body"></div>
-            <span class="splash-drop d1"></span><span class="splash-drop d2"></span><span class="splash-drop d3"></span><span class="splash-drop d4"></span>
-            <div class="object-dial">
-              <span class="dial-num n12">12</span><span class="dial-num n3">3</span><span class="dial-num n6">6</span><span class="dial-num n9">9</span>
-              <span class="analog-hand analog-hour"></span><span class="analog-hand analog-minute"></span><span class="analog-hand analog-second"></span><span class="dial-pin"></span>
-            </div>
+            <svg class="object-svg" viewBox="0 0 480 480" focusable="false">
+              <defs>
+                <radialGradient id="splashCream" cx="44%" cy="35%" r="74%">
+                  <stop stop-color="#fff9d8"/><stop offset="0.68" stop-color="#f4edc8"/><stop offset="1" stop-color="#dfd2aa"/>
+                </radialGradient>
+                <filter id="splashSvgShadow" x="-20%" y="-20%" width="140%" height="150%">
+                  <feDropShadow dx="0" dy="18" stdDeviation="15" flood-color="#000" flood-opacity="0.34"/>
+                </filter>
+              </defs>
+              <path filter="url(#splashSvgShadow)" d="M217 61 C281 48 344 75 377 126 C408 173 401 232 381 270 C429 275 442 315 406 336 C374 356 337 333 322 312 C294 338 253 357 206 346 C152 333 118 297 110 248 C67 253 37 226 51 193 C63 162 96 157 122 171 C135 114 166 72 217 61Z" fill="url(#splashCream)" stroke="#2b2a25" stroke-width="8" stroke-linejoin="round"/>
+              <path d="M70 160 C45 155 28 175 39 194 C51 213 83 202 99 181Z" fill="#d94a3c" stroke="#2b2a25" stroke-width="7"/>
+              <path d="M383 102 C412 75 446 90 438 126 C431 160 393 160 375 140Z" fill="#f8f0c9" stroke="#2b2a25" stroke-width="7"/>
+              <path d="M386 306 C424 288 455 308 438 332 C420 356 383 344 365 327Z" fill="#8aa363" stroke="#2b2a25" stroke-width="7"/>
+              <path d="M103 318 C82 348 48 344 49 312 C50 278 87 275 105 292Z" fill="#d87947" stroke="#2b2a25" stroke-width="7"/>
+              <circle class="svg-tick-ring" cx="240" cy="236" r="74" pathLength="60"/>
+              <path class="svg-soft-highlight" d="M179 191 C205 169 276 166 307 192"/>
+              <text class="svg-clock-text" x="240" y="136">12</text><text class="svg-clock-text" x="323" y="236">3</text><text class="svg-clock-text" x="240" y="323">6</text><text class="svg-clock-text" x="156" y="236">9</text>
+              <g class="svg-hand svg-hour-hand"><line x1="240" y1="236" x2="240" y2="189" stroke="#33312d" stroke-width="8" stroke-linecap="round"/></g>
+              <g class="svg-hand svg-minute-hand"><line x1="240" y1="236" x2="240" y2="158" stroke="#814449" stroke-width="5" stroke-linecap="round"/></g>
+              <g class="svg-hand svg-second-hand"><line x1="240" y1="244" x2="240" y2="143" stroke="#27a091" stroke-width="2.4" stroke-linecap="round"/></g>
+              <circle cx="240" cy="236" r="10" fill="#a97854" stroke="#f8f1de" stroke-width="4"/>
+            </svg>
             <div class="object-time clock-time-text">--:--</div>
             <div class="object-caption">splash clock</div>
           </div>
           <div class="clock-object clock-face">
-            <div class="face-ear left"></div><div class="face-ear right"></div>
-            <div class="face-head">
-              <div class="face-hair"></div>
-              <span class="face-eye left"></span><span class="face-eye right"></span><span class="face-nose"></span><span class="face-mouth"></span>
-              <span class="analog-hand analog-hour"></span><span class="analog-hand analog-minute"></span><span class="analog-hand analog-second"></span><span class="dial-pin"></span>
-            </div>
+            <svg class="object-svg" viewBox="0 0 480 480" focusable="false">
+              <defs>
+                <linearGradient id="faceSkin" x1="120" x2="360" y1="100" y2="395">
+                  <stop stop-color="#f7dba1"/><stop offset="1" stop-color="#e8b975"/>
+                </linearGradient>
+                <filter id="faceSvgShadow" x="-20%" y="-20%" width="140%" height="150%">
+                  <feDropShadow dx="0" dy="18" stdDeviation="15" flood-color="#000" flood-opacity="0.35"/>
+                </filter>
+              </defs>
+              <circle cx="103" cy="247" r="44" fill="#eec98f" stroke="#23211d" stroke-width="7"/>
+              <circle cx="377" cy="247" r="44" fill="#eec98f" stroke="#23211d" stroke-width="7"/>
+              <path filter="url(#faceSvgShadow)" d="M240 82 C325 82 374 148 374 246 C374 340 319 396 240 396 C161 396 106 340 106 246 C106 148 155 82 240 82Z" fill="url(#faceSkin)" stroke="#23211d" stroke-width="7"/>
+              <path d="M151 137 C181 94 298 92 333 137 L333 165 C303 148 290 169 276 188 C263 166 250 154 238 188 C223 161 207 151 190 188 C178 165 165 150 151 166Z" fill="#171714"/>
+              <path d="M178 236 C198 220 219 220 235 236" fill="none" stroke="#302d27" stroke-width="5" stroke-linecap="round"/>
+              <path d="M257 236 C277 220 298 220 314 236" fill="none" stroke="#302d27" stroke-width="5" stroke-linecap="round"/>
+              <ellipse cx="176" cy="275" rx="18" ry="9" fill="rgba(233,139,132,0.18)"/>
+              <ellipse cx="305" cy="275" rx="18" ry="9" fill="rgba(233,139,132,0.18)"/>
+              <ellipse cx="240" cy="319" rx="22" ry="10" fill="#b45972"/>
+              <g class="svg-hand svg-hour-hand"><path d="M240 248 C249 226 259 209 272 195" fill="none" stroke="#fff8e8" stroke-width="14" stroke-linecap="round"/></g>
+              <g class="svg-hand svg-minute-hand"><path d="M240 248 C244 216 246 184 245 158" fill="none" stroke="#2aa697" stroke-width="8" stroke-linecap="round"/></g>
+              <g class="svg-hand svg-second-hand"><line x1="240" y1="248" x2="240" y2="143" stroke="#c93a33" stroke-width="2.2" stroke-linecap="round"/></g>
+              <circle cx="240" cy="248" r="10" fill="#a97854" stroke="#f8f1de" stroke-width="4"/>
+              <path d="M244 250 C238 262 231 273 221 283" fill="none" stroke="rgba(93,56,43,0.2)" stroke-width="4" stroke-linecap="round"/>
+            </svg>
             <div class="object-time clock-time-text">--:--</div>
             <div class="object-caption">face clock</div>
           </div>
           <div class="clock-object clock-sand-object">
-            <div class="sand-frame"></div>
+            <svg class="object-svg" viewBox="0 0 360 500" focusable="false">
+              <defs>
+                <linearGradient id="sandGlassEdge" x1="0" x2="0" y1="40" y2="450">
+                  <stop stop-color="#d8c185"/><stop offset="0.5" stop-color="#7a7059"/><stop offset="1" stop-color="#d8c185"/>
+                </linearGradient>
+                <filter id="sandSvgShadow" x="-25%" y="-20%" width="150%" height="150%">
+                  <feDropShadow dx="0" dy="18" stdDeviation="14" flood-color="#000" flood-opacity="0.36"/>
+                </filter>
+              </defs>
+              <path filter="url(#sandSvgShadow)" d="M95 42 H265 C289 42 304 61 304 85 V415 C304 439 289 458 265 458 H95 C71 458 56 439 56 415 V85 C56 61 71 42 95 42Z" fill="rgba(255,255,255,0.025)" stroke="url(#sandGlassEdge)" stroke-width="5"/>
+              <path d="M95 87 H265 L207 238 L265 413 H95 L153 238Z" fill="rgba(244,226,171,0.05)" stroke="rgba(255,255,255,0.1)" stroke-width="2"/>
+              <path d="M180 75 V428" stroke="rgba(238,215,168,0.26)" stroke-width="8" stroke-linecap="round"/>
+            </svg>
             <span class="sand-top"></span><span class="sand-stream"></span><span class="sand-bottom"></span>
             <div class="object-time clock-time-text">--:--</div>
             <div class="object-caption">hourglass</div>
           </div>
           <div class="clock-object clock-melt-object">
-            <div class="melt-body"></div>
-            <span class="melt-drip d1"></span><span class="melt-drip d2"></span><span class="melt-drip d3"></span><span class="melt-pool"></span>
-            <div class="object-dial">
-              <span class="dial-num n12">12</span><span class="dial-num n3">3</span><span class="dial-num n6">6</span><span class="dial-num n9">9</span>
-              <span class="analog-hand analog-hour"></span><span class="analog-hand analog-minute"></span><span class="analog-hand analog-second"></span><span class="dial-pin"></span>
-            </div>
+            <svg class="object-svg" viewBox="0 0 520 430" focusable="false">
+              <defs>
+                <radialGradient id="meltCream" cx="42%" cy="32%" r="75%">
+                  <stop stop-color="#fffaf0"/><stop offset="0.62" stop-color="#eadfc5"/><stop offset="1" stop-color="#cdb18a"/>
+                </radialGradient>
+                <filter id="meltSvgShadow" x="-20%" y="-20%" width="140%" height="150%">
+                  <feDropShadow dx="0" dy="18" stdDeviation="15" flood-color="#000" flood-opacity="0.36"/>
+                </filter>
+              </defs>
+              <path d="M86 272 C165 249 320 249 434 276" fill="none" stroke="rgba(93,70,52,0.58)" stroke-width="18" stroke-linecap="round"/>
+              <path filter="url(#meltSvgShadow)" d="M104 122 C151 72 276 60 366 91 C429 112 452 153 438 186 C423 222 375 215 337 226 C298 237 304 275 306 315 C308 356 272 374 251 342 C232 313 257 259 231 249 C205 239 192 286 184 330 C176 373 137 374 124 340 C112 307 134 270 124 251 C113 232 75 235 66 205 C58 174 74 143 104 122Z" fill="url(#meltCream)" stroke="#4d4136" stroke-width="7" stroke-linejoin="round"/>
+              <path d="M121 135 C165 101 276 91 348 112" fill="none" stroke="rgba(255,255,255,0.48)" stroke-width="10" stroke-linecap="round"/>
+              <path d="M184 253 C180 283 181 322 159 342" fill="none" stroke="rgba(105,76,53,0.22)" stroke-width="10" stroke-linecap="round"/>
+              <path d="M303 233 C296 273 302 321 279 345" fill="none" stroke="rgba(105,76,53,0.18)" stroke-width="10" stroke-linecap="round"/>
+              <ellipse cx="260" cy="372" rx="122" ry="28" fill="rgba(233,220,194,0.2)"/>
+              <text class="svg-clock-text" x="240" y="103">12</text><text class="svg-clock-text" x="342" y="205">3</text><text class="svg-clock-text" x="240" y="295">6</text><text class="svg-clock-text" x="138" y="205">9</text>
+              <circle class="svg-tick-ring" cx="240" cy="205" r="76" pathLength="60"/>
+              <g class="svg-hand svg-hour-hand"><line x1="240" y1="205" x2="240" y2="158" stroke="#33312d" stroke-width="8" stroke-linecap="round"/></g>
+              <g class="svg-hand svg-minute-hand"><line x1="240" y1="205" x2="240" y2="132" stroke="#814449" stroke-width="5" stroke-linecap="round"/></g>
+              <g class="svg-hand svg-second-hand"><line x1="240" y1="213" x2="240" y2="120" stroke="#299f8d" stroke-width="2.4" stroke-linecap="round"/></g>
+              <circle cx="240" cy="205" r="10" fill="#a97854" stroke="#f8f1de" stroke-width="4"/>
+            </svg>
             <div class="object-time clock-time-text">--:--</div>
             <div class="object-caption">soft time</div>
           </div>
           <div class="clock-object clock-karakuri">
-            <div class="karakuri-roof"></div>
-            <div class="karakuri-house">
-              <span class="karakuri-door left"></span><span class="karakuri-door right"></span><span class="gear g1"></span><span class="gear g2"></span>
-              <div class="object-dial">
-                <span class="dial-num n12">12</span><span class="dial-num n3">3</span><span class="dial-num n6">6</span><span class="dial-num n9">9</span>
-                <span class="analog-hand analog-hour"></span><span class="analog-hand analog-minute"></span><span class="analog-hand analog-second"></span><span class="dial-pin"></span>
-              </div>
-            </div>
+            <svg class="object-svg" viewBox="0 0 520 430" focusable="false">
+              <defs>
+                <linearGradient id="karaWood" x1="0" x2="0" y1="84" y2="356">
+                  <stop stop-color="#6d5542"/><stop offset="1" stop-color="#292423"/>
+                </linearGradient>
+                <filter id="karaSvgShadow" x="-20%" y="-20%" width="140%" height="150%">
+                  <feDropShadow dx="0" dy="18" stdDeviation="15" flood-color="#000" flood-opacity="0.38"/>
+                </filter>
+              </defs>
+              <path d="M260 38 L360 104 H160Z" fill="#6b2b2b"/>
+              <rect filter="url(#karaSvgShadow)" x="68" y="96" width="384" height="270" rx="30" fill="url(#karaWood)" stroke="#9b8058" stroke-width="5"/>
+              <rect x="112" y="160" width="84" height="132" fill="rgba(255,255,255,0.04)" stroke="rgba(214,179,111,0.28)" stroke-width="2"/>
+              <rect x="324" y="160" width="84" height="132" fill="rgba(255,255,255,0.04)" stroke="rgba(214,179,111,0.28)" stroke-width="2"/>
+              <g transform="translate(149 328)">
+                <g class="svg-gear">
+                  <circle r="26" fill="none" stroke="#b79a61" stroke-width="10" stroke-dasharray="14 9"/>
+                  <circle r="7" fill="#b79a61"/>
+                </g>
+              </g>
+              <g transform="translate(371 329)">
+                <g class="svg-gear reverse">
+                  <circle r="22" fill="none" stroke="#b79a61" stroke-width="9" stroke-dasharray="12 8"/>
+                  <circle r="6" fill="#b79a61"/>
+                </g>
+              </g>
+              <circle cx="240" cy="236" r="74" fill="#fbf7e8" stroke="#6d5b48" stroke-width="4"/>
+              <circle class="svg-tick-ring" cx="240" cy="236" r="56" pathLength="60"/>
+              <text class="svg-clock-text" x="240" y="174">12</text><text class="svg-clock-text" x="302" y="236">3</text><text class="svg-clock-text" x="240" y="298">6</text><text class="svg-clock-text" x="178" y="236">9</text>
+              <g class="svg-hand svg-hour-hand"><line x1="240" y1="236" x2="240" y2="199" stroke="#35322d" stroke-width="8" stroke-linecap="round"/></g>
+              <g class="svg-hand svg-minute-hand"><line x1="240" y1="236" x2="240" y2="185" stroke="#814449" stroke-width="5" stroke-linecap="round"/></g>
+              <g class="svg-hand svg-second-hand"><line x1="240" y1="243" x2="240" y2="174" stroke="#279e8d" stroke-width="2.2" stroke-linecap="round"/></g>
+              <circle cx="240" cy="236" r="9" fill="#a97854" stroke="#f8f1de" stroke-width="4"/>
+            </svg>
             <div class="object-time clock-time-text">--:--</div>
             <div class="object-caption">karakuri</div>
           </div>
