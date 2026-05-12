@@ -168,243 +168,486 @@
       }
     }
 
-    .clock-art {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 520ms ease;
-    }
-
-    .clock-moon-dial,
-    .clock-bojagi,
-    .clock-beans,
-    .clock-sand,
-    .clock-melt,
-    .clock-shodo,
-    .clock-noren,
-    .clock-neon {
+    .clock-scene {
+      position: relative;
+      z-index: 1;
       display: none;
+      width: min(780px, 100%);
+      height: clamp(300px, 42vh, 470px);
+      margin: clamp(8px, 1vh, 14px) auto clamp(8px, 1.2vh, 16px);
+      pointer-events: none;
     }
 
-    body.clock-style-moon .clock-art,
-    body.clock-style-bojagi .clock-art,
-    body.clock-style-bean .clock-art,
-    body.clock-style-sand .clock-art,
-    body.clock-style-melt .clock-art,
-    body.clock-style-shodo .clock-art,
-    body.clock-style-noren .clock-art,
-    body.clock-style-neon .clock-art {
-      opacity: 1;
+    body.clock-style-milk .clock-scene,
+    body.clock-style-alarm .clock-scene,
+    body.clock-style-splash .clock-scene,
+    body.clock-style-face .clock-scene,
+    body.clock-style-sand .clock-scene,
+    body.clock-style-melt .clock-scene,
+    body.clock-style-karakuri .clock-scene,
+    body.clock-style-flip .clock-scene,
+    body.clock-style-neon .clock-scene {
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    body.clock-style-moon .clock-moon-dial {
+    body.clock-style-milk .time,
+    body.clock-style-alarm .time,
+    body.clock-style-splash .time,
+    body.clock-style-face .time,
+    body.clock-style-sand .time,
+    body.clock-style-melt .time,
+    body.clock-style-karakuri .time,
+    body.clock-style-flip .time,
+    body.clock-style-neon .time {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    body.time-focus-mode .clock-scene {
+      width: min(1120px, 100%);
+      height: clamp(420px, 57vh, 650px);
+      margin-top: clamp(12px, 2vh, 24px);
+      margin-bottom: clamp(10px, 1.5vh, 20px);
+    }
+
+    .clock-object {
+      position: relative;
+      display: none;
+      width: min(540px, 96%);
+      height: min(430px, 100%);
+      color: rgba(255,255,255,0.95);
+      text-shadow: none;
+      filter: drop-shadow(0 28px 54px rgba(0,0,0,0.42));
+    }
+
+    body.clock-style-milk .clock-milk,
+    body.clock-style-alarm .clock-alarm,
+    body.clock-style-splash .clock-splash,
+    body.clock-style-face .clock-face,
+    body.clock-style-sand .clock-sand-object,
+    body.clock-style-melt .clock-melt-object,
+    body.clock-style-karakuri .clock-karakuri,
+    body.clock-style-flip .clock-flip,
+    body.clock-style-neon .clock-neon-object {
+      display: block;
+    }
+
+    .object-time {
       position: absolute;
       left: 50%;
-      top: 47%;
-      display: block;
-      width: clamp(240px, 33vw, 520px);
-      aspect-ratio: 1;
+      bottom: 8%;
+      z-index: 5;
+      min-width: 5.2em;
+      padding: 7px 14px;
       border: 1px solid rgba(255,255,255,0.18);
-      border-radius: 48% 52% 49% 51%;
-      background:
-        radial-gradient(circle at 44% 38%, rgba(255,248,229,0.2), transparent 11%),
-        radial-gradient(circle at 50% 52%, rgba(236,226,205,0.13), transparent 45%),
-        rgba(255,255,255,0.035);
-      box-shadow:
-        inset 0 0 80px rgba(255,255,255,0.05),
-        0 30px 90px rgba(0,0,0,0.26);
-      -webkit-transform: translate(-50%, -50%);
-      transform: translate(-50%, -50%);
+      border-radius: 999px;
+      background: rgba(0,0,0,0.36);
+      color: rgba(255,255,255,0.92);
+      font-size: clamp(22px, 2.5vw, 36px);
+      font-weight: 950;
+      letter-spacing: -0.04em;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+      transform: translateX(-50%);
+      box-shadow: 0 10px 28px rgba(0,0,0,0.28);
     }
 
-    .clock-hand {
+    .object-caption {
+      position: absolute;
+      left: 50%;
+      bottom: 2.2%;
+      z-index: 5;
+      color: rgba(255,255,255,0.58);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      transform: translateX(-50%);
+      white-space: nowrap;
+    }
+
+    .object-dial {
       position: absolute;
       left: 50%;
       top: 50%;
-      width: 5px;
+      width: 48%;
+      aspect-ratio: 1;
       border-radius: 999px;
-      -webkit-transform-origin: 50% 100%;
-      transform-origin: 50% 100%;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.34);
+      background:
+        radial-gradient(circle at 50% 46%, rgba(255,255,255,0.98), rgba(246,239,218,0.94) 67%, rgba(218,202,172,0.92));
+      border: 2px solid rgba(30,26,22,0.42);
+      transform: translate(-50%, -50%);
+      box-shadow: inset 0 0 18px rgba(0,0,0,0.12), 0 16px 34px rgba(0,0,0,0.24);
     }
 
-    .clock-hand-hour {
-      height: 22%;
-      background: rgba(255,255,255,0.38);
-      -webkit-transform: translate(-50%, -100%) rotate(var(--hour-angle, 0deg));
+    .dial-num {
+      position: absolute;
+      color: rgba(83,42,48,0.88);
+      font-size: clamp(16px, 2vw, 24px);
+      font-weight: 950;
+      line-height: 1;
+    }
+
+    .dial-num.n12 { left: 50%; top: 9%; transform: translateX(-50%); }
+    .dial-num.n3 { right: 10%; top: 50%; transform: translateY(-50%); }
+    .dial-num.n6 { left: 50%; bottom: 9%; transform: translateX(-50%); }
+    .dial-num.n9 { left: 10%; top: 50%; transform: translateY(-50%); }
+
+    .analog-hand {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 3;
+      border-radius: 999px;
+      transform-origin: 50% 100%;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.22);
+    }
+
+    .analog-hour {
+      width: 6px;
+      height: 24%;
+      background: rgba(39,38,35,0.88);
       transform: translate(-50%, -100%) rotate(var(--hour-angle, 0deg));
     }
 
-    .clock-hand-minute {
-      height: 31%;
-      width: 3px;
-      background: rgba(246,220,162,0.5);
-      -webkit-transform: translate(-50%, -100%) rotate(var(--minute-angle, 0deg));
+    .analog-minute {
+      width: 4px;
+      height: 34%;
+      background: rgba(114,55,54,0.86);
       transform: translate(-50%, -100%) rotate(var(--minute-angle, 0deg));
     }
 
-    .clock-hand-second {
-      height: 36%;
+    .analog-second {
       width: 2px;
-      background: rgba(159,209,184,0.54);
-      -webkit-transform: translate(-50%, -100%) rotate(var(--second-angle, 0deg));
+      height: 39%;
+      background: rgba(40,136,119,0.72);
       transform: translate(-50%, -100%) rotate(var(--second-angle, 0deg));
     }
 
-    .clock-center-dot {
+    .dial-pin {
       position: absolute;
       left: 50%;
       top: 50%;
+      z-index: 4;
       width: 13px;
       height: 13px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.56);
-      -webkit-transform: translate(-50%, -50%);
+      background: rgba(150,106,72,0.95);
       transform: translate(-50%, -50%);
-      box-shadow: 0 0 0 6px rgba(255,255,255,0.08);
+      box-shadow: 0 0 0 4px rgba(255,255,255,0.46);
     }
 
-    body.clock-style-bojagi .clock-bojagi {
+    .clock-milk {
+      width: min(300px, 70%);
+      height: min(430px, 100%);
+    }
+
+    .milk-bottle {
       position: absolute;
-      inset: 18px;
-      display: grid;
-      grid-template-columns: 1.2fr 0.85fr 1fr;
-      grid-template-rows: 0.9fr 1fr;
-      gap: 10px;
-      opacity: 0.54;
-      -webkit-transform: rotate(-1.2deg);
-      transform: rotate(-1.2deg);
+      inset: 8px 22px 8px;
+      border: 4px solid rgba(44,141,108,0.9);
+      border-radius: 46% 46% 20% 20% / 14% 14% 8% 8%;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.14), transparent 18%, transparent 82%, rgba(255,255,255,0.12)),
+        rgba(252,249,231,0.9);
+      box-shadow: inset 0 0 28px rgba(30,95,77,0.18);
     }
 
-    .clock-bojagi span {
-      min-width: 0;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.04);
-    }
-
-    .clock-bojagi span:nth-child(1) { background: rgba(166,83,63,0.26); border-radius: 30px 10px 18px 12px; }
-    .clock-bojagi span:nth-child(2) { background: rgba(231,190,103,0.18); border-radius: 12px 26px 10px 18px; }
-    .clock-bojagi span:nth-child(3) { background: rgba(77,123,104,0.22); border-radius: 18px 12px 30px 10px; }
-    .clock-bojagi span:nth-child(4) { background: rgba(79,91,136,0.2); border-radius: 10px 18px 12px 30px; }
-    .clock-bojagi span:nth-child(5) { background: rgba(255,255,255,0.07); border-radius: 24px 14px 22px 16px; }
-    .clock-bojagi span:nth-child(6) { background: rgba(194,126,80,0.19); border-radius: 12px 30px 16px 10px; }
-
-    body.clock-style-bean .clock-beans {
-      --bean-orbit: clamp(92px, 15vw, 220px);
+    .milk-cap {
       position: absolute;
       left: 50%;
-      top: 48%;
-      display: block;
-      width: clamp(240px, 35vw, 560px);
-      aspect-ratio: 1;
-      border: 1px dashed rgba(255,255,255,0.13);
-      border-radius: 999px;
-      -webkit-transform: translate(-50%, -50%);
-      transform: translate(-50%, -50%);
-      opacity: 0.78;
+      top: 0;
+      width: 70%;
+      height: 38px;
+      border-radius: 999px 999px 18px 18px;
+      background: linear-gradient(180deg, #da2d37, #9e1820);
+      border: 3px solid rgba(255,235,220,0.8);
+      transform: translateX(-50%);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.26);
     }
 
-    .bean {
+    .milk-label {
+      position: absolute;
+      left: 50%;
+      top: 20%;
+      z-index: 2;
+      color: rgba(202,38,48,0.9);
+      font-size: clamp(24px, 3.4vw, 40px);
+      font-weight: 950;
+      letter-spacing: -0.07em;
+      transform: translateX(-50%) rotate(-2deg);
+    }
+
+    .clock-milk .object-dial {
+      top: 56%;
+      width: 68%;
+    }
+
+    .clock-milk .object-time {
+      bottom: 9%;
+      background: rgba(255,255,255,0.72);
+      color: rgba(98,36,42,0.94);
+      border-color: rgba(44,141,108,0.3);
+    }
+
+    .clock-alarm {
+      width: min(430px, 94%);
+      height: min(390px, 100%);
+    }
+
+    .alarm-bell {
+      position: absolute;
+      top: 8%;
+      width: 30%;
+      height: 24%;
+      border-radius: 50% 50% 30% 30%;
+      background: linear-gradient(180deg, #e43139, #9e1119);
+      border: 4px solid rgba(80,9,15,0.7);
+    }
+
+    .alarm-bell.left { left: 13%; transform: rotate(-18deg); }
+    .alarm-bell.right { right: 13%; transform: rotate(18deg); }
+
+    .alarm-body {
+      position: absolute;
+      left: 50%;
+      top: 54%;
+      width: 74%;
+      aspect-ratio: 1;
+      border-radius: 999px;
+      background: linear-gradient(145deg, #e42f3b, #a8141d 75%);
+      border: 5px solid rgba(80,9,15,0.78);
+      transform: translate(-50%, -50%);
+      box-shadow: inset 0 0 28px rgba(255,255,255,0.13);
+    }
+
+    .clock-alarm .object-dial {
+      width: 72%;
+    }
+
+    .alarm-leg {
+      position: absolute;
+      bottom: 5%;
+      width: 72px;
+      height: 13px;
+      border-radius: 999px;
+      background: rgba(80,9,15,0.85);
+    }
+
+    .alarm-leg.left { left: 18%; transform: rotate(-25deg); }
+    .alarm-leg.right { right: 18%; transform: rotate(25deg); }
+
+    .alarm-zap {
+      position: absolute;
+      top: 9%;
+      width: 18px;
+      height: 48px;
+      background: rgba(246,220,162,0.84);
+      clip-path: polygon(40% 0, 100% 0, 58% 42%, 100% 42%, 30% 100%, 52% 54%, 10% 54%);
+    }
+
+    .alarm-zap.left { left: 4%; transform: rotate(-18deg); }
+    .alarm-zap.right { right: 4%; transform: scaleX(-1) rotate(-18deg); }
+
+    body.timer-alerting.clock-style-alarm .clock-alarm {
+      animation: alarmShake 240ms linear infinite;
+    }
+
+    @keyframes alarmShake {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-1.2deg); }
+      75% { transform: rotate(1.2deg); }
+    }
+
+    .clock-splash {
+      width: min(500px, 96%);
+      height: min(430px, 100%);
+    }
+
+    .splash-body {
       position: absolute;
       left: 50%;
       top: 50%;
-      border-radius: 58% 42% 62% 38%;
-      box-shadow: 0 10px 24px rgba(0,0,0,0.24);
+      width: 74%;
+      aspect-ratio: 1;
+      border-radius: 48% 52% 46% 54% / 58% 42% 58% 42%;
+      background: rgba(252,246,220,0.95);
+      border: 6px solid rgba(24,23,22,0.78);
+      transform: translate(-50%, -50%) rotate(-5deg);
+      box-shadow: inset 0 0 22px rgba(0,0,0,0.08);
     }
 
-    .bean-hour {
-      width: 24px;
-      height: 24px;
-      background: rgba(246,220,162,0.76);
-      -webkit-transform: translate(-50%, -50%) rotate(var(--hour-angle, 0deg)) translateY(calc(var(--bean-orbit) * -0.72));
-      transform: translate(-50%, -50%) rotate(var(--hour-angle, 0deg)) translateY(calc(var(--bean-orbit) * -0.72));
+    .splash-drop {
+      position: absolute;
+      border: 5px solid rgba(24,23,22,0.78);
+      background: rgba(252,246,220,0.95);
+      border-radius: 58% 42% 64% 36%;
     }
 
-    .bean-minute {
-      width: 19px;
-      height: 19px;
-      background: rgba(159,209,184,0.76);
-      -webkit-transform: translate(-50%, -50%) rotate(var(--minute-angle, 0deg)) translateY(calc(var(--bean-orbit) * -0.92));
-      transform: translate(-50%, -50%) rotate(var(--minute-angle, 0deg)) translateY(calc(var(--bean-orbit) * -0.92));
+    .splash-drop.d1 { left: 6%; top: 26%; width: 74px; height: 36px; background: #c94036; transform: rotate(-14deg); }
+    .splash-drop.d2 { right: 8%; top: 18%; width: 58px; height: 96px; transform: rotate(22deg); }
+    .splash-drop.d3 { right: 12%; bottom: 18%; width: 92px; height: 38px; background: #8aa363; transform: rotate(-8deg); }
+    .splash-drop.d4 { left: 16%; bottom: 9%; width: 42px; height: 70px; background: #d67947; transform: rotate(10deg); }
+
+    .clock-splash .object-dial {
+      width: 56%;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
     }
 
-    .bean-second {
-      width: 11px;
-      height: 11px;
-      background: rgba(255,177,150,0.84);
-      -webkit-transform: translate(-50%, -50%) rotate(var(--second-angle, 0deg)) translateY(calc(var(--bean-orbit) * -1));
-      transform: translate(-50%, -50%) rotate(var(--second-angle, 0deg)) translateY(calc(var(--bean-orbit) * -1));
+    .clock-splash .dial-num {
+      color: rgba(45,34,29,0.82);
+      font-size: clamp(20px, 2.4vw, 32px);
     }
 
-    .bean-center {
-      width: 15px;
-      height: 15px;
-      background: rgba(255,255,255,0.56);
-      -webkit-transform: translate(-50%, -50%);
-      transform: translate(-50%, -50%);
+    .clock-face {
+      width: min(430px, 92%);
+      height: min(430px, 100%);
     }
 
-    body.clock-style-bojagi .clock-card,
-    body.clock-style-bean .clock-card {
-      background: rgba(0,0,0,0.28);
-    }
-
-    body.clock-style-sand .clock-sand {
+    .face-head {
       position: absolute;
       left: 50%;
-      top: 47%;
-      display: block;
-      width: clamp(210px, 30vw, 460px);
-      aspect-ratio: 0.72;
-      border: 1px solid rgba(238,215,168,0.22);
-      border-radius: 44% 44% 38% 38% / 24% 24% 36% 36%;
-      background:
-        linear-gradient(90deg, transparent 48%, rgba(238,215,168,0.4) 49%, rgba(238,215,168,0.4) 51%, transparent 52%),
-        radial-gradient(ellipse at 50% 18%, rgba(239,208,143,0.16), transparent 35%),
-        radial-gradient(ellipse at 50% 82%, rgba(239,208,143,0.18), transparent 36%);
-      box-shadow: inset 0 0 52px rgba(239,208,143,0.05);
-      opacity: 0.78;
-      -webkit-transform: translate(-50%, -50%);
+      top: 51%;
+      width: 76%;
+      aspect-ratio: 1;
+      border-radius: 48% 52% 52% 48%;
+      background: linear-gradient(180deg, #f3d59d, #e8b979);
+      border: 5px solid rgba(24,23,22,0.86);
+      transform: translate(-50%, -50%);
+      box-shadow: inset 0 -22px 30px rgba(145,81,42,0.1);
+    }
+
+    .face-ear {
+      position: absolute;
+      top: 44%;
+      width: 18%;
+      height: 22%;
+      border: 5px solid rgba(24,23,22,0.86);
+      border-radius: 50%;
+      background: #eec98f;
+    }
+
+    .face-ear.left { left: 4%; }
+    .face-ear.right { right: 4%; }
+
+    .face-hair {
+      position: absolute;
+      left: 50%;
+      top: 12%;
+      width: 60%;
+      height: 28%;
+      background: rgba(20,20,18,0.95);
+      clip-path: polygon(0 0, 100% 0, 100% 55%, 83% 40%, 72% 70%, 58% 38%, 43% 74%, 30% 40%, 18% 66%, 0 45%);
+      transform: translateX(-50%);
+      border-radius: 48% 48% 20% 20%;
+    }
+
+    .face-eye {
+      position: absolute;
+      top: 39%;
+      width: 18%;
+      height: 9%;
+      border-top: 4px solid rgba(24,23,22,0.84);
+      border-radius: 50%;
+    }
+
+    .face-eye.left { left: 31%; transform: rotate(8deg); }
+    .face-eye.right { right: 31%; transform: rotate(-8deg); }
+
+    .face-nose {
+      position: absolute;
+      left: 50%;
+      top: 51%;
+      width: 9px;
+      height: 18px;
+      border-radius: 999px;
+      background: rgba(24,23,22,0.84);
       transform: translate(-50%, -50%);
     }
 
-    .sand-glass {
+    .face-mouth {
       position: absolute;
-      inset: 9%;
-      border-radius: 46%;
-      clip-path: polygon(19% 0, 81% 0, 57% 48%, 81% 100%, 19% 100%, 43% 48%);
-      background: rgba(255,255,255,0.035);
-      border: 1px solid rgba(255,255,255,0.1);
+      left: 50%;
+      bottom: 21%;
+      width: 34px;
+      height: 15px;
+      border-radius: 999px;
+      background: rgba(145,49,86,0.68);
+      transform: translateX(-50%);
+    }
+
+    .clock-face .analog-hand {
+      top: 51%;
+    }
+
+    .clock-face .analog-hour {
+      height: 18%;
+      width: 12px;
+      background: #f7f1e7;
+    }
+
+    .clock-face .analog-minute {
+      height: 27%;
+      width: 8px;
+      background: #2aa08d;
+    }
+
+    .clock-face .analog-second {
+      background: rgba(198,57,48,0.78);
+    }
+
+    .clock-face .object-time {
+      bottom: 4%;
+    }
+
+    .clock-sand-object {
+      width: min(360px, 74%);
+      height: min(430px, 100%);
+    }
+
+    .sand-frame {
+      position: absolute;
+      inset: 0 12%;
+      border: 3px solid rgba(238,215,168,0.42);
+      border-radius: 46% 46% 36% 36% / 20% 20% 28% 28%;
+      background:
+        linear-gradient(90deg, transparent 48%, rgba(238,215,168,0.44) 49%, rgba(238,215,168,0.44) 51%, transparent 52%),
+        rgba(255,255,255,0.03);
+      box-shadow: inset 0 0 42px rgba(239,208,143,0.06);
     }
 
     .sand-top,
     .sand-bottom {
       position: absolute;
-      left: 24%;
-      right: 24%;
+      left: 28%;
+      right: 28%;
+      z-index: 2;
       background:
-        radial-gradient(circle at 30% 40%, rgba(255,245,198,0.62) 0 7%, transparent 8%),
-        radial-gradient(circle at 70% 64%, rgba(255,223,149,0.54) 0 6%, transparent 7%),
-        linear-gradient(180deg, rgba(239,208,143,0.58), rgba(179,126,74,0.42));
+        radial-gradient(circle at 30% 40%, rgba(255,245,198,0.72) 0 7%, transparent 8%),
+        radial-gradient(circle at 70% 64%, rgba(255,223,149,0.64) 0 6%, transparent 7%),
+        linear-gradient(180deg, rgba(239,208,143,0.7), rgba(179,126,74,0.5));
       transform-origin: center bottom;
     }
 
     .sand-top {
-      top: 11%;
+      top: 10%;
       height: 34%;
       clip-path: polygon(0 0, 100% 0, 54% 100%, 46% 100%);
-      -webkit-transform: scaleY(calc(1 - var(--minute-progress, 0)));
       transform: scaleY(calc(1 - var(--minute-progress, 0)));
     }
 
     .sand-bottom {
-      bottom: 12%;
-      height: 34%;
+      bottom: 14%;
+      height: 35%;
       clip-path: polygon(46% 0, 54% 0, 100% 100%, 0 100%);
-      transform-origin: center bottom;
-      -webkit-transform: scaleY(var(--minute-progress, 0));
       transform: scaleY(var(--minute-progress, 0));
     }
 
@@ -412,171 +655,257 @@
       position: absolute;
       left: 50%;
       top: 43%;
+      z-index: 3;
       width: 3px;
-      height: 18%;
+      height: 20%;
       border-radius: 999px;
-      background: rgba(239,208,143,0.72);
-      -webkit-transform: translateX(-50%);
+      background: rgba(239,208,143,0.8);
       transform: translateX(-50%);
       box-shadow: 0 0 16px rgba(239,208,143,0.28);
     }
 
-    body.clock-style-melt .clock-melt {
+    .clock-sand-object .object-time {
+      bottom: 5%;
+    }
+
+    .clock-melt-object {
+      width: min(540px, 96%);
+      height: min(390px, 100%);
+    }
+
+    .melt-body {
       position: absolute;
       left: 50%;
-      top: 45%;
-      display: block;
-      width: min(76%, 980px);
-      height: 52%;
-      opacity: 0.76;
-      -webkit-transform: translate(-50%, -50%);
-      transform: translate(-50%, -50%);
-    }
-
-    body.clock-style-melt .time .hm {
-      text-shadow:
-        0 14px 0 rgba(255,255,255,0.04),
-        0 22px 34px rgba(0,0,0,0.86);
-      -webkit-transform: skewX(-2deg);
-      transform: skewX(-2deg);
-    }
-
-    .melt-pool {
-      position: absolute;
-      left: 12%;
-      right: 10%;
-      bottom: 7%;
-      height: 18%;
-      border-radius: 50%;
-      background: radial-gradient(ellipse at center, rgba(255,255,255,0.12), transparent 72%);
-      -webkit-transform: skewX(-8deg);
-      transform: skewX(-8deg);
+      top: 42%;
+      width: 78%;
+      height: 68%;
+      border-radius: 46% 54% 55% 45% / 42% 38% 62% 58%;
+      background:
+        radial-gradient(circle at 45% 36%, rgba(255,255,255,0.98), rgba(238,228,206,0.96) 58%, rgba(204,181,143,0.92));
+      border: 4px solid rgba(34,28,24,0.66);
+      transform: translate(-50%, -50%) skewX(-4deg);
+      box-shadow: inset 0 -24px 30px rgba(124,84,50,0.12);
     }
 
     .melt-drip {
       position: absolute;
-      top: 28%;
-      width: clamp(13px, 1.2vw, 24px);
-      height: clamp(70px, 8vw, 140px);
-      border-radius: 999px 999px 70% 70%;
-      background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.035));
+      top: 66%;
+      z-index: 2;
+      width: 28px;
+      height: 104px;
+      border-radius: 0 0 999px 999px;
+      background: linear-gradient(180deg, rgba(238,228,206,0.96), rgba(204,181,143,0.72));
+      border: 3px solid rgba(34,28,24,0.56);
+      border-top: 0;
       animation: meltDrift 6.8s ease-in-out infinite alternate;
     }
 
-    .melt-drip:nth-child(1) { left: 18%; height: 31%; animation-delay: -1.2s; }
-    .melt-drip:nth-child(2) { left: 47%; height: 24%; animation-delay: -3.4s; }
-    .melt-drip:nth-child(3) { left: 70%; height: 36%; animation-delay: -2s; }
+    .melt-drip.d1 { left: 32%; height: 88px; animation-delay: -1.2s; }
+    .melt-drip.d2 { left: 52%; height: 122px; animation-delay: -3.4s; }
+    .melt-drip.d3 { right: 28%; height: 76px; animation-delay: -2s; }
+
+    .melt-pool {
+      position: absolute;
+      left: 24%;
+      right: 18%;
+      bottom: 2%;
+      height: 20%;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(238,228,206,0.42), transparent 72%);
+      transform: skewX(-8deg);
+    }
+
+    .clock-melt-object .object-dial {
+      top: 42%;
+      width: 52%;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+    }
+
+    .clock-melt-object .object-time {
+      bottom: 1%;
+    }
 
     @keyframes meltDrift {
-      from { -webkit-transform: translateY(-8px) scaleY(0.96); transform: translateY(-8px) scaleY(0.96); }
-      to { -webkit-transform: translateY(12px) scaleY(1.08); transform: translateY(12px) scaleY(1.08); }
+      from { transform: translateY(-6px) scaleY(0.96); }
+      to { transform: translateY(12px) scaleY(1.08); }
     }
 
-    body.clock-style-shodo .clock-shodo {
+    .clock-karakuri {
+      width: min(520px, 96%);
+      height: min(410px, 100%);
+    }
+
+    .karakuri-house {
       position: absolute;
-      inset: 12%;
-      display: block;
-      opacity: 0.68;
-    }
-
-    .shodo-stroke {
-      position: absolute;
-      border-radius: 999px;
-      background: linear-gradient(90deg, rgba(255,255,255,0.04), rgba(255,255,255,0.22), rgba(255,255,255,0.02));
-      filter: blur(0.2px);
-      transform-origin: left center;
-    }
-
-    .shodo-stroke:nth-child(1) {
-      left: 6%;
-      top: 26%;
-      width: 42%;
-      height: 18px;
-      -webkit-transform: rotate(-11deg);
-      transform: rotate(-11deg);
-    }
-
-    .shodo-stroke:nth-child(2) {
-      right: 4%;
-      top: 38%;
-      width: 48%;
-      height: 13px;
-      -webkit-transform: rotate(14deg);
-      transform: rotate(14deg);
-    }
-
-    .shodo-stroke:nth-child(3) {
-      left: 20%;
-      bottom: 18%;
-      width: 58%;
-      height: 10px;
-      -webkit-transform: rotate(-3deg);
-      transform: rotate(-3deg);
-    }
-
-    .shodo-seal {
-      position: absolute;
-      right: 10%;
-      bottom: 15%;
-      width: 48px;
-      height: 48px;
-      border: 2px solid rgba(218,70,55,0.46);
-      border-radius: 10px;
-      background: rgba(133,25,22,0.18);
-      -webkit-transform: rotate(5deg);
-      transform: rotate(5deg);
-    }
-
-    body.clock-style-noren .clock-noren {
-      position: absolute;
-      inset: 0;
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      opacity: 0.55;
-    }
-
-    .noren-panel {
-      border-right: 1px solid rgba(255,255,255,0.08);
+      left: 50%;
+      top: 52%;
+      width: 80%;
+      height: 76%;
+      border-radius: 26px;
       background:
-        linear-gradient(180deg, rgba(255,255,255,0.11), transparent 24%),
-        linear-gradient(160deg, rgba(41,80,105,0.34), rgba(22,31,45,0.16));
-      clip-path: polygon(0 0, 100% 0, 100% 78%, 52% 88%, 0 78%);
+        linear-gradient(90deg, rgba(255,255,255,0.08), transparent 18%, transparent 82%, rgba(255,255,255,0.07)),
+        linear-gradient(180deg, rgba(72,56,44,0.95), rgba(33,29,28,0.95));
+      border: 3px solid rgba(218,184,119,0.42);
+      transform: translate(-50%, -50%);
+      box-shadow: inset 0 0 38px rgba(0,0,0,0.3);
     }
 
-    .noren-panel:nth-child(2) { background-color: rgba(123,47,44,0.22); clip-path: polygon(0 0, 100% 0, 100% 84%, 48% 76%, 0 84%); }
-    .noren-panel:nth-child(3) { background-color: rgba(226,182,96,0.13); clip-path: polygon(0 0, 100% 0, 100% 77%, 52% 89%, 0 77%); }
-    .noren-panel:nth-child(4) { background-color: rgba(54,99,76,0.22); clip-path: polygon(0 0, 100% 0, 100% 85%, 45% 78%, 0 85%); }
-    .noren-panel:nth-child(5) { border-right: 0; background-color: rgba(61,61,100,0.2); }
-
-    body.clock-style-neon .clock-neon {
+    .karakuri-roof {
       position: absolute;
-      inset: 9%;
-      display: block;
-      border: 1px solid rgba(250,86,68,0.18);
+      left: 50%;
+      top: 4%;
+      width: 86%;
+      height: 24%;
+      background: linear-gradient(180deg, #6b2b2b, #311919);
+      clip-path: polygon(8% 100%, 50% 0, 92% 100%);
+      transform: translateX(-50%);
+      filter: drop-shadow(0 10px 14px rgba(0,0,0,0.22));
+    }
+
+    .karakuri-door {
+      position: absolute;
+      top: 23%;
+      bottom: 20%;
+      width: 21%;
+      border: 1px solid rgba(218,184,119,0.26);
+      background: rgba(255,255,255,0.035);
+    }
+
+    .karakuri-door.left { left: 13%; }
+    .karakuri-door.right { right: 13%; }
+
+    .gear {
+      position: absolute;
+      width: 58px;
+      height: 58px;
+      border-radius: 999px;
+      border: 9px dashed rgba(218,184,119,0.48);
+      animation: gearTurn 20s linear infinite;
+    }
+
+    .gear.g1 { left: 16%; bottom: 14%; }
+    .gear.g2 { right: 17%; bottom: 16%; width: 46px; height: 46px; animation-direction: reverse; }
+
+    @keyframes gearTurn {
+      to { transform: rotate(360deg); }
+    }
+
+    .clock-karakuri .object-dial {
+      width: 40%;
+      top: 49%;
+    }
+
+    .clock-karakuri .object-time {
+      bottom: 5%;
+    }
+
+    .clock-flip {
+      width: min(680px, 100%);
+      height: min(360px, 100%);
+    }
+
+    .flip-board {
+      position: absolute;
+      inset: 11% 2% 20%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(10px, 1.4vw, 18px);
+      padding: clamp(12px, 2vw, 24px);
       border-radius: 28px;
-      opacity: 0.62;
-      box-shadow:
-        inset 0 0 38px rgba(250,86,68,0.08),
-        0 0 26px rgba(245,189,92,0.08);
+      background: rgba(16,18,19,0.82);
+      border: 1px solid rgba(255,255,255,0.13);
+      box-shadow: inset 0 0 36px rgba(255,255,255,0.04);
     }
 
-    body.clock-style-neon .time .hm {
-      color: rgba(255,248,232,0.98);
-      text-shadow:
-        0 0 18px rgba(255,116,91,0.24),
-        0 0 34px rgba(245,189,92,0.18),
-        0 16px 34px rgba(0,0,0,0.88);
+    .flip-card {
+      position: relative;
+      width: min(170px, 28vw);
+      height: clamp(128px, 20vw, 190px);
+      border-radius: 18px;
+      background: linear-gradient(180deg, #24282a 0 49%, #151719 50% 100%);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.96);
+      font-size: clamp(82px, 12vw, 150px);
+      font-weight: 950;
+      line-height: 1.15;
+      font-variant-numeric: tabular-nums;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 22px 46px rgba(0,0,0,0.34);
     }
 
-    .neon-line {
+    .flip-card::after {
+      content: "";
       position: absolute;
-      background: rgba(245,189,92,0.38);
-      box-shadow: 0 0 16px rgba(245,189,92,0.2);
+      left: 0;
+      right: 0;
+      top: 50%;
+      height: 1px;
+      background: rgba(255,255,255,0.12);
     }
 
-    .neon-line:nth-child(1) { left: 5%; top: 12%; width: 28%; height: 2px; }
-    .neon-line:nth-child(2) { right: 5%; bottom: 16%; width: 34%; height: 2px; }
-    .neon-line:nth-child(3) { right: 11%; top: 18%; width: 2px; height: 24%; background: rgba(159,209,184,0.38); }
+    .flip-colon {
+      color: rgba(246,220,162,0.86);
+      font-size: clamp(76px, 10vw, 130px);
+      font-weight: 950;
+      transform: translateY(-0.06em);
+    }
+
+    .clock-flip .object-caption {
+      bottom: 9%;
+    }
+
+    .clock-neon-object {
+      width: min(620px, 100%);
+      height: min(390px, 100%);
+    }
+
+    .neon-sign {
+      position: absolute;
+      inset: 9% 1% 18%;
+      border-radius: 34px;
+      background:
+        radial-gradient(circle at 72% 24%, rgba(255,96,80,0.16), transparent 28%),
+        rgba(9,15,17,0.78);
+      border: 2px solid rgba(250,86,68,0.32);
+      box-shadow:
+        inset 0 0 44px rgba(250,86,68,0.09),
+        0 0 30px rgba(245,189,92,0.12);
+    }
+
+    .neon-word {
+      position: absolute;
+      left: 50%;
+      top: 44%;
+      color: rgba(255,248,232,0.98);
+      font-size: clamp(76px, 9.2vw, 150px);
+      font-weight: 950;
+      letter-spacing: -0.08em;
+      font-variant-numeric: tabular-nums;
+      transform: translate(-50%, -50%);
+      text-shadow:
+        0 0 18px rgba(255,116,91,0.34),
+        0 0 34px rgba(245,189,92,0.24),
+        0 16px 34px rgba(0,0,0,0.88);
+      white-space: nowrap;
+    }
+
+    .neon-kana {
+      position: absolute;
+      left: 50%;
+      bottom: 17%;
+      color: rgba(159,209,184,0.82);
+      font-size: clamp(15px, 1.4vw, 22px);
+      font-weight: 900;
+      letter-spacing: 0.28em;
+      transform: translateX(-50%);
+      text-shadow: 0 0 14px rgba(159,209,184,0.32);
+      white-space: nowrap;
+    }
 
     .timezone-label {
       position: relative;
@@ -635,22 +964,21 @@
     .date {
       position: relative;
       z-index: 1;
-      margin-top: clamp(10px, 1.5vh, 18px);
-      font-size: 31px;
+      margin-top: clamp(8px, 1.2vh, 14px);
+      font-size: 21px;
       font-weight: 700;
-      color: rgba(255,255,255,0.9);
-      letter-spacing: -0.02em;
+      color: rgba(255,255,255,0.78);
+      letter-spacing: 0.08em;
     }
 
     body.time-focus-mode .date {
-      margin-top: clamp(16px, 2.4vh, 34px);
-      letter-spacing: 0;
-      color: rgba(255,255,255,0.88);
+      margin-top: clamp(8px, 1.4vh, 16px);
+      color: rgba(255,255,255,0.72);
     }
 
     @supports (font-size: clamp(1px, 2vw, 3px)) {
-      .date { font-size: clamp(20px, 2.1vw, 38px); }
-      body.time-focus-mode .date { font-size: clamp(24px, 2.8vw, 50px); }
+      .date { font-size: clamp(15px, 1.35vw, 22px); }
+      body.time-focus-mode .date { font-size: clamp(16px, 1.6vw, 25px); }
     }
 
     .weather {
@@ -692,6 +1020,13 @@
       color: rgba(255,255,255,0.58);
     }
 
+    @media (min-width: 861px) {
+      .clock-card .weather,
+      .clock-card .weather-source {
+        display: none;
+      }
+    }
+
     body.time-focus-mode .weather,
     body.time-focus-mode .weather-source,
     body.time-focus-mode .weather-summary,
@@ -702,20 +1037,17 @@
     .main-timer {
       position: relative;
       z-index: 1;
-      display: -webkit-box;
-      display: -ms-flexbox;
-      display: flex;
-      -webkit-box-align: center;
-      -ms-flex-align: center;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
       align-items: center;
-      -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-      justify-content: space-between;
-      gap: clamp(12px, 2vw, 24px);
-      width: min(720px, 100%);
-      margin: clamp(12px, 1.8vh, 20px) auto 0;
-      padding-top: clamp(10px, 1.3vh, 16px);
+      gap: clamp(14px, 2vw, 28px);
+      width: min(800px, 100%);
+      margin: clamp(10px, 1.5vh, 18px) auto 0;
+      padding: clamp(10px, 1.4vh, 16px) clamp(10px, 1.3vw, 18px);
       border-top: 1px solid rgba(255,255,255,0.2);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      background: rgba(0,0,0,0.16);
       text-align: left;
       font-variant-numeric: tabular-nums;
     }
@@ -723,6 +1055,7 @@
     .main-timer[hidden] { display: none; }
 
     .main-timer-label {
+      grid-area: label;
       font-size: clamp(12px, 1vw, 15px);
       font-weight: 900;
       letter-spacing: 0.18em;
@@ -731,8 +1064,9 @@
     }
 
     .main-timer-remaining {
-      margin-top: 4px;
-      font-size: clamp(34px, 3.7vw, 62px);
+      grid-area: time;
+      margin-top: 0;
+      font-size: clamp(34px, 3.2vw, 58px);
       line-height: 0.95;
       font-weight: 900;
       letter-spacing: 0;
@@ -740,7 +1074,8 @@
     }
 
     .main-timer-status {
-      margin-top: 4px;
+      grid-area: status;
+      margin-top: 0;
       max-width: 38em;
       font-size: clamp(13px, 1.1vw, 17px);
       line-height: 1.35;
@@ -749,9 +1084,10 @@
     }
 
     .main-timer-progress {
+      grid-area: progress;
       width: min(340px, 100%);
       height: 4px;
-      margin-top: 10px;
+      margin-top: 4px;
       overflow: hidden;
       border-radius: 999px;
       background: rgba(255,255,255,0.14);
@@ -785,22 +1121,50 @@
     }
 
     .main-timer-actions {
-      display: -webkit-box;
-      display: -ms-flexbox;
       display: flex;
-      -ms-flex-wrap: wrap;
       flex-wrap: wrap;
-      -webkit-box-pack: end;
-      -ms-flex-pack: end;
       justify-content: flex-end;
       gap: 8px;
-      min-width: min(320px, 42vw);
+      min-width: min(300px, 38vw);
     }
 
     .main-timer-actions button {
       min-height: 44px;
       padding: 8px 13px;
       white-space: nowrap;
+    }
+
+    .main-timer-copy {
+      display: grid;
+      grid-template-columns: auto minmax(170px, 1fr);
+      grid-template-areas:
+        "label status"
+        "time progress";
+      align-items: end;
+      column-gap: clamp(14px, 1.8vw, 24px);
+      row-gap: 5px;
+      min-width: 0;
+    }
+
+    @media (min-width: 861px) {
+      .main-timer-copy {
+        grid-template-columns: max-content minmax(220px, 1fr);
+      }
+
+      .main-timer-label,
+      .main-timer-status {
+        white-space: nowrap;
+      }
+
+      .main-timer-actions {
+        min-width: min(270px, 34vw);
+      }
+    }
+
+    body.time-focus-mode .main-timer {
+      width: min(760px, 86%);
+      margin-top: clamp(12px, 1.8vh, 20px);
+      background: rgba(0,0,0,0.2);
     }
 
     .weather-summary {
@@ -878,17 +1242,17 @@
 
     .summary-hourly {
       display: grid;
-      grid-template-columns: repeat(7, minmax(62px, 1fr));
-      gap: 8px;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 6px;
       margin-top: 12px;
-      overflow-x: auto;
-      padding-bottom: 3px;
+      overflow: hidden;
+      padding-bottom: 0;
     }
 
     .hourly-slot {
       min-width: 0;
-      min-height: 86px;
-      padding: 8px 7px;
+      min-height: 82px;
+      padding: 8px 5px;
       border-radius: 16px;
       background: rgba(255,255,255,0.075);
       border: 1px solid rgba(255,255,255,0.08);
@@ -909,7 +1273,7 @@
     .hourly-slot strong {
       display: block;
       margin-top: 6px;
-      font-size: 18px;
+      font-size: 17px;
       line-height: 1;
       font-weight: 900;
       color: rgba(255,255,255,0.94);
@@ -917,7 +1281,7 @@
 
     .hourly-icon {
       margin-top: 6px;
-      font-size: 22px;
+      font-size: 20px;
       line-height: 1;
       filter: drop-shadow(0 4px 9px rgba(0,0,0,0.42));
     }
@@ -1534,13 +1898,21 @@
         margin-bottom: 6px;
       }
 
+      .clock-scene {
+        height: clamp(260px, 36vh, 360px);
+      }
+
+      body.time-focus-mode .clock-scene {
+        height: clamp(380px, 52vh, 560px);
+      }
+
       .time .hm {
         font-size: clamp(104px, 11.5vw, 220px);
       }
 
       .date {
         margin-top: 10px;
-        font-size: clamp(20px, 1.9vw, 34px);
+        font-size: clamp(15px, 1.15vw, 20px);
       }
 
       .main-timer {
@@ -1606,26 +1978,45 @@
       .clock-card { border-radius: 22px; padding: 12px 4vw 14px; }
       body.time-focus-mode .clock-card { width: min(94vw, 760px); padding: 24px 5vw 28px; }
       .timezone-label { margin-bottom: 5px; }
+      .clock-scene {
+        width: min(94vw, 620px);
+        height: clamp(250px, 56vw, 360px);
+      }
+      body.time-focus-mode .clock-scene {
+        width: min(94vw, 700px);
+        height: clamp(280px, 70vw, 480px);
+      }
       .time .hm { font-size: 72px; }
       body.time-focus-mode .time .hm { font-size: clamp(82px, 24vw, 160px); }
       .time .sec { display: inline-block; min-width: 1.6em; margin-left: 0.12em; margin-top: 0; font-size: 24px; vertical-align: super; }
-      .date { margin-top: 10px; font-size: 22px; }
-      body.time-focus-mode .date { font-size: clamp(22px, 5vw, 34px); }
+      .date { margin-top: 10px; font-size: 16px; }
+      body.time-focus-mode .date { font-size: clamp(16px, 4vw, 20px); }
       .weather { gap: 7px; margin-top: 12px; }
       .weather-item { min-width: 0; padding: 7px 11px; font-size: 14px; }
       .weather-source { margin-top: 8px; font-size: 12px; }
       .main-timer {
-        -webkit-box-align: stretch;
-        -ms-flex-align: stretch;
+        grid-template-columns: 1fr;
         align-items: stretch;
-        -webkit-box-orient: vertical;
-        -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-        flex-direction: column;
         gap: 10px;
+        width: 100%;
         text-align: center;
       }
+      .main-timer-copy {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          "label"
+          "time"
+          "status"
+          "progress";
+        justify-items: center;
+        row-gap: 6px;
+      }
       .main-timer-status { max-width: none; }
+      .main-timer-progress {
+        width: min(280px, 100%);
+        margin-left: auto;
+        margin-right: auto;
+      }
       .main-timer-actions {
         -webkit-box-pack: center;
         -ms-flex-pack: center;
@@ -1638,10 +2029,10 @@
       .summary-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 7px; margin-top: 10px; }
       .summary-metric { min-height: 50px; padding: 8px 10px; border-radius: 14px; }
       .summary-metric strong { font-size: 16px; }
-      .summary-hourly { margin-top: 8px; }
-      .hourly-slot { min-height: 88px; padding: 7px 8px; border-radius: 14px; }
-      .hourly-icon { font-size: 20px; }
-      .hourly-slot strong { font-size: 16px; }
+      .summary-hourly { gap: 5px; margin-top: 8px; }
+      .hourly-slot { min-height: 78px; padding: 7px 4px; border-radius: 14px; }
+      .hourly-icon { font-size: 18px; }
+      .hourly-slot strong { font-size: 15px; }
       .summary-tips, .summary-night { display: none; }
       .forecast-rail { width: min(94vw, 720px); padding: 10px 13px 12px; border-radius: 22px; }
       .forecast-rail-head { margin-bottom: 7px; }
@@ -1685,10 +2076,18 @@
       body.time-focus-mode .time .hm { font-size: clamp(66px, 22vw, 104px); }
       .time .sec { font-size: 20px; }
       body.time-focus-mode .time .sec { font-size: 0.3em; }
-      .date { font-size: 20px; }
-      body.time-focus-mode .date { font-size: clamp(20px, 5vw, 26px); }
+      .clock-scene { height: clamp(220px, 78vw, 320px); }
+      body.time-focus-mode .clock-scene { height: clamp(260px, 88vw, 360px); }
+      .object-caption { display: none; }
+      .date { font-size: 15px; }
+      body.time-focus-mode .date { font-size: clamp(15px, 4.4vw, 18px); }
       .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .summary-hourly { grid-template-columns: repeat(7, minmax(58px, 1fr)); }
+      .summary-hourly { grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+      .hourly-slot { min-height: 74px; padding: 6px 3px; border-radius: 12px; }
+      .hourly-slot span,
+      .hourly-slot em { font-size: 10px; }
+      .hourly-icon { font-size: 16px; }
+      .hourly-slot strong { font-size: 14px; }
       .main-timer-actions button { -webkit-box-flex: 1; -ms-flex: 1 1 92px; flex: 1 1 92px; }
       .forecast-days { grid-template-columns: repeat(2, minmax(0, 1fr)); overflow: visible; }
       .forecast-day { min-height: 72px; }
@@ -1714,7 +2113,7 @@
     <button id="next-art-button" type="button">배경변경</button>
     <button id="weather-button" type="button">날씨갱신</button>
     <button id="focus-mode-button" type="button" aria-pressed="false">시계집중</button>
-    <button id="clock-style-button" type="button">갤러리시계</button>
+    <button id="clock-style-button" type="button">기본 갤러리</button>
     <button id="city-panel-button" type="button" aria-expanded="false" aria-controls="city-panel">도시선택</button>
     <button id="timer-panel-button" type="button" aria-expanded="false" aria-controls="timer-panel">타이머</button>
     <button id="protect-panel-button" type="button" aria-expanded="false" aria-controls="protect-panel">화면보호</button>
@@ -1825,51 +2224,91 @@
     <div class="dashboard">
       <section class="clock-card" aria-label="대한민국 기준 현재 시각">
         <div class="timezone-label">Korea Standard Time</div>
-        <div id="clock-art" class="clock-art" aria-hidden="true">
-          <div class="clock-moon-dial">
-            <span class="clock-hand clock-hand-hour"></span>
-            <span class="clock-hand clock-hand-minute"></span>
-            <span class="clock-hand clock-hand-second"></span>
-            <span class="clock-center-dot"></span>
+        <div id="clock-scene" class="clock-scene" aria-hidden="true">
+          <div class="clock-object clock-milk">
+            <div class="milk-bottle"></div>
+            <div class="milk-cap"></div>
+            <div class="milk-label">Milk</div>
+            <div class="object-dial">
+              <span class="dial-num n12">12</span><span class="dial-num n3">3</span><span class="dial-num n6">6</span><span class="dial-num n9">9</span>
+              <span class="analog-hand analog-hour"></span><span class="analog-hand analog-minute"></span><span class="analog-hand analog-second"></span><span class="dial-pin"></span>
+            </div>
+            <div class="object-time clock-time-text">--:--</div>
+            <div class="object-caption">milk clock</div>
           </div>
-          <div class="clock-bojagi">
-            <span></span><span></span><span></span><span></span><span></span><span></span>
+          <div class="clock-object clock-alarm">
+            <span class="alarm-zap left"></span><span class="alarm-zap right"></span>
+            <div class="alarm-bell left"></div><div class="alarm-bell right"></div>
+            <div class="alarm-body">
+              <div class="object-dial">
+                <span class="dial-num n12">12</span><span class="dial-num n3">3</span><span class="dial-num n6">6</span><span class="dial-num n9">9</span>
+                <span class="analog-hand analog-hour"></span><span class="analog-hand analog-minute"></span><span class="analog-hand analog-second"></span><span class="dial-pin"></span>
+              </div>
+            </div>
+            <span class="alarm-leg left"></span><span class="alarm-leg right"></span>
+            <div class="object-time clock-time-text">--:--</div>
+            <div class="object-caption">wake up</div>
           </div>
-          <div class="clock-beans">
-            <span class="bean bean-hour"></span>
-            <span class="bean bean-minute"></span>
-            <span class="bean bean-second"></span>
-            <span class="bean bean-center"></span>
+          <div class="clock-object clock-splash">
+            <div class="splash-body"></div>
+            <span class="splash-drop d1"></span><span class="splash-drop d2"></span><span class="splash-drop d3"></span><span class="splash-drop d4"></span>
+            <div class="object-dial">
+              <span class="dial-num n12">12</span><span class="dial-num n3">3</span><span class="dial-num n6">6</span><span class="dial-num n9">9</span>
+              <span class="analog-hand analog-hour"></span><span class="analog-hand analog-minute"></span><span class="analog-hand analog-second"></span><span class="dial-pin"></span>
+            </div>
+            <div class="object-time clock-time-text">--:--</div>
+            <div class="object-caption">splash clock</div>
           </div>
-          <div class="clock-sand">
-            <span class="sand-glass"></span>
-            <span class="sand-top"></span>
-            <span class="sand-stream"></span>
-            <span class="sand-bottom"></span>
+          <div class="clock-object clock-face">
+            <div class="face-ear left"></div><div class="face-ear right"></div>
+            <div class="face-head">
+              <div class="face-hair"></div>
+              <span class="face-eye left"></span><span class="face-eye right"></span><span class="face-nose"></span><span class="face-mouth"></span>
+              <span class="analog-hand analog-hour"></span><span class="analog-hand analog-minute"></span><span class="analog-hand analog-second"></span><span class="dial-pin"></span>
+            </div>
+            <div class="object-time clock-time-text">--:--</div>
+            <div class="object-caption">face clock</div>
           </div>
-          <div class="clock-melt">
-            <span class="melt-drip"></span>
-            <span class="melt-drip"></span>
-            <span class="melt-drip"></span>
-            <span class="melt-pool"></span>
+          <div class="clock-object clock-sand-object">
+            <div class="sand-frame"></div>
+            <span class="sand-top"></span><span class="sand-stream"></span><span class="sand-bottom"></span>
+            <div class="object-time clock-time-text">--:--</div>
+            <div class="object-caption">hourglass</div>
           </div>
-          <div class="clock-shodo">
-            <span class="shodo-stroke"></span>
-            <span class="shodo-stroke"></span>
-            <span class="shodo-stroke"></span>
-            <span class="shodo-seal"></span>
+          <div class="clock-object clock-melt-object">
+            <div class="melt-body"></div>
+            <span class="melt-drip d1"></span><span class="melt-drip d2"></span><span class="melt-drip d3"></span><span class="melt-pool"></span>
+            <div class="object-dial">
+              <span class="dial-num n12">12</span><span class="dial-num n3">3</span><span class="dial-num n6">6</span><span class="dial-num n9">9</span>
+              <span class="analog-hand analog-hour"></span><span class="analog-hand analog-minute"></span><span class="analog-hand analog-second"></span><span class="dial-pin"></span>
+            </div>
+            <div class="object-time clock-time-text">--:--</div>
+            <div class="object-caption">soft time</div>
           </div>
-          <div class="clock-noren">
-            <span class="noren-panel"></span>
-            <span class="noren-panel"></span>
-            <span class="noren-panel"></span>
-            <span class="noren-panel"></span>
-            <span class="noren-panel"></span>
+          <div class="clock-object clock-karakuri">
+            <div class="karakuri-roof"></div>
+            <div class="karakuri-house">
+              <span class="karakuri-door left"></span><span class="karakuri-door right"></span><span class="gear g1"></span><span class="gear g2"></span>
+              <div class="object-dial">
+                <span class="dial-num n12">12</span><span class="dial-num n3">3</span><span class="dial-num n6">6</span><span class="dial-num n9">9</span>
+                <span class="analog-hand analog-hour"></span><span class="analog-hand analog-minute"></span><span class="analog-hand analog-second"></span><span class="dial-pin"></span>
+              </div>
+            </div>
+            <div class="object-time clock-time-text">--:--</div>
+            <div class="object-caption">karakuri</div>
           </div>
-          <div class="clock-neon">
-            <span class="neon-line"></span>
-            <span class="neon-line"></span>
-            <span class="neon-line"></span>
+          <div class="clock-object clock-flip">
+            <div class="flip-board">
+              <div class="flip-card flip-hour">--</div><div class="flip-colon">:</div><div class="flip-card flip-minute">--</div>
+            </div>
+            <div class="object-caption">flip board</div>
+          </div>
+          <div class="clock-object clock-neon-object">
+            <div class="neon-sign">
+              <div class="neon-word clock-time-text">--:--</div>
+              <div class="neon-kana">TOKI NO AKARI</div>
+            </div>
+            <div class="object-caption">neon sign</div>
           </div>
         </div>
         <div class="time" aria-live="polite">
@@ -2006,7 +2445,10 @@
 
       var el = {
         clockCard: document.querySelector('.clock-card'),
-        clockArt: document.getElementById('clock-art'),
+        clockScene: document.getElementById('clock-scene'),
+        clockTimeTexts: document.querySelectorAll('.clock-time-text'),
+        flipHour: document.querySelector('.flip-hour'),
+        flipMinute: document.querySelector('.flip-minute'),
         hm: document.getElementById('hm'),
         sec: document.getElementById('sec'),
         date: document.getElementById('date'),
@@ -2156,7 +2598,7 @@
         cursorTimer: null
       };
 
-      var weekdays = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+      var weekdays = ['일', '월', '화', '수', '목', '금', '토'];
       var fallbackClasses = ['fallback-bg-1', 'fallback-bg-2', 'fallback-bg-3'];
       var cityPresets = [
         { id: 'seoul', name: '서울', lat: 37.5665, lon: 126.9780 },
@@ -2181,15 +2623,16 @@
       ];
       var alertDurations = [1, 3, 5, 10];
       var clockStyles = [
-        { id: 'gallery', label: '갤러리시계' },
-        { id: 'moon', label: '달항아리' },
-        { id: 'bojagi', label: '보자기' },
-        { id: 'bean', label: '콩알시계' },
+        { id: 'gallery', label: '기본 갤러리' },
+        { id: 'milk', label: '우유병' },
+        { id: 'alarm', label: '만화 알람' },
+        { id: 'splash', label: '잉크 스플래시' },
+        { id: 'face', label: '얼굴 시계' },
         { id: 'sand', label: '모래시계' },
-        { id: 'melt', label: '녹는시계' },
-        { id: 'shodo', label: '먹선시계' },
-        { id: 'noren', label: '노렌시계' },
-        { id: 'neon', label: '간판시계' }
+        { id: 'melt', label: '녹는 시계' },
+        { id: 'karakuri', label: '카라쿠리' },
+        { id: 'flip', label: '플립 시계' },
+        { id: 'neon', label: '네온 간판' }
       ];
 
       applySavedSettings();
@@ -2395,22 +2838,30 @@
 
         updateClockArt(hour, minute, second);
 
-        el.date.textContent = kst.getUTCFullYear() + '년 ' +
-          (kst.getUTCMonth() + 1) + '월 ' +
-          kst.getUTCDate() + '일 ' +
-          weekdays[kst.getUTCDay()] + ' · 대한민국 기준';
+        el.date.textContent = kst.getUTCFullYear() + '.' +
+          pad(kst.getUTCMonth() + 1) + '.' +
+          pad(kst.getUTCDate()) + ' ' +
+          weekdays[kst.getUTCDay()] + ' · KST';
       }
 
       function updateClockArt(hour, minute, second) {
-        if (!el.clockArt) return;
         var hourAngle = (((hour % 12) + minute / 60) * 30).toFixed(2) + 'deg';
         var minuteAngle = ((minute + second / 60) * 6).toFixed(2) + 'deg';
         var secondAngle = (second * 6).toFixed(2) + 'deg';
         var minuteProgress = ((minute * 60 + second) / 3600).toFixed(4);
-        el.clockArt.style.setProperty('--hour-angle', hourAngle);
-        el.clockArt.style.setProperty('--minute-angle', minuteAngle);
-        el.clockArt.style.setProperty('--second-angle', secondAngle);
-        el.clockArt.style.setProperty('--minute-progress', minuteProgress);
+        var timeText = pad(hour) + ':' + pad(minute);
+
+        if (el.clockScene) {
+          el.clockScene.style.setProperty('--hour-angle', hourAngle);
+          el.clockScene.style.setProperty('--minute-angle', minuteAngle);
+          el.clockScene.style.setProperty('--second-angle', secondAngle);
+          el.clockScene.style.setProperty('--minute-progress', minuteProgress);
+        }
+        for (var i = 0; i < el.clockTimeTexts.length; i++) {
+          el.clockTimeTexts[i].textContent = timeText;
+        }
+        if (el.flipHour) el.flipHour.textContent = pad(hour);
+        if (el.flipMinute) el.flipMinute.textContent = pad(minute);
       }
 
       function cycleClockStyle() {
@@ -2448,13 +2899,16 @@
 
       function normalizeClockStyle(value) {
         var id = cleanText(String(value || '')).toLowerCase();
-        if (id === 'jar' || id === 'moonjar' || id === 'moon-jar' || id === 'moon') return 'moon';
-        if (id === 'patchwork' || id === 'bojagi') return 'bojagi';
-        if (id === 'cute' || id === 'bean' || id === 'beans') return 'bean';
+        if (id === 'jar' || id === 'moonjar' || id === 'moon-jar' || id === 'moon') return 'gallery';
+        if (id === 'patchwork' || id === 'bojagi' || id === 'shodo' || id === 'brush' || id === 'ink' || id === 'calligraphy' || id === 'curtain' || id === 'noren') return 'gallery';
+        if (id === 'milk' || id === 'bottle' || id === 'milk-bottle' || id === 'carton') return 'milk';
+        if (id === 'alarm' || id === 'wakeup' || id === 'wake-up' || id === 'bell') return 'alarm';
+        if (id === 'splash' || id === 'splatter' || id === 'blob') return 'splash';
+        if (id === 'cute' || id === 'bean' || id === 'beans' || id === 'character' || id === 'face' || id === 'kao') return 'face';
         if (id === 'hourglass' || id === 'sandglass' || id === 'sand' || id === 'suna') return 'sand';
         if (id === 'melting' || id === 'melt' || id === 'liquid' || id === 'soft') return 'melt';
-        if (id === 'brush' || id === 'ink' || id === 'shodo' || id === 'calligraphy') return 'shodo';
-        if (id === 'curtain' || id === 'noren') return 'noren';
+        if (id === 'karakuri' || id === 'mechanic' || id === 'mechanical' || id === 'gear') return 'karakuri';
+        if (id === 'flip' || id === 'flap' || id === 'board') return 'flip';
         if (id === 'sign' || id === 'neon' || id === 'tokyo') return 'neon';
         for (var i = 0; i < clockStyles.length; i++) {
           if (clockStyles[i].id === id) return clockStyles[i].id;
