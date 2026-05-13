@@ -112,23 +112,36 @@
     }
 
     .dashboard {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
+      -webkit-box-pack: center;
+      -ms-flex-pack: center;
+      justify-content: center;
+      width: min(1720px, 98vw);
+    }
+
+    body.weather-detail-open .dashboard {
       display: grid;
       grid-template-columns: minmax(760px, 1fr) clamp(360px, 27vw, 500px);
       grid-template-areas:
         "clock weather"
         "clock timer";
-      align-items: center;
-      justify-content: center;
       column-gap: clamp(18px, 1.8vw, 32px);
       row-gap: clamp(12px, 1.5vh, 18px);
       width: min(1660px, 94vw);
     }
 
-    body.time-focus-mode .stage {
+    body.time-focus-mode .stage,
+    body.ambient-mode .stage {
       padding: clamp(54px, 7vh, 96px) 3vw clamp(70px, 10vh, 130px);
     }
 
-    body.time-focus-mode .dashboard {
+    body.time-focus-mode .dashboard,
+    body.ambient-mode .dashboard {
       display: -webkit-box;
       display: -ms-flexbox;
       display: flex;
@@ -142,6 +155,12 @@
     }
 
     .clock-card {
+      --spot-x: 50%;
+      --spot-y: 50%;
+      --tilt-x: 0deg;
+      --tilt-y: 0deg;
+      --object-tilt-x: 0deg;
+      --object-tilt-y: 0deg;
       position: relative;
       grid-area: clock;
       width: min(1180px, 68vw);
@@ -150,19 +169,33 @@
       padding: clamp(18px, 2.6vh, 32px) clamp(34px, 3.8vw, 68px) clamp(20px, 2.8vh, 34px);
       border: 1px solid rgba(255,255,255,0.18);
       border-radius: 30px;
-      background: rgba(0,0,0,0.22);
+      background:
+        radial-gradient(circle at var(--spot-x) var(--spot-y), rgba(255,255,255,0.12), transparent 24%),
+        linear-gradient(135deg, rgba(255,255,255,0.045), transparent 34%, rgba(255,255,255,0.025) 72%, transparent),
+        rgba(0,0,0,0.22);
       box-shadow: 0 36px 90px rgba(0,0,0,0.45);
       text-shadow: 0 8px 28px rgba(0,0,0,0.9), 0 1px 4px rgba(0,0,0,0.9);
+      transform: perspective(1400px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+      transform-style: preserve-3d;
+      transition:
+        transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
+        background 360ms cubic-bezier(0.22, 1, 0.36, 1),
+        border-color 260ms cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 360ms cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     body.night-mode .clock-card {
-      background: rgba(0,0,0,0.44);
+      background:
+        radial-gradient(circle at var(--spot-x) var(--spot-y), rgba(255,255,255,0.08), transparent 24%),
+        linear-gradient(135deg, rgba(255,255,255,0.03), transparent 34%, rgba(255,255,255,0.018) 72%, transparent),
+        rgba(0,0,0,0.44);
       border-color: rgba(255,255,255,0.1);
       box-shadow: 0 22px 64px rgba(0,0,0,0.55);
       text-shadow: 0 5px 18px rgba(0,0,0,0.92);
     }
 
-    body.time-focus-mode .clock-card {
+    body.time-focus-mode .clock-card,
+    body.ambient-mode .clock-card {
       width: min(1540px, 94vw);
       padding: clamp(22px, 4vh, 54px) clamp(26px, 5vw, 90px) clamp(26px, 4.4vh, 56px);
       background: rgba(0,0,0,0.18);
@@ -185,6 +218,8 @@
       height: clamp(520px, 65vh, 700px);
       margin: clamp(4px, 0.8vh, 10px) auto clamp(6px, 1vh, 14px);
       pointer-events: none;
+      perspective: 1200px;
+      transform-style: preserve-3d;
     }
 
     body.clock-style-gallery .clock-card::before,
@@ -340,6 +375,9 @@
       color: rgba(255,255,255,0.95);
       text-shadow: none;
       filter: drop-shadow(0 28px 54px rgba(0,0,0,0.42));
+      transform: rotateX(var(--object-tilt-x)) rotateY(var(--object-tilt-y)) translateZ(0);
+      transform-style: preserve-3d;
+      transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1), filter 360ms cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     body.clock-style-milk .clock-milk,
@@ -366,6 +404,11 @@
       line-height: 1;
       transform: translateX(-50%);
       box-shadow: 0 10px 28px rgba(0,0,0,0.28);
+      overflow: hidden;
+      transition:
+        transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 240ms cubic-bezier(0.22, 1, 0.36, 1),
+        border-color 240ms cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     .object-caption {
@@ -641,6 +684,23 @@
     @keyframes meltStageDrift {
       0%, 100% { transform: translate(-50%, -50%) skewX(-7deg) scaleX(0.98); opacity: 0.72; }
       50% { transform: translate(-50%, -48%) skewX(-4deg) scaleX(1.04); opacity: 0.96; }
+    }
+
+    @keyframes timerDockConfirm {
+      0% { transform: translateY(0) scale(1); border-color: rgba(255,255,255,0.2); }
+      42% { transform: translateY(-3px) scale(1.01); border-color: rgba(159,209,184,0.48); box-shadow: 0 22px 54px rgba(0,0,0,0.28); }
+      100% { transform: translateY(0) scale(1); }
+    }
+
+    @keyframes timerDockPause {
+      0% { transform: translateY(0); }
+      45% { transform: translateY(2px); border-color: rgba(255,255,255,0.32); }
+      100% { transform: translateY(0); }
+    }
+
+    @keyframes timerDockAlert {
+      0%, 100% { box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 16px 44px rgba(0,0,0,0.18); }
+      50% { box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 22px 58px rgba(118,38,22,0.34); }
     }
 
     .object-dial {
@@ -1376,7 +1436,10 @@
       opacity: 0.86;
     }
 
-    body.time-focus-mode .time {
+    body.clock-style-gallery .time::after { display: none; }
+
+    body.time-focus-mode .time,
+    body.ambient-mode .time {
       letter-spacing: 0;
       line-height: 0.9;
     }
@@ -1389,6 +1452,9 @@
       font-size: clamp(9.6rem, 20vh, 18.8rem);
       font-weight: 950;
       letter-spacing: 0;
+      color: rgba(255,255,255,0.98);
+      -webkit-text-stroke: 1px rgba(255,255,255,0.04);
+      filter: drop-shadow(0 22px 34px rgba(0,0,0,0.54));
     }
 
     .time .sec {
@@ -1402,7 +1468,8 @@
       color: rgba(255,255,255,0.84);
     }
 
-    body.time-focus-mode .time .sec {
+    body.time-focus-mode .time .sec,
+    body.ambient-mode .time .sec {
       min-width: 1.5em;
       margin-left: 0.2em;
       letter-spacing: 0;
@@ -1412,26 +1479,28 @@
     body.clock-style-gallery .time .sec {
       min-width: auto;
       margin-left: 0;
-      margin-top: 0.15em;
-      padding: 0.28em 0.46em 0.24em;
-      border: 1px solid rgba(255,255,255,0.16);
-      border-radius: 999px;
-      background: rgba(0,0,0,0.28);
-      color: rgba(255,255,255,0.78);
-      font-size: clamp(1.4rem, 4.6vh, 3.8rem);
-      font-weight: 850;
+      margin-top: 0.24em;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: rgba(255,255,255,0.46);
+      font-size: clamp(1.05rem, 3vh, 2.1rem);
+      font-weight: 760;
       letter-spacing: 0;
       line-height: 1;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 16px 34px rgba(0,0,0,0.36);
+      box-shadow: none;
       vertical-align: top;
     }
 
     @supports (font-size: clamp(1px, 2vw, 3px)) {
       .time .hm { font-size: clamp(106px, 12.6vw, 246px); }
       .timezone-label { font-size: clamp(13px, 1.2vw, 23px); }
-      body.time-focus-mode .time .hm { font-size: clamp(112px, 19.4vw, 370px); }
+      body.time-focus-mode .time .hm,
+      body.ambient-mode .time .hm { font-size: clamp(112px, 19.4vw, 370px); }
       body.clock-style-gallery .time .hm { font-size: clamp(9.6rem, 20vh, 18.8rem); }
-      body.time-focus-mode.clock-style-gallery .time .hm { font-size: clamp(11.5rem, 29vh, 24rem); }
+      body.time-focus-mode.clock-style-gallery .time .hm,
+      body.ambient-mode.clock-style-gallery .time .hm { font-size: clamp(11.5rem, 29vh, 24rem); }
     }
 
     .date {
@@ -1452,14 +1521,18 @@
       text-shadow: 0 10px 24px rgba(0,0,0,0.86);
     }
 
-    body.time-focus-mode .date {
+    body.clock-style-gallery .date::after { display: none; }
+
+    body.time-focus-mode .date,
+    body.ambient-mode .date {
       margin-top: clamp(8px, 1.4vh, 16px);
       color: rgba(255,255,255,0.72);
     }
 
     @supports (font-size: clamp(1px, 2vw, 3px)) {
       .date { font-size: clamp(15px, 1.35vw, 22px); }
-      body.time-focus-mode .date { font-size: clamp(16px, 1.6vw, 25px); }
+      body.time-focus-mode .date,
+      body.ambient-mode .date { font-size: clamp(16px, 1.6vw, 25px); }
     }
 
     .weather {
@@ -1476,17 +1549,58 @@
       gap: 8px;
       margin-top: clamp(12px, 1.8vh, 20px);
       color: rgba(255,255,255,0.88);
+      width: -webkit-fit-content;
+      width: -moz-fit-content;
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 8px 14px;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 999px;
+      background: rgba(0,0,0,0.24);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 14px 34px rgba(0,0,0,0.18);
     }
 
     .weather-item {
+      min-width: auto;
+      padding: 0;
+      border-radius: 0;
+      background: transparent;
+      border: 0;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    body.ambient-mode #weather-humidity,
+    body.ambient-mode #weather-feels {
+      display: none;
+    }
+
+    body.ambient-mode .weather-item + .weather-item::before {
+      content: "·";
+      margin: 0 8px 0 2px;
+      color: rgba(255,255,255,0.42);
+    }
+
+    body.weather-detail-open .weather {
+      width: auto;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    body.weather-detail-open .weather-item {
       min-width: 116px;
       padding: 8px 14px;
       border-radius: 999px;
       background: rgba(0,0,0,0.26);
       border: 1px solid rgba(255,255,255,0.14);
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
+    }
+
+    body.weather-detail-open .weather-item::before {
+      content: none;
     }
 
     @supports (font-size: clamp(1px, 2vw, 3px)) {
@@ -1501,21 +1615,22 @@
       color: rgba(255,255,255,0.58);
     }
 
-    @media (min-width: 861px) {
-      .clock-card .weather,
-      .clock-card .weather-source {
-        display: none;
-      }
-    }
-
-    body.time-focus-mode .weather,
+    body.ambient-mode .weather-source,
     body.time-focus-mode .weather-source,
     body.time-focus-mode .weather-summary,
-    body.time-focus-mode .forecast-rail {
+    body.time-focus-mode .forecast-rail,
+    body.ambient-mode .weather-summary,
+    body.ambient-mode .forecast-rail {
       display: none !important;
     }
 
+    body.weather-detail-open .weather-source {
+      display: block;
+    }
+
     .main-timer {
+      --timer-progress: 0;
+      --timer-progress-pos: 0%;
       position: relative;
       z-index: 1;
       display: grid;
@@ -1531,6 +1646,30 @@
       background: rgba(0,0,0,0.16);
       text-align: left;
       font-variant-numeric: tabular-nums;
+      overflow: hidden;
+      isolation: isolate;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.08),
+        0 16px 44px rgba(0,0,0,0.18);
+      transition:
+        transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+        border-color 260ms cubic-bezier(0.22, 1, 0.36, 1),
+        background 260ms cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 260ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .main-timer::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border-radius: inherit;
+      background:
+        radial-gradient(circle at var(--timer-progress-pos, 0%) 0%, rgba(246,220,162,0.18), transparent 34%),
+        linear-gradient(90deg, rgba(246,220,162,0.08), rgba(159,209,184,0.05), transparent 70%);
+      opacity: 0.9;
+      pointer-events: none;
+      transition: background 320ms linear, opacity 260ms cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     .timer-slot {
@@ -1614,8 +1753,19 @@
       background: linear-gradient(90deg, rgba(255,255,255,0.72), rgba(190,198,205,0.72));
     }
 
+    .main-timer.is-paused {
+      border-color: rgba(255,255,255,0.22);
+      background: rgba(0,0,0,0.28);
+    }
+
     .main-timer.is-alerting .main-timer-progress span {
       background: linear-gradient(90deg, rgba(255,216,170,0.98), rgba(255,154,128,0.96));
+    }
+
+    .main-timer.is-alerting {
+      border-color: rgba(255,205,157,0.46);
+      background: rgba(42,18,12,0.34);
+      animation: timerDockAlert 920ms cubic-bezier(0.22, 1, 0.36, 1) infinite;
     }
 
     .main-timer.is-alarm .main-timer-progress {
@@ -1634,6 +1784,15 @@
       min-height: 44px;
       padding: 8px 13px;
       white-space: nowrap;
+    }
+
+    .main-timer.timer-feedback-start,
+    .main-timer.timer-feedback-extend {
+      animation: timerDockConfirm 680ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .main-timer.timer-feedback-pause {
+      animation: timerDockPause 620ms cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .main-timer-copy {
@@ -1976,24 +2135,69 @@
       justify-content: flex-end;
       gap: 8px;
       max-width: calc(100vw - 32px);
-      opacity: 0.18;
-      transition: opacity 180ms ease;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition:
+        opacity 220ms cubic-bezier(0.22, 1, 0.36, 1),
+        transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    .controls:hover, .controls:focus-within { opacity: 1; }
+    body.controls-open .controls {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
 
     button {
       appearance: none;
       -webkit-appearance: none;
+      position: relative;
+      overflow: hidden;
       border: 1px solid rgba(255,255,255,0.22);
       border-radius: 999px;
       padding: 10px 14px;
-      background: rgba(0,0,0,0.48);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.015)),
+        rgba(0,0,0,0.48);
       color: rgba(255,255,255,0.92);
       font-weight: 800;
       font-size: 14px;
       font-family: inherit;
       cursor: pointer;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.08),
+        0 9px 22px rgba(0,0,0,0.18);
+      transform: translateY(0);
+      transition:
+        transform 150ms cubic-bezier(0.22, 1, 0.36, 1),
+        border-color 200ms cubic-bezier(0.22, 1, 0.36, 1),
+        background 200ms cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 200ms cubic-bezier(0.22, 1, 0.36, 1),
+        color 200ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    button::before {
+      display: none;
+    }
+
+    button:hover:not(:disabled),
+    button:focus-visible:not(:disabled) {
+      border-color: rgba(255,255,255,0.38);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.025)),
+        rgba(0,0,0,0.58);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.12),
+        0 14px 30px rgba(0,0,0,0.24);
+      transform: translateY(-1px);
+    }
+
+    button:active:not(:disabled) {
+      transform: translateY(1px) scale(0.985);
+      box-shadow:
+        inset 0 2px 8px rgba(0,0,0,0.26),
+        0 6px 16px rgba(0,0,0,0.18);
     }
 
     button:focus {
@@ -2004,6 +2208,7 @@
     button:disabled {
       cursor: default;
       opacity: 0.42;
+      transform: none;
     }
 
     #focus-mode-button[aria-pressed="true"] {
@@ -2012,10 +2217,10 @@
       color: rgba(255,255,255,0.98);
     }
 
-    .music-panel, .city-panel, .timer-panel, .protect-panel {
+    .music-panel, .city-panel, .timer-panel, .protect-panel, .settings-panel {
       position: fixed;
       z-index: 4;
-      top: 66px;
+      top: 70px;
       right: 16px;
       width: min(380px, calc(100vw - 32px));
       padding: 14px;
@@ -2027,9 +2232,10 @@
       text-align: left;
     }
 
-    .city-panel { top: 120px; }
-    .timer-panel { top: 174px; width: min(470px, calc(100vw - 32px)); }
-    .protect-panel { top: 228px; width: min(430px, calc(100vw - 32px)); }
+    .settings-panel { width: min(470px, calc(100vw - 32px)); }
+    .city-panel { width: min(430px, calc(100vw - 32px)); }
+    .timer-panel { width: min(470px, calc(100vw - 32px)); }
+    .protect-panel { width: min(430px, calc(100vw - 32px)); }
 
     .timer-panel {
       display: grid;
@@ -2038,21 +2244,34 @@
       overflow: auto;
     }
 
-    .music-panel[hidden], .city-panel[hidden], .timer-panel[hidden], .protect-panel[hidden] { display: none; }
+    .music-panel[hidden], .city-panel[hidden], .timer-panel[hidden], .protect-panel[hidden], .settings-panel[hidden] { display: none; }
 
     @supports ((-webkit-backdrop-filter: blur(8px)) or (backdrop-filter: blur(8px))) {
-      .music-panel, .city-panel, .timer-panel, .protect-panel {
+      .music-panel, .city-panel, .timer-panel, .protect-panel, .settings-panel {
         -webkit-backdrop-filter: blur(12px) saturate(120%);
         backdrop-filter: blur(12px) saturate(120%);
       }
     }
 
-    .music-label, .city-label, .timer-label, .protect-label {
+    .music-label, .city-label, .timer-label, .protect-label, .settings-label {
       display: block;
       margin-bottom: 8px;
       font-size: 13px;
       font-weight: 800;
       color: rgba(255,255,255,0.72);
+    }
+
+    .settings-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .settings-row button {
+      min-height: 42px;
+      padding: 8px 12px;
+      white-space: normal;
     }
 
     .timer-panel-head {
@@ -2223,7 +2442,8 @@
       color: rgba(255,255,255,0.66);
     }
 
-    body.night-mode .controls { opacity: 0.11; }
+    body.night-mode .controls { opacity: 0; }
+    body.night-mode.controls-open .controls { opacity: 1; }
 
     body.night-mode button,
     body.night-mode .music-select,
@@ -2412,6 +2632,8 @@
       .melt-pool-svg,
       .melt-highlight,
       .melt-drip,
+      .clock-object,
+      .main-timer,
       .clock-scene::before,
       .clock-scene::after,
       .screen-rest-card,
@@ -2670,17 +2892,20 @@
         overflow-y: auto;
       }
 
-      .stage { height: auto; min-height: 100vh; justify-content: flex-start; gap: 8px; padding: 138px 3vw 24px; }
-      body.time-focus-mode .stage { justify-content: flex-start; padding: 138px 3vw 44px; }
+      .stage { height: auto; min-height: 100vh; justify-content: flex-start; gap: 8px; padding: 92px 3vw 24px; }
+      body.time-focus-mode .stage,
+      body.ambient-mode .stage { justify-content: center; padding: 64px 3vw 44px; }
       .clock-card { border-radius: 22px; padding: 12px 4vw 14px; }
-      body.time-focus-mode .clock-card { width: min(94vw, 760px); padding: 24px 5vw 28px; }
+      body.time-focus-mode .clock-card,
+      body.ambient-mode .clock-card { width: min(94vw, 760px); padding: 24px 5vw 28px; }
       .timezone-label { margin-bottom: 5px; }
       .clock-scene {
         width: 100%;
         max-width: 620px;
         height: clamp(330px, 86vw, 460px);
       }
-      body.time-focus-mode .clock-scene {
+      body.time-focus-mode .clock-scene,
+      body.ambient-mode .clock-scene {
         width: 100%;
         max-width: 700px;
         height: clamp(380px, 96vw, 520px);
@@ -2696,13 +2921,17 @@
       body.clock-style-gallery .time .sec {
         font-size: clamp(1.05rem, 4vh, 1.8rem);
       }
-      body.time-focus-mode .time .hm { font-size: clamp(82px, 24vw, 160px); }
-      body.time-focus-mode.clock-style-gallery .time .hm { font-size: clamp(5.8rem, 18vh, 9rem); }
+      body.time-focus-mode .time .hm,
+      body.ambient-mode .time .hm { font-size: clamp(82px, 24vw, 160px); }
+      body.time-focus-mode.clock-style-gallery .time .hm,
+      body.ambient-mode.clock-style-gallery .time .hm { font-size: clamp(5.8rem, 18vh, 9rem); }
       .time .sec { display: inline-block; min-width: 1.6em; margin-left: 0.12em; margin-top: 0; font-size: 24px; vertical-align: super; }
       .date { margin-top: 10px; font-size: 16px; }
-      body.time-focus-mode .date { font-size: clamp(16px, 4vw, 20px); }
+      body.time-focus-mode .date,
+      body.ambient-mode .date { font-size: clamp(16px, 4vw, 20px); }
       .weather { gap: 7px; margin-top: 12px; }
       .weather-item { min-width: 0; padding: 7px 11px; font-size: 14px; }
+      body.ambient-mode .weather-item { padding: 0; }
       .weather-source { margin-top: 8px; font-size: 12px; }
       .main-timer {
         grid-template-columns: 1fr;
@@ -2761,10 +2990,17 @@
       .forecast-days { grid-template-columns: repeat(5, minmax(126px, 1fr)); overflow-x: auto; padding-bottom: 3px; }
       .forecast-day { min-height: 74px; padding: 9px 10px; border-radius: 15px; }
       .controls { top: 10px; right: 10px; }
-      .music-panel { top: 138px; right: 10px; width: calc(100vw - 20px); }
-      .city-panel { top: 192px; right: 10px; width: calc(100vw - 20px); }
-      .timer-panel { top: 246px; right: 10px; width: calc(100vw - 20px); max-height: calc(100vh - 258px); }
-      .protect-panel { top: 300px; right: 10px; width: calc(100vw - 20px); }
+      .settings-panel,
+      .music-panel,
+      .city-panel,
+      .timer-panel,
+      .protect-panel {
+        top: 72px;
+        right: 10px;
+        width: calc(100vw - 20px);
+        max-height: calc(100vh - 86px);
+        overflow: auto;
+      }
       .timer-countdown { font-size: 34px; }
       button { padding: 8px 10px; font-size: 12px; }
       .art-credit { font-size: 13px; }
@@ -2780,12 +3016,13 @@
 
       .stage {
         min-height: auto;
-        padding: 138px 10px 14px;
+        padding: 86px 10px 14px;
       }
 
-      body.time-focus-mode .stage {
+      body.time-focus-mode .stage,
+      body.ambient-mode .stage {
         min-height: 100vh;
-        padding: 138px 10px 34px;
+        padding: 54px 10px 34px;
       }
 
       .clock-card,
@@ -2797,15 +3034,20 @@
       .time .hm { font-size: 58px; }
       body.clock-style-gallery .time .hm { font-size: clamp(4.4rem, 15vh, 6.6rem); }
       body.clock-style-gallery .time .sec { font-size: clamp(1rem, 3.6vh, 1.45rem); }
-      body.time-focus-mode .time .hm { font-size: clamp(66px, 22vw, 104px); }
-      body.time-focus-mode.clock-style-gallery .time .hm { font-size: clamp(4.8rem, 16vh, 7.6rem); }
+      body.time-focus-mode .time .hm,
+      body.ambient-mode .time .hm { font-size: clamp(66px, 22vw, 104px); }
+      body.time-focus-mode.clock-style-gallery .time .hm,
+      body.ambient-mode.clock-style-gallery .time .hm { font-size: clamp(4.8rem, 16vh, 7.6rem); }
       .time .sec { font-size: 20px; }
-      body.time-focus-mode .time .sec { font-size: 0.3em; }
+      body.time-focus-mode .time .sec,
+      body.ambient-mode .time .sec { display: none; }
       .clock-scene { height: clamp(350px, 100vw, 460px); }
-      body.time-focus-mode .clock-scene { height: clamp(380px, 96vw, 500px); }
+      body.time-focus-mode .clock-scene,
+      body.ambient-mode .clock-scene { height: clamp(380px, 96vw, 500px); }
       .object-caption { display: none; }
       .date { font-size: 15px; }
-      body.time-focus-mode .date { font-size: clamp(15px, 4.4vw, 18px); }
+      body.time-focus-mode .date,
+      body.ambient-mode .date { font-size: clamp(15px, 4.4vw, 18px); }
       .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .summary-hourly { grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
       .hourly-slot { min-height: 74px; padding: 6px 3px; border-radius: 12px; }
@@ -2835,15 +3077,22 @@
 
   <div class="controls" aria-label="시계 조작 버튼">
     <button id="fullscreen-button" type="button">전체화면</button>
-    <button id="next-art-button" type="button">배경변경</button>
-    <button id="weather-button" type="button">날씨갱신</button>
-    <button id="focus-mode-button" type="button" aria-pressed="false">시계집중</button>
-    <button id="clock-style-button" type="button">기본 시계</button>
-    <button id="city-panel-button" type="button" aria-expanded="false" aria-controls="city-panel">도시선택</button>
+    <button id="focus-mode-button" type="button" aria-pressed="false">날씨</button>
     <button id="timer-panel-button" type="button" aria-expanded="false" aria-controls="timer-panel">타이머</button>
-    <button id="protect-panel-button" type="button" aria-expanded="false" aria-controls="protect-panel">화면보호</button>
-    <button id="music-toggle-button" type="button">음악재생</button>
-    <button id="music-panel-button" type="button" aria-expanded="false" aria-controls="music-panel">음악선택</button>
+    <button id="settings-panel-button" type="button" aria-expanded="false" aria-controls="settings-panel">설정</button>
+  </div>
+
+  <div id="settings-panel" class="settings-panel" hidden>
+    <div class="settings-label">조용히 숨겨 둔 설정</div>
+    <div class="settings-row" aria-label="세부 설정">
+      <button id="next-art-button" type="button">배경변경</button>
+      <button id="weather-button" type="button">날씨갱신</button>
+      <button id="clock-style-button" type="button">기본 시계</button>
+      <button id="city-panel-button" type="button" aria-expanded="false" aria-controls="city-panel">도시선택</button>
+      <button id="protect-panel-button" type="button" aria-expanded="false" aria-controls="protect-panel">화면보호</button>
+      <button id="music-toggle-button" type="button">음악재생</button>
+      <button id="music-panel-button" type="button" aria-expanded="false" aria-controls="music-panel">음악선택</button>
+    </div>
   </div>
 
   <div id="music-panel" class="music-panel" hidden>
@@ -3252,7 +3501,7 @@
         </div>
         <div id="weather" class="weather" aria-label="현재 날씨">
           <div class="weather-item" id="weather-city">서울</div>
-          <div class="weather-item" id="weather-temp">온도 --°</div>
+          <div class="weather-item" id="weather-temp">--°</div>
           <div class="weather-item" id="weather-humidity">습도 --%</div>
           <div class="weather-item" id="weather-feels">체감 --°</div>
           <div class="weather-item" id="weather-condition">날씨 확인 중</div>
@@ -3338,7 +3587,7 @@
         enableMusic: true,
         enableTimer: true,
         enableProtection: true,
-        focusMode: false,
+        focusMode: true,
         focusModeFromQuery: false,
         protectionFromQuery: false,
         restAfterMinutes: 50,
@@ -3395,6 +3644,8 @@
         nextArtButton: document.getElementById('next-art-button'),
         weatherButton: document.getElementById('weather-button'),
         focusModeButton: document.getElementById('focus-mode-button'),
+        settingsPanelButton: document.getElementById('settings-panel-button'),
+        settingsPanel: document.getElementById('settings-panel'),
         clockStyleButton: document.getElementById('clock-style-button'),
         cityPanelButton: document.getElementById('city-panel-button'),
         cityPanel: document.getElementById('city-panel'),
@@ -3520,7 +3771,9 @@
           ignoreInputUntil: 0
         },
         noticeTimer: null,
-        cursorTimer: null
+        cursorTimer: null,
+        timerFeedbackTimer: null,
+        controlsTimer: null
       };
 
       var weekdays = ['일', '월', '화', '수', '목', '금', '토'];
@@ -3566,11 +3819,15 @@
         populateCitySelect();
         applyClockStyle(false);
         applyNightMode();
+        if (!CONFIG.enableWeather || !CONFIG.enableWeatherSummary) {
+          CONFIG.focusMode = true;
+        }
         applyFocusMode(false);
         setInterval(applyNightMode, 60 * 1000);
         if (!CONFIG.enableWeatherSummary) {
           el.weatherSummary.hidden = true;
           if (el.forecastRail) el.forecastRail.hidden = true;
+          if (el.focusModeButton) el.focusModeButton.style.display = 'none';
         }
 
         updateClock();
@@ -3581,6 +3838,8 @@
           updateWeather();
           setInterval(updateWeather, CONFIG.weatherRefreshMs);
         } else {
+          if (el.focusModeButton) el.focusModeButton.style.display = 'none';
+          if (el.weatherButton) el.weatherButton.style.display = 'none';
           el.weather.style.display = 'none';
           el.weatherSummary.hidden = true;
           if (el.forecastRail) el.forecastRail.hidden = true;
@@ -3614,9 +3873,6 @@
         }
         if (saved.nightMode === 'auto' || saved.nightMode === 'on' || saved.nightMode === 'off') {
           CONFIG.nightMode = saved.nightMode;
-        }
-        if (typeof saved.focusMode === 'boolean') {
-          CONFIG.focusMode = saved.focusMode;
         }
         if (saved.clockStyle) {
           CONFIG.clockStyle = normalizeClockStyle(saved.clockStyle);
@@ -3770,6 +4026,10 @@
         var minuteProgress = ((minute * 60 + second) / 3600).toFixed(4);
         var timeText = pad(hour) + ':' + pad(minute);
 
+        document.documentElement.style.setProperty('--hour-angle', hourAngle);
+        document.documentElement.style.setProperty('--minute-angle', minuteAngle);
+        document.documentElement.style.setProperty('--second-angle', secondAngle);
+        document.documentElement.style.setProperty('--minute-progress', minuteProgress);
         if (el.clockScene) {
           el.clockScene.style.setProperty('--hour-angle', hourAngle);
           el.clockScene.style.setProperty('--minute-angle', minuteAngle);
@@ -3784,6 +4044,7 @@
       }
 
       function cycleClockStyle() {
+        revealControls();
         var next = nextClockStyle(CONFIG.clockStyle);
         CONFIG.clockStyle = next;
         CONFIG.clockStyleFromQuery = false;
@@ -3908,9 +4169,13 @@
       }
 
       function toggleCityPanel() {
+        revealControls();
         el.cityPanel.hidden = !el.cityPanel.hidden;
         el.cityPanelButton.setAttribute('aria-expanded', el.cityPanel.hidden ? 'false' : 'true');
         if (!el.cityPanel.hidden && el.musicPanel) {
+          el.settingsPanel.hidden = true;
+          document.body.classList.remove('settings-open');
+          el.settingsPanelButton.setAttribute('aria-expanded', 'false');
           el.musicPanel.hidden = true;
           el.musicPanelButton.setAttribute('aria-expanded', 'false');
           el.timerPanel.hidden = true;
@@ -3940,23 +4205,23 @@
         CONFIG.focusModeFromQuery = false;
         applyFocusMode(true);
         closeAllPanels();
-        showMessage(CONFIG.focusMode ? '시계 집중 모드입니다.' : '시계와 날씨를 함께 봅니다.');
+        revealControls();
+        showMessage(CONFIG.focusMode ? '간결한 시계 화면입니다.' : '날씨 상세를 엽니다.');
       }
 
       function applyFocusMode(persist) {
         document.body.classList.toggle('time-focus-mode', !!CONFIG.focusMode);
+        document.body.classList.toggle('ambient-mode', !!CONFIG.focusMode);
+        document.body.classList.toggle('weather-detail-open', !CONFIG.focusMode);
         placeMainTimer();
         var hidden = CONFIG.focusMode ? 'true' : 'false';
-        if (el.weather) el.weather.setAttribute('aria-hidden', hidden);
+        if (el.weather) el.weather.setAttribute('aria-hidden', CONFIG.enableWeather ? 'false' : 'true');
         if (el.source) el.source.setAttribute('aria-hidden', hidden);
         if (el.weatherSummary) el.weatherSummary.setAttribute('aria-hidden', hidden);
         if (el.forecastRail) el.forecastRail.setAttribute('aria-hidden', hidden);
         if (el.focusModeButton) {
-          el.focusModeButton.textContent = CONFIG.focusMode ? '혼합보기' : '시계집중';
-          el.focusModeButton.setAttribute('aria-pressed', CONFIG.focusMode ? 'true' : 'false');
-        }
-        if (persist) {
-          saveAppSettings({ focusMode: !!CONFIG.focusMode });
+          el.focusModeButton.textContent = CONFIG.focusMode ? '날씨' : '간결보기';
+          el.focusModeButton.setAttribute('aria-pressed', CONFIG.focusMode ? 'false' : 'true');
         }
       }
 
@@ -4079,7 +4344,7 @@
       function prepareWeatherRefresh(snapshot) {
         el.city.textContent = snapshot.city;
         if (!isWeatherForSnapshot(state.latestWeather, snapshot) || !state.latestWeather.current) {
-          el.temp.textContent = '온도 --°';
+          el.temp.textContent = '--°';
           el.humidity.textContent = '습도 --%';
           el.feels.textContent = '체감 --°';
           el.condition.textContent = '날씨 확인 중';
@@ -4110,7 +4375,7 @@
           el.source.textContent = '현재 날씨 갱신 실패 · 마지막 정보 표시 중';
           return;
         }
-        el.temp.textContent = '온도 --°';
+        el.temp.textContent = '--°';
         el.humidity.textContent = '습도 --%';
         el.feels.textContent = '체감 --°';
         el.condition.textContent = '날씨 연결 실패';
@@ -4276,7 +4541,7 @@
 
       function renderCurrentWeather(current, isCached) {
         el.city.textContent = CONFIG.city;
-        el.temp.textContent = '온도 ' + formatNumber(current.temperature_2m) + '°';
+        el.temp.textContent = formatNumber(current.temperature_2m) + '°';
         el.humidity.textContent = '습도 ' + formatNumber(current.relative_humidity_2m) + '%';
         el.feels.textContent = '체감 ' + formatNumber(current.apparent_temperature) + '°';
         el.condition.textContent = codeToKorean(current.weather_code);
@@ -4946,9 +5211,13 @@
       }
 
       function toggleMusicPanel() {
+        revealControls();
         el.musicPanel.hidden = !el.musicPanel.hidden;
         el.musicPanelButton.setAttribute('aria-expanded', el.musicPanel.hidden ? 'false' : 'true');
         if (!el.musicPanel.hidden && el.cityPanel) {
+          el.settingsPanel.hidden = true;
+          document.body.classList.remove('settings-open');
+          el.settingsPanelButton.setAttribute('aria-expanded', 'false');
           el.cityPanel.hidden = true;
           el.cityPanelButton.setAttribute('aria-expanded', 'false');
           el.timerPanel.hidden = true;
@@ -5191,6 +5460,8 @@
         clearTimerAlert();
         saveTimerSettings();
         updateTimerUi();
+        closeTimerPanel();
+        pulseMainTimer('start');
         showMessage('타이머를 시작했습니다.');
       }
 
@@ -5201,6 +5472,7 @@
         state.timer.paused = true;
         saveTimerSettings();
         updateTimerUi();
+        pulseMainTimer('pause');
         showMessage('타이머를 일시정지했습니다.');
       }
 
@@ -5236,6 +5508,7 @@
         }
         saveTimerSettings();
         updateTimerUi();
+        pulseMainTimer('extend');
         showMessage('타이머를 5분 연장했습니다.');
       }
 
@@ -5286,6 +5559,7 @@
           state.timer.alarmAt = Date.now() + 5 * 60 * 1000;
           saveTimerSettings();
           updateTimerUi();
+          pulseMainTimer('extend');
           showMessage('알람을 5분 미뤘습니다.');
           return;
         }
@@ -5297,6 +5571,7 @@
         state.timer.paused = false;
         saveTimerSettings();
         updateTimerUi();
+        pulseMainTimer('extend');
         showMessage('타이머를 5분 연장했습니다.');
       }
 
@@ -5305,6 +5580,7 @@
         state.timer.alarmTime = '';
         saveTimerSettings();
         updateTimerUi();
+        pulseMainTimer('extend');
         showMessage('알람을 5분 미뤘습니다.');
       }
 
@@ -5344,6 +5620,7 @@
         state.timer.alarmAt = computeNextKoreaAlarmTimestamp(value);
         saveTimerSettings();
         updateTimerUi();
+        closeTimerPanel();
         showMessage('알람을 설정했습니다.');
       }
 
@@ -5400,6 +5677,8 @@
           if (state.timer.alerting) remaining = 0;
           var duration = Math.max(Number(state.timer.durationMs) || 0, remaining, 1);
           var progress = state.timer.alerting ? 1 : clamp(1 - (remaining / duration), 0, 1);
+          el.mainTimer.style.setProperty('--timer-progress', progress.toFixed(4));
+          el.mainTimer.style.setProperty('--timer-progress-pos', (progress * 100).toFixed(2) + '%');
           el.mainTimerLabel.textContent = state.timer.alerting ? 'TIMER ALERT' : (state.timer.paused ? 'TIMER PAUSED' : 'TIMER RUNNING');
           el.mainTimerRemaining.textContent = formatTimerRemaining(remaining);
           if (el.mainTimerProgressBar) {
@@ -5424,6 +5703,8 @@
         el.mainTimerLabel.textContent = 'ALARM SET';
         el.mainTimerRemaining.textContent = compactKoreaTime(state.timer.alarmAt);
         el.mainTimerStatus.textContent = formatKoreaDateTime(state.timer.alarmAt) + ' 알림 예정';
+        el.mainTimer.style.setProperty('--timer-progress', '1');
+        el.mainTimer.style.setProperty('--timer-progress-pos', '100%');
         if (el.mainTimerProgressBar) {
           el.mainTimerProgressBar.style.webkitTransform = 'scaleX(1)';
           el.mainTimerProgressBar.style.transform = 'scaleX(1)';
@@ -5433,6 +5714,20 @@
         el.mainTimerAddFiveButton.textContent = '5분 미루기';
         el.mainTimerAddFiveButton.disabled = false;
         el.mainTimerClearButton.textContent = '알람해제';
+      }
+
+      function pulseMainTimer(kind) {
+        if (!el.mainTimer || el.mainTimer.hidden) return;
+        var className = 'timer-feedback-' + kind;
+        el.mainTimer.classList.remove('timer-feedback-start', 'timer-feedback-pause', 'timer-feedback-extend');
+        void el.mainTimer.offsetWidth;
+        el.mainTimer.classList.add(className);
+        clearTimeout(state.timerFeedbackTimer);
+        state.timerFeedbackTimer = setTimeout(function () {
+          if (el.mainTimer) {
+            el.mainTimer.classList.remove('timer-feedback-start', 'timer-feedback-pause', 'timer-feedback-extend');
+          }
+        }, 740);
       }
 
       function updateTimerPresetButtons() {
@@ -5808,9 +6103,13 @@
 
       function toggleTimerPanel() {
         if (!CONFIG.enableTimer) return;
+        revealControls();
         el.timerPanel.hidden = !el.timerPanel.hidden;
         el.timerPanelButton.setAttribute('aria-expanded', el.timerPanel.hidden ? 'false' : 'true');
         if (!el.timerPanel.hidden) {
+          el.settingsPanel.hidden = true;
+          document.body.classList.remove('settings-open');
+          el.settingsPanelButton.setAttribute('aria-expanded', 'false');
           el.cityPanel.hidden = true;
           el.cityPanelButton.setAttribute('aria-expanded', 'false');
           el.musicPanel.hidden = true;
@@ -5843,9 +6142,13 @@
       }
 
       function toggleProtectPanel() {
+        revealControls();
         el.protectPanel.hidden = !el.protectPanel.hidden;
         el.protectPanelButton.setAttribute('aria-expanded', el.protectPanel.hidden ? 'false' : 'true');
         if (!el.protectPanel.hidden) {
+          el.settingsPanel.hidden = true;
+          document.body.classList.remove('settings-open');
+          el.settingsPanelButton.setAttribute('aria-expanded', 'false');
           el.cityPanel.hidden = true;
           el.cityPanelButton.setAttribute('aria-expanded', 'false');
           el.timerPanel.hidden = true;
@@ -5979,6 +6282,9 @@
       }
 
       function closeAllPanels() {
+        document.body.classList.remove('settings-open');
+        el.settingsPanel.hidden = true;
+        el.settingsPanelButton.setAttribute('aria-expanded', 'false');
         el.cityPanel.hidden = true;
         el.cityPanelButton.setAttribute('aria-expanded', 'false');
         el.timerPanel.hidden = true;
@@ -5989,17 +6295,85 @@
         el.musicPanelButton.setAttribute('aria-expanded', 'false');
       }
 
+      function toggleSettingsPanel() {
+        revealControls();
+        el.settingsPanel.hidden = !el.settingsPanel.hidden;
+        document.body.classList.toggle('settings-open', !el.settingsPanel.hidden);
+        el.settingsPanelButton.setAttribute('aria-expanded', el.settingsPanel.hidden ? 'false' : 'true');
+        if (!el.settingsPanel.hidden) {
+          el.cityPanel.hidden = true;
+          el.cityPanelButton.setAttribute('aria-expanded', 'false');
+          el.timerPanel.hidden = true;
+          el.timerPanelButton.setAttribute('aria-expanded', 'false');
+          el.protectPanel.hidden = true;
+          el.protectPanelButton.setAttribute('aria-expanded', 'false');
+          el.musicPanel.hidden = true;
+          el.musicPanelButton.setAttribute('aria-expanded', 'false');
+        }
+      }
+
+      function revealControls() {
+        document.body.classList.add('controls-open');
+        scheduleControlsClose();
+      }
+
+      function scheduleControlsClose() {
+        clearTimeout(state.controlsTimer);
+        state.controlsTimer = setTimeout(function () {
+          if (hasOpenPanel()) return scheduleControlsClose();
+          document.body.classList.remove('controls-open');
+        }, 7000);
+      }
+
+      function hideControls() {
+        clearTimeout(state.controlsTimer);
+        closeAllPanels();
+        document.body.classList.remove('controls-open');
+      }
+
+      function hasOpenPanel() {
+        return (el.settingsPanel && !el.settingsPanel.hidden) ||
+          (el.cityPanel && !el.cityPanel.hidden) ||
+          (el.timerPanel && !el.timerPanel.hidden) ||
+          (el.protectPanel && !el.protectPanel.hidden) ||
+          (el.musicPanel && !el.musicPanel.hidden);
+      }
+
+      function isOverlayTarget(target) {
+        while (target && target !== document.body) {
+          if (target === el.notice || target === el.timerAlert || target === el.screenRest) return true;
+          if (target === el.settingsPanel || target === el.cityPanel || target === el.timerPanel || target === el.protectPanel || target === el.musicPanel) return true;
+          if (target.classList && target.classList.contains('controls')) return true;
+          var tag = (target.tagName || '').toLowerCase();
+          if (tag === 'button' || tag === 'a' || tag === 'input' || tag === 'select' || tag === 'textarea' || tag === 'label') return true;
+          target = target.parentNode;
+        }
+        return false;
+      }
+
+      function closeTimerPanel() {
+        if (!el.timerPanel) return;
+        el.timerPanel.hidden = true;
+        if (el.timerPanelButton) el.timerPanelButton.setAttribute('aria-expanded', 'false');
+      }
+
       function bindControls() {
-        el.fullscreenButton.addEventListener('click', requestFullscreen);
+        el.fullscreenButton.addEventListener('click', function () {
+          revealControls();
+          requestFullscreen();
+        });
         el.nextArtButton.addEventListener('click', function () {
+          revealControls();
           nextArtwork(false);
           showMessage('배경을 변경합니다.');
         });
         el.weatherButton.addEventListener('click', function () {
+          revealControls();
           updateWeather();
           showMessage('날씨를 갱신합니다.');
         });
         el.focusModeButton.addEventListener('click', toggleFocusMode);
+        el.settingsPanelButton.addEventListener('click', toggleSettingsPanel);
         el.clockStyleButton.addEventListener('click', cycleClockStyle);
         el.cityPanelButton.addEventListener('click', toggleCityPanel);
         el.cityApplyButton.addEventListener('click', function () {
@@ -6065,9 +6439,28 @@
 
         document.addEventListener('keydown', function (event) {
           var key = event.key || event.code;
-          if (key === 'f' || key === 'F') requestFullscreen();
-          if (key === 'n' || key === 'N') nextArtwork(false);
-          if (key === 'w' || key === 'W') updateWeather();
+          var targetTag = ((event.target && event.target.tagName) || '').toLowerCase();
+          var typing = targetTag === 'input' || targetTag === 'select' || targetTag === 'textarea';
+          if (!typing && (key === 'Enter' || key === ' ' || key === 'Spacebar')) {
+            if (!document.body.classList.contains('controls-open')) {
+              event.preventDefault();
+              revealControls();
+              return;
+            }
+            scheduleControlsClose();
+          }
+          if (key === 'f' || key === 'F') {
+            revealControls();
+            requestFullscreen();
+          }
+          if (key === 'n' || key === 'N') {
+            revealControls();
+            nextArtwork(false);
+          }
+          if (key === 'w' || key === 'W') {
+            revealControls();
+            updateWeather();
+          }
           if (key === 'x' || key === 'X') toggleFocusMode();
           if (key === 'a' || key === 'A') cycleClockStyle();
           if (key === 'm' || key === 'M') toggleMusicPlayback();
@@ -6075,7 +6468,27 @@
           if (key === 't' || key === 'T') toggleTimerPanel();
           if (key === 'p' || key === 'P') toggleProtectPanel();
           if (key === 'r' || key === 'R') cycleMusicMode();
-          if (key === 'Escape') clearTimerAlert();
+          if (key === 'Escape') {
+            clearTimerAlert();
+            if (!CONFIG.focusMode && !hasOpenPanel()) {
+              CONFIG.focusMode = true;
+              applyFocusMode(false);
+            }
+            hideControls();
+          }
+        });
+
+        document.addEventListener('click', function (event) {
+          if (state.protection.resting) return;
+          if (isOverlayTarget(event.target)) {
+            if (document.body.classList.contains('controls-open')) scheduleControlsClose();
+            return;
+          }
+          if (document.body.classList.contains('controls-open')) {
+            hideControls();
+          } else {
+            revealControls();
+          }
         });
 
         document.addEventListener('keydown', handleDisplayProtectionInput, true);
